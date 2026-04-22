@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University Quiz</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f2f5;
+      padding: clamp(0.5rem, 2vw, 1rem);
+    }
+
+    .quiz-container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: clamp(1rem, 4vw, 2rem);
+      max-width: 560px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .quiz-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .timer {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 600;
+      color: #1a1a2e;
+      background: #e8eaf0;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      font-size: clamp(0.85rem, 2vw, 0.9rem);
+      font-weight: 500;
+      padding: 0.5rem 0.75rem;
+      min-height: 44px;
+      min-width: 44px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-skip {
+      background: #e8eaf0;
+      color: #1a1a2e;
+    }
+
+    .btn-skip:hover {
+      background: #d0d4dc;
+    }
+
+    .btn-pause {
+      background: #1a1a2e;
+      color: #fff;
+    }
+
+    .btn-pause:hover {
+      background: #2d2d44;
+    }
+
+    .btn-resume {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .btn-resume:hover {
+      background: #218838;
+    }
+
+    .btn-resume.hidden {
+      display: none;
+    }
+
+    .btn-pause.hidden {
+      display: none;
+    }
+
+    .btn-back {
+      background: #6c757d;
+      color: #fff;
+    }
+
+    .btn-back:hover {
+      background: #5a6268;
+    }
+
+    .btn-back.hidden {
+      display: none;
+    }
+
+    .btn-next-question.hidden {
+      display: none;
+    }
+
+    .progress-tracker {
+      margin-bottom: 1rem;
+    }
+
+    .progress-tracker.hidden {
+      display: none;
+    }
+
+    .progress-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #1a1a2e;
+    }
+
+    .progress-stats span {
+      font-weight: 600;
+    }
+
+    .progress-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .progress-bar-wrap {
+      flex: 1;
+      display: flex;
+      height: 12px;
+      background: #e8eaf0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-segment {
+      flex: 1;
+      min-width: 2px;
+      transition: background 0.2s;
+    }
+
+    .progress-segment.pending {
+      background: #e8eaf0;
+    }
+
+    .progress-segment.correct {
+      background: #28a745;
+    }
+
+    .progress-segment.wrong {
+      background: #dc3545;
+    }
+
+    .progress-pct {
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-width: 3rem;
+      color: #1a1a2e;
+    }
+
+    .question-container {
+      margin-bottom: clamp(1rem, 4vw, 2rem);
+    }
+
+    .question-text {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      line-height: 1.5;
+      color: #1a1a2e;
+      margin: 0;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      font-size: clamp(0.95rem, 2vw, 1rem);
+      padding: clamp(0.75rem, 3vw, 1rem) clamp(1rem, 3vw, 1.25rem);
+      min-height: 48px;
+      background: #f5f6f8;
+      color: #1a1a2e;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .option-btn:hover {
+      background: #e8eaf0;
+      border-color: #c0c4cc;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+      opacity: 1;
+    }
+
+    .option-btn:disabled:hover {
+      background: inherit;
+      border-color: inherit;
+    }
+
+    .option-btn.correct {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+
+    .option-btn.wrong {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+
+    .results-panel {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .results-panel h2 {
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      color: #1a1a2e;
+      margin: 0 0 1rem 0;
+    }
+
+    .results-score {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 0.25rem;
+    }
+
+    .results-percentage {
+      font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    .load-warning {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #856404;
+    }
+
+    .load-warning.hidden {
+      display: none;
+    }
+
+    .btn-show-answer {
+      background: #6c757d;
+      color: #fff;
+    }
+
+    .btn-show-answer:hover {
+      background: #5a6268;
+    }
+
+    .btn-settings {
+      background: #17a2b8;
+      color: #fff;
+    }
+
+    .btn-settings:hover {
+      background: #138496;
+    }
+
+    .settings-panel {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .settings-panel.open {
+      display: block;
+    }
+
+    .settings-panel h3 {
+      font-size: 1rem;
+      margin: 0 0 0.75rem 0;
+      color: #1a1a2e;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .setting-row label {
+      min-width: 180px;
+      font-size: 0.9rem;
+      color: #495057;
+    }
+
+    .setting-row input[type="range"] {
+      flex: 1;
+      min-width: 120px;
+      max-width: 200px;
+    }
+
+    .setting-row input[type="number"] {
+      width: 3.5rem;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.9rem;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+    }
+
+    .setting-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1a1a2e;
+      min-width: 2rem;
+    }
+
+    .category-screen .category-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .category-btn {
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      background: #17a2b8;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .category-btn:hover {
+      background: #138496;
+    }
+
+    .category-btn:disabled {
+      background: #adb5bd;
+      color: #6c757d;
+      cursor: not-allowed;
+      opacity: 0.8;
+    }
+
+    .main-menu-screen .main-menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      max-width: 280px;
+    }
+
+    .main-menu-btn {
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: #17a2b8;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-align: center;
+    }
+
+    .main-menu-btn:hover {
+      background: #138496;
+    }
+
+    .category-btn-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+      opacity: 0.95;
+    }
+
+    .category-btn-name {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0.9;
+      line-height: 1.25;
+    }
+
+    @media (max-width: 480px) {
+      .quiz-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .timer {
+        justify-content: center;
+      }
+
+      .controls {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="quiz-container">
+    <header class="quiz-header">
+      <div class="timer" aria-live="polite">0:00</div>
+      <div class="controls">
+        <button type="button" class="btn btn-back hidden" id="btn-back">Back</button>
+        <button type="button" class="btn btn-show-answer" id="btn-show-answer">Show answer</button>
+        <button type="button" class="btn btn-next-question hidden" id="btn-next-question">Next question</button>
+        <button type="button" class="btn btn-skip">Skip</button>
+        <button type="button" class="btn btn-pause">Pause</button>
+        <button type="button" class="btn btn-resume hidden">Resume</button>
+        <button type="button" class="btn btn-settings" id="btn-settings">Settings</button>
+      </div>
+    </header>
+
+    <div class="settings-panel" id="settings-panel">
+      <h3>Quiz settings</h3>
+      <div class="setting-row">
+        <label for="setting-question-time">Time per question (seconds)</label>
+        <input type="range" id="setting-question-time" min="1" max="60" value="20" aria-label="Time per question in seconds">
+        <span class="setting-value" id="question-time-value">20</span>
+        <span>s</span>
+      </div>
+      <div class="setting-row">
+        <label for="setting-wait-between">Wait between questions (seconds)</label>
+        <input type="range" id="setting-wait-between" min="0" max="10" value="10" aria-label="Wait between questions in seconds">
+        <span class="setting-value" id="wait-between-value">10</span>
+        <span>s</span>
+      </div>
+      <div class="setting-row">
+        <label for="setting-no-timers">No timers</label>
+        <input type="checkbox" id="setting-no-timers" aria-label="Disable all timers; use Next question button to advance">
+      </div>
+    </div>
+
+    <div class="progress-tracker hidden" id="progress-tracker">
+      <div class="progress-stats">
+        <span id="progress-current-total">1 / 0</span>
+        <span id="progress-correct">Correct: 0</span>
+        <span id="progress-wrong">Wrong: 0</span>
+      </div>
+      <div class="progress-bar-row">
+        <div class="progress-bar-wrap" id="progress-bar"></div>
+        <span class="progress-pct" id="progress-pct">0%</span>
+      </div>
+    </div>
+
+    <section class="question-container">
+      <h2 class="question-text">Question text will appear here.</h2>
+    </section>
+
+    <div class="options" id="options-container">
+      <!-- Option buttons are generated by displayQuestion() -->
+    </div>
+    <p class="load-warning hidden" id="load-warning" role="alert"></p>
+  </main>
+
+  <script>
+    let questions = {};
+    let activeQuestions = [];
+    let categoryNames = {};
+    let currentQuestionIndex = 0;
+    let questionTimerId = null;
+    let waitTimerId = null;
+    let questionTimeSec = 20;
+    let waitBetweenSec = 10;
+    let noTimersMode = false;
+
+    let isPaused = false;
+    let pauseRemaining = 0;
+    let pausePhase = null;
+    let pauseQuestion = null;
+    let pauseOptionsContainer = null;
+    let questionRemainingSec = 0;
+    let waitRemainingSec = 0;
+    let score = 0;
+    let wrongCount = 0;
+    let answerResults = [];
+
+    const EMBEDDED_MARKDOWN = "## 6. Piatra Naturală\n### Definiții și Clasificări\n1) Cum se numește partea din scoarța terestră din care se exploatează rocile naturale care stau la baza materialelor de construcție sub formă de piatră naturală?\n- a) atmosferă;\n- b) biosferă;\n- c) litosferă;\n- d) stratosferă;\n- e) rockosferă.\n**Răspuns: c**\n2) Alegeți definiția corectă pentru minerale:\n- a) compuși chimici sub formă de roci cu structură cristalină;\n- b) materie primă la fabricarea unor noi materiale de construcții cu aceleași proprietăți fizice și chimice;\n- c) structuri minerale;\n- d) substanțe chimice cu compoziție bine definită;\n- e) materiale de construcții care se găsesc în natură sub formă de roci.\n**Răspuns: d**\n3) Alegeți definiția corectă pentru roci:\n- a) compuși chimici sub formă de roci cu structură cristalină;\n- b) materie primă la fabricarea unor noi materiale de construcții cu aceleași proprietăți fizice și chimice;\n- c) structuri minerale;\n- d) substanțe chimice cu compoziție bine definită;\n- e) materiale de construcții care se găsesc în natură sub formă de roci.\n**Răspuns: c**\n4) În construcții rocile se folosesc ca:\n- a) produse brute, prelucrate chimic modificându-li-se proprietățile fizice și chimice;\n- b) produse prelucrate mecanic, fără a li se modifica proprietățile fizice și chimice;\n- c) materie primă la fabricarea unor noi materiale de construcții cu aceleași proprietăți fizice și chimice;\n- d) materie primă la obținerea de noi materiale de construcții cu proprietăți fizice și chimice modificate;\n- e) produse finisate prin procedee chimice fără a li se schimba proprietățile fizice și chimice.\n**Răspuns: b,d**\n### Clasificarea Rocilor\n5) Rocile care iau naștere ca urmare a solidificării topiturii silicioase în drumul ei spre suprafața pământului se numesc:\n- a) roci sedimentare;\n- b) roci holocristaline;\n- c) roci eruptive;\n- d) roci metamorfice;\n- e) roci magmatice.\n**Răspuns: e**\n6) Rocile care iau naștere ca urmare a depunerilor succesive a produselor de eroziune se numesc:\n- a) roci sedimentare;\n- b) roci holocristaline;\n- c) roci eruptive;\n- d) roci metamorfice;\n- e) roci magmatice.\n**Răspuns: a**\n7) Rocile care iau naștere ca urmare a acțiunii presiunilor și temperaturilor ridicate asupra rocilor preexistente (schimbându-le structura) se numesc:\n- a) roci sedimentare;\n- b) roci holocristaline;\n- c) roci eruptive;\n- d) roci metamorfice;\n- e) roci magmatice.\n**Răspuns: d**\n### Structura și Textura Rocilor\n8) Rocile alcătuite din minerale cristalizate complet se numesc:\n- a) roci cu textură stratificată;\n- b) roci cu textură neorientată (masivă);\n- c) roci cu structură holocristalină;\n- d) roci cu structură hemicristalină;\n- e) roci cu textură șistoasă.\n**Răspuns: c**\n9) Rocile alcătuite din minerale cristaline amestecate cu minerale amorfe se numesc:\n- a) roci cu textură stratificată;\n- b) roci cu textură neorientată (masivă);\n- c) roci cu structură holocristalină;\n- d) roci cu structură hemicristalină;\n- e) roci cu textură șistoasă.\n**Răspuns: d**\n10) Rocile alcătuite din straturi succesive de minerale, fiecare strat fiind alcătuit din alt mineral se numesc:\n- a) roci cu textură stratificată;\n- b) roci cu textură neorientată (masivă);\n- c) roci cu structură holocristalină;\n- d) roci cu structură hemicristalină;\n- e) roci cu textură șistoasă.\n**Răspuns: a**\n11) Rocile alcătuite din minerale nearanjate ordonat în spațiu se numesc:\n- a) roci cu textură stratificată;\n- b) roci cu textură neorientată (masivă);\n- c) roci cu structură holocristalină;\n- d) roci cu structură hemicristalină;\n- e) roci cu textură șistoasă.\n**Răspuns: e**\n12) Rocile alcătuite din straturi succesive de minerale, fiecare strat fiind alcătuit din alt mineral se numesc:\n- a) roci cu textură stratificată;\n- b) roci cu textură neorientată (masivă);\n- c) roci cu structură holocristalină;\n- d) roci cu structură hemicristalină;\n- e) roci cu textură șistoasă.\n**Răspuns: b**\n13) Rocile formate prin răcirea magmei și întărirea ei la adâncime sunt:\n- a) roci granitice;\n- b) roci bazaltice;\n- c) roci efuzive;\n- d) roci intrusive;\n- e) roci filoniene.\n**Răspuns: d**\n14) Rocile formate prin răcirea și întărirea magmei în apropierea scoarței terestre se numesc:\n- a) roci granitice;\n- b) roci bazaltice;\n- c) roci efuzive;\n- d) roci intrusive;\n- e) roci filoniene.\n**Răspuns: e**\n15) Rocile formate prin răcirea bruscă a magmei și întărirea ei la suprafața scoarței terestre se numesc:\n- a) roci granitice;\n- b) roci bazaltice;\n- c) roci efuzive;\n- d) roci intrusive;\n- e) roci filoniene.\n**Răspuns: c**\n16) Granitul și sienitul sunt roci:\n- a) magmatice intrusive;\n- b) magmatice filoniene;\n- c) magmatice efuzive;\n- d) sedimentare detritice;\n- e) sedimentare de precipitație.\n**Răspuns: a**\n17) Porfirele și dacitele filoniene sunt roci:\n- a) magmatice intrusive;\n- b) magmatice filoniene;\n- c) magmatice efuzive;\n- d) sedimentare detritice;\n- e) sedimentare de precipitație.\n**Răspuns: b**\n18) Granodioritul și granitul sunt roci:\n- a) magmatice intrusive;\n- b) magmatice filoniene;\n- c) magmatice efuzive;\n- d) sedimentare detritice;\n- e) sedimentare de precipitație.\n**Răspuns: a**\n19) Bazaltul, andezitul și trahitul sunt roci:\n- a) magmatice intrusive;\n- b) magmatice filoniene;\n- c) magmatice efuzive;\n- d) sedimentare detritice;\n- e) sedimentare de precipitație.\n**Răspuns: c**\n20) Piatra ponce, scoria bazaltică și tufurile vulcanice sunt roci:\n- a) magmatice intrusive;\n- b) magmatice filoniene;\n- c) magmatice efuzive cu structură vitroasă;\n- d) sedimentare detritice;\n- e) sedimentare de precipitație.\n**Răspuns: c**\n21) Grohotișurile, prundișurile, nisipurile și gresiile sunt roci:\n- a) magmatice intrusive;\n- b) magmatice filoniene;\n- c) magmatice efuzive;\n- d) sedimentare detritice;\n- e) sedimentare de precipitație.\n**Răspuns: d**\n22) Ghipsul, tuful calcaros și travertinul sunt roci:\n- a) magmatice intrusive;\n- b) magmatice filoniene;\n- c) magmatice efuzive;\n- d) sedimentare detritice;\n- e) sedimentare de precipitație.\n**Răspuns: e**\n23) Diatomitul și calcarul cochilifer sunt roci:\n- a) sedimentare detritice;\n- b) metamorfice;\n- c) sedimentare de precipitație;\n- d) magmatice filoniene;\n- e) sedimentare organogene.\n**Răspuns: e**\n24) Gnaisul, cuarțitele și marmura sunt roci:\n- a) sedimentare detritice;\n- b) metamorfice;\n- c) sedimentare de precipitație;\n- d) magmatice filoniene;\n- e) sedimentare organogene.\n**Răspuns: b**\n25) Extragerea pietrei naturale se face:\n- a) pe cale manuală cu sapă și lopată;\n- b) pe cale manuală cu pârghii, ciocane de abataj;\n- c) pe cale mecanizată cu dispozitive de tăiat;\n- d) pe cale mecanizată cu excavatoare și dragline;\n- e) cu explozibili.\n**Răspuns: b,c,d,e**\n26) Piatra naturală se utilizează în construcții sub formă de:\n- a) piatră brută, așa cum a fost extrasă;\n- b) piatră brută tratată chimic;\n- c) piatră prelucrată;\n- d) piatră prelucrată chimic;\n- e) agregate naturale și artificiale.\n**Răspuns: a,c,e**\n27) Produsele de balastieră sunt:\n- a) piatra brută;\n- b) piatra prelucrată sub formă de moloane, piatră de talie;\n- c) pavele, calupuri, borduri;\n- d) nisip, pietriș, bolovani și balast;\n- e) treaptă, contratreaptă, solbanc, glaf, plintă, dale etc.\n**Răspuns: d**\n28) Produsele de carieră fasonate pe o față (cea vizibilă) și câțiva cm pe fețe denumesc:\n- a) piatra prelucrată sub formă de moloane;\n- b) piatra brută;\n- c) pavele, calăpuri, borduri;\n- d) nisip, pietriș, bolovani și balast;\n- e) treaptă, contratreaptă, solbanc, glaf, plintă, dale etc.\n**Răspuns: a**\n29) Produsele de carieră fasonate pe toate fețele denumesc:\n- a) piatra brută;\n- b) piatră de talie;\n- c) pavele, calăpuri, borduri;\n- d) nisip, pietriș, bolovani și balast;\n- e) treaptă, contratreaptă, solbanc, glaf, plintă, dale etc.\n**Răspuns: b**\n30) În construcția de drumuri se utilizează:\n- a) moloane;\n- b) piatra prelucrată sub formă de moloane, piatră de talie;\n- c) pavele, calupuri, borduri;\n- d) nisip, pietriș, bolovani și balast;\n- e) treaptă, contratreaptă, solbanc, glaf, plintă, dale etc.\n**Răspuns: c**\n31) Piatra naturală se utilizează și la realizarea următoarelor elemente de construcție finite:\n- a) piatra brută;\n- b) piatra prelucrată sub formă de moloane, piatră de talie;\n- c) pavele, calăpuri, borduri;\n- d) nisip, pietriș, bolovani și balast;\n- e) treaptă, contratreaptă, solbanc, glaf, plintă, dale etc.\n**Răspuns: e**\n32) Din produsele de balastieră fac parte:\n- a) nisipul;\n- b) savura; criblura;\n- c) pietrișul;\n- d) balastul;\n- e) bolovănișul.\n**Răspuns: a,c,d,e**\n33) Prelucrarea pietrei naturale se face prin:\n- a) tăiere;\n- b) cioplire;\n- c) șlefuire și lustruire;\n- d) buciardare;\n- e) concasare.\n**Răspuns: a,b,c,d,e**\n34) Limitarea dintre carosabil și acostament se realizează cu:\n- a) borduri;\n- b) pavele;\n- c) calăpuri;\n- d) bolovani;\n- e) nisip.\n**Răspuns: a**\n35) Produsele de concasare sunt:\n- a) filer, ghips, nisip de concasare și split;\n- b) filer, nisip de concasare, calcar, savură, split și criblură;\n- c) filer, nisip de concasare, savură, split, argilă, criblură, piatră spartă;\n- d) filer, nisip de concasare, savură, split, ghips, calcar, argilă și macadam;\n- e) filer, nisip de concasare, savură, split, criblură obținută prin dublă concasare și piatră spartă.\n**Răspuns: e**\n36) Acțiunea distructivă a aerului atmosferic asupra pietrei naturale are loc prin:\n- a) eroziune;\n- b) cristalizarea sărurilor dizolvate în apă în fisurile elementelor;\n- c) prezența în aerul atmosferic a bioxidului de carbon și a bioxidului de sulf care au caracter acid și atacă componentii mineralogici de natură bazică din piatră dând săruri solubile;\n- d) favorizarea dezvoltării microorganismelor;\n- e) pierderea culorii rocii sub acțiunea razelor solare.\n**Răspuns: a,c,d**\n37) Acțiunea distructivă a agenților agresivi diferă de la o rocă la altă funcție de:\n- a) compoziția mineralogică;\n- b) umiditatea;\n- c) porozitatea și compactitatea;\n- d) caracteristici mecanice;\n- e) structura.\n**Răspuns: a,b,c,d,e**\n38) Acțiunea distructivă a apei asupra elementelor din piatra naturală se manifestă prin:\n- a) eroziune;\n- b) cristalizarea sărurilor dizolvate în apă în fisurile elementelor;\n- c) prezența în aerul atmosferic a bioxidului de carbon și hidroxidului de sulf care au caracter acid și atacă componentii mineralogici de natură bazică din piatră dând săruri solubile;\n- d) favorizarea dezvoltării microorganismelor;\n- e) pierderea culorii rocii sub acțiunea razelor solare.\n**Răspuns: a,b,d**\n39) Care este procentul aproximativ al agregatului în beton?\n- a) 60-65 %\n- b) 80-85 %\n- c) 70-75 %\n- d) 75-80 %\n- e) 85-90 %\n**Răspuns: b**\n40) După natura chimică (și origine), agregatele sunt:\n- a) anorganice și organice;\n- b) naturale și artificiale;\n- c) grele compacte (ρga ≥ 1200 kg/m³) și ușoare poroase (ρga < 1200 kg/m³);\n- d) cu granule rotunjite, poliedrice, lamelare și aciculare;\n- e) cu granulozitate continuă, granulozitate discontinuă și monogranulare.\n**Răspuns: a**\n41) Protecția elementelor din piatră naturală împotriva agenților agresivi se face prin:\n- a) stropirea lor cu apă tot timpul;\n- b) utilizarea de roci cu caracteristici corespunzătoare;\n- c) evitarea suprafețelor orizontale;\n- d) vopsirea suprafețelor elementelor cu miniu de plumb;\n- e) tratarea suprafețelor elementelor cu compuși chimici, cu o soluție de sare sau cu uleiuri sicative.\n**Răspuns: b,c,e**\n42) Agregatele anorganice (după origine) pot fi:\n- a) anorganice și organice;\n- b) naturale și artificiale;\n- c) grele compacte (ρ₉ₐ ≥ 1200 kg/m³) și ușoare poroase (ρ₉ₐ < 1200 kg/m³);\n- d) cu granule rotunjite, poliedrice, lamelare și aciculare;\n- e) cu granulozitate continuă, granulozitate discontinuă și monogranulare.\n**Răspuns: b**\n43) Agregatele organice (după origine) pot fi:\n- a) anorganice și organice;\n- b) naturale și artificiale;\n- c) grele compacte (ρ₉ₐ ≥ 1200 kg/m³) și ușoare poroase (ρ₉ₐ < 1200 kg/m³);\n- d) cu granule rotunjite, poliedrice, lamelare și aciculare;\n- e) cu granulozitate continuă, granulozitate discontinuă și monogranulare.\n**Răspuns: b**\n44) După densitatea în grămadă, agregatele se clasifică în:\n- a) anorganice și organice;\n- b) naturale și artificiale;\n- c) grele compacte (ρ₉ₐ ≥ 1200 kg/m³) și ușoare poroase (ρ₉ₐ < 1200 kg/m³);\n- d) cu granule rotunjite, poliedrice, lamelare și aciculare;\n- e) cu granulozitate continuă, granulozitate discontinuă și monogranulare.\n**Răspuns: c**\n45) După forma granulelor, agregatele pot fi:\n- a) nisip, pietriș, bolovani și balast;\n- b) naturale și artificiale;\n- c) grele compacte (ρ₉ₐ ≥ 1200 kg/m³) și ușoare poroase (ρ₉ₐ < 1200 kg/m³);\n- d) cu granule rotunjite, poliedrice, lamelare și aciculare;\n- e) cu granulozitate continuă, granulozitate discontinuă și monogranulare.\n**Răspuns: d**\n46) După mărime și compoziția granulometrică, agregatele pot fi:\n- a) nisip, pietriș, bolovani și balast;\n- b) naturale și artificiale;\n- c) grele compacte (ρ₉ₐ ≥ 1200 kg/m³) și ușoare poroase (ρ₉ₐ < 1200 kg/m³);\n- d) cu granule rotunjite, poliedrice, lamelare și aciculare;\n- e) cu granulozitate continuă, granulozitate discontinuă și monogranulare.\n**Răspuns: a,e**\n47) După mărimea granulelor, agregatele de balastieră se împart în:\n- a) nisip, pietriș, bolovani și balast;\n- b) naturale și artificiale;\n- c) grele compacte (ρga≥1200kg/m³) și ușoare poroase (ρga<1200kg/m³);\n- d) cu granule rotunjite, poliedrice, lamelare și aciculare;\n- e) cu granulozitate continuă, granulozitate discontinuă și monogranulare.\n**Răspuns: a**\n48) Prin granulozitate - compoziția granulometrică – se înțelege:\n- a) compoziția procentuală (în volume) a diferitelor sorturi sau fracțiuni ce compun un agregat;\n- b) reprezentarea grafică a resturilor (în masă) din seria de ciururi și site standard;\n- c) reprezentarea grafică a procentelor trecerilor (în masă) prin seria de ciururi și site standard;\n- d) compoziția procentuală masică pe sorturi a unui agregat;\n- e) toate granulele de agregat care au granulele de diametru cuprins între două site sau ciururi impuse.\n**Răspuns: d**\n49) Prin curbă granulometrică se înțelege:\n- a) compoziția procentuală (în volume) a diferitelor sorturi sau fracțiuni ce compun un agregat;\n- b) reprezentarea grafică a resturilor (în masă) pe seria de ciururi și site standard;\n- c) reprezentarea grafică a procentelor trecerilor (în masă) prin seria de ciururi și site standard;\n- d) compoziția procentuală (în masă) a diferitelor sorturi și fracțiuni de agregat ce compun un agregat;\n- e) toate granulele de agregat care au granulele de diametru cuprins între două site sau ciururi impuse.\n**Răspuns: c**\n50) Prin sort se înțelege:\n- a) compoziția procentuală (în volume) a diferitelor sorturi sau fracțiuni ce compun un agregat;\n- b) reprezentarea grafică a resturilor (în masă) din seria de ciururi și site standard;\n- c) reprezentarea grafică a procentelor trecerilor (în masă) prin seria de ciururi și site standard;\n- d) compoziția procentuală (în masă) a diferitelor sorturi și fracțiuni de agregat ce compun un agregat;\n- e) toate granulele de agregat care au granulele de diametru maxim și minim cuprins în limite bine stabilite.\n**Răspuns: e**\n51) Nisipul poate fi:\n- a) silicios, calcaros;\n- b) de balastieră, de concasaj;\n- c) monogranlar, poligranular;\n- d) cu granulozitate continuă, cu granulozitate discontinuă;\n- e) având granulele cu diametre cuprinse între 0-15 mm.\n**Răspuns: a,b,c,d**\n52) Agregatele compacte grele sunt:\n- a) scoria bazaltică, piatra ponce, tuful vulcanic;\n- b) granulitul, perlitul expandat, zgura expandată, algoporitul, spărturile ceramice;\n- c) rumegușul, cojile de copac, deșeurile textile, puzderia de in și cânepă, cojile de orez;\n- d) nisip, pietriș, bolovani și balast;\n- e) nisipul de concasaj, filerul, savura, splitul, criblura obținută prin dublă concasare și piatră spartă.\n**Răspuns: d**\n53) Agregatele ușoare naturale anorganice sunt:\n- a) scoria bazaltică, piatra ponce, tuful vulcanic;\n- b) granulitul, perlitul expandat, zgura expandată, algoporitul, spărturile ceramice;\n- c) rumegușul, cojile de copac, deșeurile textile, puzderia de in și cânepă, cojile de orez;\n- d) nisip, pietriș, bolovani și balast;\n- e) nisipul de concasaj, filerul, savura, splitul, criblura obținută prin dublă concasare și piatră spartă.\n**Răspuns: a**\n54) Agregatele ușoare artificiale anorganice sunt:\n- a) scoria bazaltică, piatra ponce, tuful vulcanic;\n- b) granulitul, perlitul expandat, zgura expandată, algoporitul, spărturile ceramice;\n- c) rumegușul, cojile de copac, deșeurile textile, puzderia de in și cânepă, cojile de orez;\n- d) nisip, pietriș, bolovani și balast;\n- e) nisipul de concasaj, filerul, savura, splitul, criblura obținută prin dublă concasare și piatră spartă.\n**Răspuns: b**\n55) Agregatele ușoare organice sunt:\n- a) scoria bazaltică, piatra ponce, tuful vulcanic;\n- b) granulitul, perlitul expandat, zgura expandată, algoporitul, spărturile ceramice;\n- c) rumegușul, cojile de copac, deșeurile textile, puzderia de in și cânepă, cojile de orez;\n- d) nisip, pietriș, bolovani și balast;\n- e) nisipul de concasaj, filerul, savura, splitul, criblura obținută prin dublă concasare și piatră spartă.\n**Răspuns: c**\n56) Agregatele ușoare naturale sau artificiale se obțin prin:\n- a) sfărmarea naturală a rocilor eruptive poroase;\n- b) sfărmarea naturală a rocilor sedimentare poroase;\n- c) concasarea rocilor magmatice;\n- d) concasarea rocilor eruptive poroase;\n- e) concasarea rocilor sedimentare poroase.\n**Răspuns: a,b,d,e**\n57) Agregatele grele compacte au ρga:\n- a) mai mică decât 1200 kg/m³;\n- b) mai mare decât 1200 kg/m³;\n- c) mai mică decât 1800 kg/m³;\n- d) mai mare decât 1800 kg/m³;\n- e) egală cu 2500 kg/m³.\n**Răspuns: b**\n58) Pentru ca un agregat să fie acceptat, acesta trebuie să aibă coeficientul volumic mediu Cvm:\n- a) ≥ 0,18;\n- b) ≥ 0,20;\n- c) ≤ 0,20;\n- d) ≥ 0,15;\n- e) ≤ 0,15.\n**Răspuns: b**\n59) Forma ideală a granulelor agregatelor este:\n- a) sferică;\n- b) rotunjită;\n- c) poliedrică;\n- d) lamelară;\n- e) aciculară.\n**Răspuns: a**\n60) Argila expandată, zgura expandată, granulitul, perlitul expandat sunt:\n- a) agregate anorganice naturale;\n- b) agregate anorganice artificiale;\n- c) agregate organice naturale;\n- d) agregate organice artificiale;\n- e) agregate de concasaj.\n**Răspuns: b**\n61) Agregatele ușoare poroase au ρga:\n- a) mai mică decât 1200 kg/m³;\n- b) mai mare decât 1200 kg/m³;\n- c) mai mică decât 1800 kg/m³;\n- d) mai mare decât 1800 kg/m³;\n- e) egală cu 2500 kg/m³.\n**Răspuns: a**\n62) Prin creșterea progresivă a umidității cu 2% se poate studia:\n- a) conținutul de mică liberă;\n- b) conținutul de carbune;\n- c) humusul;\n- d) părțile levigabile;\n- e) variația de volum (înfoierea) a nisipului.\n**Răspuns: e**\n63) Nisipul se utilizează ca agregat la obținerea:\n- a) varului;\n- b) mortarelor;\n- c) betoanelor;\n- d) ipsosului;\n- e) cimentului.\n**Răspuns: b,c**\n64) Balastul este:\n- a) agregat cu dimensiunea maximă de 10 mm;\n- b) agregat cu dimensiunea maximă de 15 mm;\n- c) agregat cu dimensiunea maximă de 70 mm;\n- d) agregat cu dimensiunea maximă de 150 mm;\n- e) un amestec natural de nisip și pietriș.\n**Răspuns: e**\n65) Prin analiza culorii soluției de 3% hidroxid de sodiu (care s-a turnat peste nisip), la 24 ore de la efectuarea determinării conf. standardelor, se apreciază:\n- a) conținutul de mică liberă;\n- b) conținutul de carbune;\n- c) conținutul de humus;\n- d) părțile levigabile;\n- e) înfoierea nisipului.\n**Răspuns: c**\n66) Impuritățile care se pot îndepărta prin spălarea agregatelor sunt:\n- a) conținutul de mică liberă;\n- b) conținutul de carbune;\n- c) humusul;\n- d) părțile levigabile;\n- e) înfoierea nisipului.\n**Răspuns: d**\n67) Deșeurile de cauciuc sunt agregate:\n- a) agregate anorganice naturale;\n- b) agregate anorganice artificiale;\n- c) agregate de balastieră;\n- d) agregate ușoare organice;\n- e) agregate de concasaj.\n**Răspuns: d**\n68) Pentru a fi acceptat, un agregat trebuie să respecte următoarele condiții cu privire la formă:\n- a) b/a ≥ 0,68;\n- b) c/a ≥ 0,35;\n- c) b/a ≥ 0,66 și c/a ≥ 0,33;\n- d) b/a ≥ 0,60;\n- e) c/a ≥ 0,30;\n**Răspuns: c**\n69) Metoda de prelevare a cantității de agregat necesară determinărilor se numește:\n- a) metoda întregului;\n- b) metoda înjumătățirii;\n- c) metoda proporțiilor;\n- d) metoda fracțiilor;\n- e) metoda sferturilor.\n**Răspuns: e**\n70) Impuritățile vizibile cu ochiul liber se numesc:\n- a) părți lavigabile;\n- b) conținut de humus;\n- c) corpuri străine;\n- d) umiditate;\n- e) absorbție de apă.\n**Răspuns: c**\n71) Cantitatea de apă existentă la un moment dat în agregat se numește:\n- a) părți lavigabile;\n- b) conținut de humus;\n- c) corpuri străine;\n- d) umiditate;\n- e) absorbție de apă.\n**Răspuns: d**\n72) Proprietatea materialului definită cu formula (ms - m)/m * 100%, definește:\n- a) părți lavigabile;\n- b) conținut de humus;\n- c) corpuri străine;\n- d) umiditate;\n- e) absorbție de apă în masă.\n**Răspuns: e**\n73) Când amestecăm nisipul cu apă în cantități mici (2, 4, 6, 8 %) volumul în gramada în stare afânată al acestuia:\n- a) crește;\n- b) scade;\n- c) rămâne constant;\n- d) se înjumătățește;\n- e) se dublează.\n**Răspuns: a**\n74) Cu cât granulele de agregat sunt mai mari volumul de goluri al agregatului este:\n- a) mai mic;\n- b) constant;\n- c) scade;\n- d) crește;\n- e) mai mare.\n**Răspuns: e**\n75) Proprietatea agregatelor caracterizate de formula Va/Vs, definește:\n- a) formula granulelor;\n- b) curba granulometrică;\n- c) coeficientul volumic mediu;\n- d) umiditate absolută;\n- e) umiditate relativă.\n**Răspuns: c**\n76) Raportul b/a al agregatelor acceptate trebuie să aibă valoarea:\n- a) ≥ 0,20;\n- b) ≥ 0,33;\n- c) ≤ 0,66;\n- d) ≤ 0,45;\n- e) ≥ 0,66.\n**Răspuns: e**\n77) Raportul c/a al agregatelor acceptate trebuie să aibă valoarea:\n- a) ≥ 0,20;\n- b) ≥ 0,33;\n- c) ≤ 0,66;\n- d) ≤ 0,45;\n- e) ≥ 0,66.\n**Răspuns: b**\n78) Coeficientul volumic al agregatelor corespunzătoare trebuie să aibă valoarea:\n- a) ≥ 0,20;\n- b) ≥ 0,33;\n- c) ≤ 0,66;\n- d) ≤ 0,45;\n- e) ≥ 0,66.\n**Răspuns: a**\n79) Reprezentarea grafică procentuală masică a trecerilor prin seria de ciururi standard se numește:\n- a) formula granulelor;\n- b) curba granulometrică;\n- c) coeficientul volumic mediu;\n- d) umiditate absolută;\n- e) umiditate relativă.\n**Răspuns: b**\n80) Proprietatea agregatelor definită de formula: (mum - mus)/mus se numește:\n- a) formula granulelor;\n- b) curba granulometrică;\n- c) coeficientul volumic mediu;\n- d) umiditate absolută;\n- e) umiditate relativă.\n**Răspuns: d**\n81) Proprietatea agregatelor definită de formula: (mum - mus)/mum se numește:\n- a) formula granulelor;\n- b) curba granulometrică;\n- c) coeficientul volumic mediu;\n- d) umiditate absolută;\n- e) umiditate relativă.\n**Răspuns: e**\n82) Rocile alcătuite numai din minerale vitroase se numesc:\n- a) roci cu structură holocristalină;\n- b) roci cu structură hemicristalină;\n- c) roci amorfe;\n- d) roci cu textură șistoasă;\n- e) roci cu textură cristalină.\n**Răspuns: c**\n83) Rocile porfirice sunt roci:\n- a) magmatice efuzive;\n- b) sedimentare;\n- c) metamorfice;\n- d) magmatice intrusive;\n- e) magmatice filoniene.\n**Răspuns: e**\n84) Rocile granitice sunt roci:\n- a) magmatice efuzive;\n- b) sedimentare;\n- c) metamorfice;\n- d) magmatice intrusive;\n- e) magmatice filoniene.\n**Răspuns: d**\n85) Rocile bazaltice sunt roci:\n- a) magmatice efuzive;\n- b) sedimentare;\n- c) metamorfice;\n- d) magmatice intrusive;\n- e) magmatice filoniene.\n**Răspuns: a**\n86) Rocile cu structură vitroasă sunt roci:\n- a) magmatice efuzive;\n- b) sedimentare;\n- c) metamorfice;\n- d) magmatice intrusive;\n- e) magmatice filoniene.\n**Răspuns: a**\n87) După domeniul de utilizare, rocile se împart în:\n- a) roci pentru drumuri;\n- b) roci pentru fundații;\n- c) roci pentru construcții civile și industriale;\n- d) roci pentru ziduri de sprijin;\n- e) roci pentru construcții inginerești.\n**Răspuns: c,e**\n88) După densitatea în stare uscată rocile se împart în:\n- a) roci foarte ușoare;\n- b) roci cu densitate medie;\n- c) roci ușoare;\n- d) roci grele;\n- e) roci foarte grele.\n**Răspuns: c,d**\n## 7. Mortarul cu lianți anorganici\n### Definiții și Utilizări\n1) Alegeți definiția corectă pentru mortar:\n- a) amestec bine omogenizat de liant, pietriș și apă care după întărire ajunge la o structură asemănătoare gresiei;\n- b) amestec bine omogenizat de liant, nisip și apă care după întărire ajunge la o structură asemănătoare gresiei;\n- c) amestec bine omogenizat de liant, nisip apă care după întărire ajunge la o structură asemănătoare faianței;\n- d) amestec bine omogenizat de liant, pietriș și apă care după întărire ajunge la o structură asemănătoare faianței;\n- e) amestec bine omogenizat de liant, pietriș și apă care după întărire ajunge la o structură asemănătoare betonului.\n**Răspuns: b**\n2) La prepararea mortarelor se folosesc:\n- a) var, ciment, ipsos, nisip, pietriș, apă și adaosuri;\n- b) var, ciment, ipsos, nisip, apă și adaosuri;\n- c) var, ciment, ipsos, nisip, mărgăritar, apă și adaosuri;\n- d) var, ciment, ipsos, nisip, pietriș, bolovani și apă;\n- e) var, ciment, ipsos, nisip, macadam și apă.\n**Răspuns: b**\n3) La prepararea mortarelor se utilizează următorii aditivi:\n- a) aditivi plastificanți;\n- b) adaosuri hidraulice;\n- c) coloranți;\n- d) aceleratori și întârzieri de priză;\n- e) adaosuri impermeabilizatoare.\n**Răspuns: a,c,d**\n4) Mortarele pot fi utilizate la:\n- a) executarea zidăriilor;\n- b) turnarea stâlpilor și grinzilor;\n- c) executarea tencuielilor;\n- d) impermeabilizarea unor suprafețe;\n- e) protecția antiacidă, izolarea termică și fonică.\n**Răspuns: a,c,d,e**\n5) După domeniul de utilizare mortarele sunt:\n- a) mortare obișnuite de zidărie și tencuieli;\n- b) mortare obișnuite pentru stâlpi și grinzi;\n- c) mortare speciale pentru tencuieli decorative, anticorozive, refractare, de rezistență și hidrofuge;\n- d) mortare speciale de zidărie și tencuieli;\n- e) mortare speciale pentru plăci și pereți.\n**Răspuns: a,c,d**\n### Clasificarea Mortarelor\n12) După raportul liant/nisip, folosit la prepararea lor, mortarele sunt:\n- a) mortare slabe având raportul L/N=[1/5...1/7];\n- b) mortare simple având raportul L/N=[1/5...1/7];\n- c) mortare mijlocii având raportul L/N=[1/3...1/5];\n- d) mortare normale având raportul L/N=[1/3...1/5];\n- e) mortare grase având raportul L/N=[1/1...1/2].\n**Răspuns: a,c,e**\n13) După clasa, mortarele pot fi (rezistența la compresiune la 28 zile):\n- a) M4, M25, M50, M150;\n- b) M1Z, M2,5Z, M5Z, M10Z, M20Z;\n- c) M4, M10, M25, M50, M100, M150, M200;\n- d) M10, M25, M50, M100;\n- e) CSI; CSII; CSIII; CSIV.\n**Răspuns: b,e**\n14) Tipul de liant utilizat la prepararea mortarelor se alege în funcție de:\n- a) locul unde este amplasat obiectivul (sat, oraș);\n- b) mediul în care va fi utilizat (uscat sau umed);\n- c) destinația mortarului (zidărie, tencuială, special);\n- d) rezistențele mecanice necesare;\n- e) rezistențele chimice necesare.\n**Răspuns: b,c,d,e**\n15) Pentru lucrări de calitate liantul trebuie să îndeplinească următoarele condiții:\n- a) varul să nu conțină părți nestinse;\n- b) varul să nu conțină părți de Ca(OH) ca gel;\n- c) ipsosul să nu conțină granule de ghips;\n- d) ipsosul va fi utilizat numai în mediul uscat;\n- e) cimentul va fi utilizat de obicei în amestec cu ipsos pentru o priză mai bună.\n**Răspuns: a,d**\n16) Nisipul utilizat la prepararea mortarelor trebuie să:\n- a) aibă curba granulometrică corespunzătoare;\n- b) să nu conțină humus, mică, săruri solubile, cărbuni;\n- c) fie monogranular;\n- d) conțină granule aciculare;\n- e) nu conțină granule aciculare.\n**Răspuns: a,b,e**\n### Prepararea și Proprietățile Mortarelor\n17) La înfoierea nisipului:\n- a) volumul în grămadă crește;\n- b) densitatea în grămadă în stare afânată crește;\n- c) volumul de goluri scade;\n- d) volumul lui scade;\n- e) densitatea în grămadă în stare afânată scade.\n**Răspuns: a,e**\n18) La prepararea mortarelor se poate utiliza:\n- a) apă potabilă;\n- b) apă din lac sau râu;\n- c) ape minerale neutre față de hârtia de turnesol (neutre, slab alcaline, slab acide);\n- d) apă de mare neutre față de hârtia de turnesol (neutre, slab alcaline, slab acide);\n- e) apă de mare.\n**Răspuns: a,b,c,d**\n19) După gradul de finisare tencuielile pot fi:\n- a) brute;\n- b) drișcuite;\n- c) gletuite;\n- d) sclivisite;\n- e) decorative.\n**Răspuns: a,b,c,d,e**\n20) Practic, rețeta unui mortar se stabilește prin:\n- a) utilizarea rezultatelor stabilite;\n- b) utilizarea experienței în domeniul dulgherului;\n- c) utilizarea tablelor;\n- d) utilizarea diagramelor nisip/ciment/apă;\n- e) utilizarea curbei granulometrice la pietriș.\n**Răspuns: c**\n### Prepararea Mortarelor\n21) Mortarele de ipsos se prepară:\n- a) mecanic în malaxoare sau betoniere introducerea componentelor făcându-se în ordinea: apă (lapte de var), ciment, nisip, și restul apei (lapte de var) până la consistența dorită;\n- b) mecanic în malaxoare sau betoniere introducerea componentelor făcându-se în ordinea: ciment, nisip, apă (lapte de var);\n- c) mecanic în malaxoare sau betoniere introducerea componentelor făcându-se în ordinea: nisip, ciment, apă (lapte de var);\n- d) manual, introducându-se apă peste ipsos;\n- e) manual, introducându-se ipsos în apă numai atât cât poare fi pus în operă până la începutul prizei.\n**Răspuns: e**\n22) Prepararea mortarelor pe bază de ciment se face:\n- a) mecanic în malaxoare sau betoniere, introducerea componentelor făcându-se în ordinea: lapte de var, ciment, nisip;\n- b) mecanic în malaxoare sau betoniere, introducerea componentelor făcându-se în ordinea: ciment, nisip, apă (lapte de var);\n- c) mecanic în malaxoare sau betoniere, introducerea componentelor făcându-se în ordinea: nisip, ciment, apă (lapte de var);\n- d) manual, introducându-se apă peste ipsos în orice cantitate;\n- e) manual, introducându-se ipsos în apă numai atât cât poare fi pus în operă până la începutul prizei.\n**Răspuns: c**\n23) Înainte de punerea în operă mortarul va fi obligatoriu:\n- a) verificat dacă corespunde rețetei;\n- b) reamestecat până la omogenizare;\n- c) reamestecat pentru eliminarea apei;\n- d) reamestecat pentru a elimina tendința de segregare;\n- e) verificat dacă are suficient liant.\n**Răspuns: b,d**\n24) Manual mortarele de ciment se prepară:\n- a) pe pământ, ordinea de punere pe platformă fiind: ciment, apă, var, nisip;\n- b) pe o platformă de lemn sau beton, ordinea de punere pe platformă fiind: apă, var, ciment, nisip;\n- c) pe o platformă de lemn sau beton, ordinea de punere pe platformă fiind: nisip, var, apă, ciment;\n- d) pe o platformă de lemn sau beton, ordinea de punere pe platformă fiind: nisip, ciment, apă, var;\n- e) pe o platformă de lemn sau beton, ordinea de punere pe platformă fiind: nisip, ciment, lapte de var și apă.\n**Răspuns: e**\n25) Mortarele de var se prepară:\n- a) în găleți;\n- b) în lăzi de lemn;\n- c) pe platforme betonate;\n- d) pe o platformă de lemn;\n- e) pe o platformă de lemn sau beton.\n**Răspuns: b**\n### Straturile Tencuielilor\n26) O tencuială pe un perete de beton este alcătuită din următoarele straturi:\n- a) șpriț;\n- b) grund;\n- c) tinci;\n- d) șmir;\n- e) glet.\n**Răspuns: a,b,c**\n27) Stratul de tencuială care asigură legătura dintre stratul suport din beton și tencuială propriu-zisă se numește:\n- a) șpriț;\n- b) grund;\n- c) tinci;\n- d) șmir;\n- e) glet.\n**Răspuns: a**\n28) Stratul care asigură eliminarea denivelărilor grosiere având grosimea 8-20 mm, executat din mortar vârtos-plastic, se numește:\n- a) șpriț;\n- b) grund;\n- c) tinci;\n- d) șmir;\n- e) glet.\n**Răspuns: b**\n29) Stratul care asigură planeitatea finală a tencuieli, având grosimea de maxim 5 mm, realizat cu un nisip 0-1, se numește:\n- a) șpriț;\n- b) grund;\n- c) tinci;\n- d) șmir;\n- e) glet.\n**Răspuns: c**\n30) Primul strat la tencuieli pe rabiț, realizat din mortar de ipsos, având rolul de a ancora tencuiala în plasă, se numește:\n- a) șpriț;\n- b) grund;\n- c) tinci;\n- d) șmir;\n- e) glet.\n**Răspuns: d**\n31) Stratul suport pentru vopsitoriile în ulei, se numește:\n- a) șpriț;\n- b) grund;\n- c) tinci;\n- d) șmir;\n- e) glet.\n**Răspuns: e**\n### Tipuri de Tencuieli\n32) Tencuiala brută este alcătuită din următoarele straturi:\n- a) șpriț, grund, tinci;\n- b) șpriț, grund, tinci, glet;\n- c) grund-strat de 2 cm grosime;\n- d) șmir, grund, tinci;\n- e) grund, tinci.\n**Răspuns: c**\n33) Tencuiala pe zidăria de cărămidă este alcătuită din următoarele straturi:\n- a) șpriț, grund, tinci;\n- b) grund, tinci, glet;\n- c) grund-strat de 2 cm grosime;\n- d) șmir, grund, tinci;\n- e) grund, tinci.\n**Răspuns: b,e**\n34) Tencuiala pe beton este alcătuită din următoarele straturi:\n- a) șpriț, grund, tinci;\n- b) șpriț, grund, tinci, glet;\n- c) grund-strat de 2 cm grosime;\n- d) șmir, grund, tinci;\n- e) grund, tinci.\n**Răspuns: a,b**\n35) Tencuiala pe beton în mediul umed sau care trebuie vopsită în ulei are următoarele straturi:\n- a) șpriț, grund, scliviseală;\n- b) șpriț, grund, tinci, glet;\n- c) grund-strat de 2 cm grosime;\n- d) șmir, grund, tinci;\n- e) grund, tinci.\n**Răspuns: a,b**\n36) Tencuielile pe rabiț au următoarele straturi:\n- a) șpriț, grund, tinci;\n- b) șpriț, grund, tinci, glet;\n- c) grund-strat de 2 cm grosime;\n- d) șmir, grund, tinci;\n- e) șmir, grund, tinci și glet.\n**Răspuns: d,e**\n37) Cele mai frecvente tencuieli decorative sunt:\n- a) tencuieli cu praf de piatră;\n- b) tencuieli cu ipsos;\n- c) tencuieli cu mozaic;\n- d) tencuieli cu humus;\n- e) tencuieli colorate.\n**Răspuns: a,e**\n### Defecte și Proprietăți ale Mortarelor\n38) Defectele în tencuieli sunt:\n- a) împușcăturile;\n- b) crăpăturile;\n- c) decolorarea;\n- d) eflorescențele;\n- e) grosimi neuniforme.\n**Răspuns: a,b,d**\n39) Consistența mortarelor se determină cu:\n- a) vasul cilindric având înălțimea de 30cm;\n- b) conul etalon;\n- c) aparatul Fruhling-Michaels\n- d) presa hidraulică;\n- e) cu aparatul cu strat absorbant.\n**Răspuns: b**\n40) Tendința de segregare a mortarelor se determină cu:\n- a) vasul cilindric având înălțimea de 30cm;\n- b) conul etalon;\n- c) aparatul Fruhling-Michaels;\n- d) presa hidraulică;\n- e) cu aparatul cu strat absorbant.\n**Răspuns: a**\n41) Capacitatea de reținere a apei la mortare se determină cu:\n- a) vasul cilindric având înălțimea de 30cm;\n- b) conul etalon;\n- c) aparatul Fruhling-Michaels;\n- d) presa hidraulică;\n- e) cu aparatul cu strat absorbant.\n**Răspuns: e**\n42) Rezistența la întindere din încovoiere a mortarelor se determină cu:\n- a) vasul cilindric având înălțimea de 30cm;\n- b) conul etalon;\n- c) aparatul Fruhling-Michaels;\n- d) masa vibrantă;\n- e) cu aparatul cu strat absorbant.\n**Răspuns: c**\n43) Rezistența la compresiune a mortarelor se determină cu:\n- a) vasul cilindric având înălțimea de 30cm;\n- b) conul etalon;\n- c) aparatul Fruhling-Michaels;\n- d) presa hidraulică;\n- e) cu aparatul cu strat absorbant.\n**Răspuns: d**\n### Proprietăți Mecanice ale Mortarelor\n44) Tendința de segregare a mortarului este:\n- a) rezistența lui la compresiune;\n- b) rezistența lui la întindere din încovoiere;\n- c) densitatea lui în stare vibrantă;\n- d) proprietatea lui de a se separa în părțile componente;\n- e) densitatea lui aparentă în stare întărită.\n**Răspuns: d**\n45) Proprietatea mortarului determinată pe resturi de prismă 4 x 4 x 16 cm este:\n- a) rezistența la compresiune;\n- b) rezistența la întindere din încovoiere;\n- c) densitatea în stare presată;\n- d) proprietatea de a se separa în părțile componente;\n- e) densitatea aparentă în stare întărită.\n**Răspuns: a**\n46) Proprietatea mortarului determinată pe prisme 4 x 4 x 16 cm este:\n- a) rezistența la compresiune;\n- b) rezistența la întindere din încovoiere;\n- c) densitatea în stare compactată;\n- d) proprietatea de a se separa în părțile componente;\n- e) densitatea lui aparentă în stare întărită.\n**Răspuns: b**\n47) Proprietatea mortarului determinată cu formula ... = (mpils - mvas)/Vvas este:\n- a) rezistența la compresiune;\n- b) rezistența la întindere din încovoiere;\n- c) densitatea în stare proaspătă;\n- d) proprietatea de a se separa în părțile componente;\n- e) densitatea aparentă în stare întărită.\n**Răspuns: c**\n## 8. Betonul cu lianți anorganici\n### Definiții și Clasificări\n1) Betonul întărit este un material de construcție alcătuit din:\n- a) agregat, liant, apă;\n- b) agregat, liant, aer, apă;\n- c) agregat, liant, apă și aditivi;\n- d) piatra de ciment, agregate, bitum;\n- e) agregat, liant, apă, aer și aditivi.\n**Răspuns: a**\n2) Betonul proaspăt este un material de construcție alcătuit din:\n- a) agregat, liant, apă, var;\n- b) nisip, liant, aer, apă;\n- c) nisip, liant, apă și aditivi;\n- d) nisip, liant, aer și aditivi;\n- e) agregat, liant, apă.\n**Răspuns: e**\n3) Scheletul rigid al betonului este dat de:\n- a) piatra de ciment;\n- b) piatra de ciment și agregat;\n- c) agregate;\n- d) liantul amestecat cu apă și întărit;\n- e) agregatul amestecat cu liant.\n**Răspuns: c**\n4) Avantajele utilizării betonului în construcții sunt:\n- a) preț de cost redus;\n- b) întărire rapidă;\n- c) utilizează materiale locale;\n- d) se pot turnă elemente având formele dorite;\n- e) se comportă foarte bine la compresiune.\n**Răspuns: a,c,d,e**\n5) Dezavantajele utilizării betonului în construcții sunt:\n- a) preț de cost mare față de metal;\n- b) preț de cost mic față de lemn;\n- c) greutate mare a elementelor realizate din beton față de cele din lemn și metal;\n- d) greutate mică a elementelor realizate din beton față de cele din lemn și metal;\n- e) timpul lung până pot fi decofrate.\n**Răspuns: c,e**\n### Tipuri de Beton\n6) Betonul simplu întărit este:\n- a) amestec compozit alcătuit din agregat, liant, apă cu structură rigidă;\n- b) amestec de agregat și piatră de ciment cu structură rigidă;\n- c) amestec de apă, liant, agregat eventual aditivi, din momentul amestecării componentelor până în momentul începerii prizei liantului;\n- d) amestec de agregat, piatră de ciment, armătură cu structură rigidă;\n- e) amestec de apă, liant, agregat, armătură eventual aditivi din momentul amestecării.\n**Răspuns: b**\n7) Betonul armat este:\n- a) amestec compozit alcătuit din agregat, liant, apă cu structură rigidă;\n- b) amestec bine omogenizat alcătuit din agregat și piatră de ciment cu structură rigidă;\n- c) amestec de apă, liant, agregat eventual aditivi, din momentul amestecării componentelor până în momentul începerii prizei liantului;\n- d) amestec de agregat, piatră de ciment, armătură având o structură rigidă;\n- e) amestec de apă, liant, nisip, armătură eventual aditivi din momentul amestecării.\n**Răspuns: d**\n8) Lucrabilitatea este proprietatea betonului definită ca:\n- a) ușurința cu care se pune în operă betonul;\n- b) mobilitatea unui beton proaspăt sub acțiunea masei proprii sau a unor forțe exterioare care acționează asupra lui;\n- c) creșterea înălțimii grămezii de beton sub formă de trunchi de con sub masă proprie;\n- d) creșterea volumului betonului sub acțiunea unor șocuri;\n- e) timpul în care betonul deformat revine la forma inițială.\n**Răspuns: a**\n9) Tasarea este proprietatea betonului definită ca:\n- a) ușurința cu care se pune în operă betonul;\n- b) mobilitatea unui beton proaspăt sub acțiunea masei proprii sau a unor forțe exterioare care acționează asupra lui;\n- c) micșorarea înălțimii grămezii de beton proaspăt sub formă de trunchi de con sub masă proprie;\n- d) micșorarea volumului betonului sub acțiunea unor șocuri;\n- e) timpul în care betonul deformat revine la forma inițială.\n**Răspuns: c**\n10) Gradul de compactare este proprietatea betonului definită ca:\n- a) ușurința cu care se pune în operă betonul;\n- b) mobilitatea unui beton proaspăt sub acțiunea masei proprii sau a unor forțe exterioare care acționează asupra lui;\n- c) micșorarea înălțimii grămezii de beton sub formă de trunchi de con sub masă proprie;\n- d) micșorarea volumului betonului sub acțiunea unor șocuri;\n- e) timpul în care betonul deformat revine la forma inițială.\n**Răspuns: d**\n### Proprietăți ale Betonului\n11) Remodelarea este proprietatea betonului definită ca:\n- a) ușurința cu care se pune în operă betonul;\n- b) mobilitatea unui beton proaspăt sub acțiunea masei proprii sau a unor forțe exterioare care acționează asupra lui;\n- c) micșorarea înălțimii grămezii de beton sub formă de trunchi de con sub masă proprie;\n- d) micșorarea volumului betonului sub acțiunea unor șocuri;\n- e) timpul în care betonul deformat revine la forma inițială sub acțiunea vibrațiilor.\n**Răspuns: e**\n12) Notațiile următoare P40; P80; P420; P820 și P1220 se referă la:\n- a) rezistența la compresiune a betonului;\n- b) rezistența la îngheț-dezgheț a betonului;\n- c) permeabilitatea betonului;\n- d) penetrarea betonului;\n- e) densitatea aparentă a betonului.\n**Răspuns: c**\n13) Notațiile: C8/10 ; C25/30 și C50/60 se referă la:\n- a) rezistența la compresiune a betonului;\n- b) rezistența la îngheț-dezgheț a betonului;\n- c) permeabilitatea betonului;\n- d) penetrarea betonului;\n- e) densitatea aparentă a betonului.\n**Răspuns: a**\n14) Notațiile: G25 ; G50 și G100 se referă la:\n- a) rezistența la compresiune a betonului;\n- b) rezistența la îngheț-dezgheț a betonului;\n- c) permeabilitatea betonului;\n- d) penetrarea betonului;\n- e) densitatea aparentă a betonului.\n**Răspuns: b**\n15) Valorile: 2000 kg/m³; 2500 kg/m³ și 1800 kg/m³ reprezintă:\n- a) rezistența la compresiune a betonului;\n- b) rezistența la îngheț-dezgheț a betonului;\n- c) permeabilitatea betonului;\n- d) penetrarea betonului;\n- e) densitatea aparentă a betonului.\n**Răspuns: e**\n### Clasificarea Betonului\n16) Rezistența medie la compresiune la 28 de zile determinată pe cuburi cu latura de 200 mm în daN/cm² se numește:\n- a) clasa betonului (S.R.);\n- b) clasa betonului (STAS);\n- c) duritatea betonului;\n- d) marca betonului;\n- e) omogenitatea betonului.\n**Răspuns: d**\n17) Rezistența minimă la compresiune la 28 zile determinată pe cuburi cu latura de 141 mm sub a cărui valoare nu pot fi mai mult de 5% din rezistențele la compresiune determinate exprimată în N/mm² este:\n- a) clasa betonului (S.R);\n- b) clasa betonului (STAS);\n- c) duritatea betonului;\n- d) marca betonului;\n- e) omogenitatea betonului.\n**Răspuns: b**\n18) Rezistența minimă la compresiune la 28 zile determinată pe cilindru 150/300 mm sau cuburi cu latura de 150 mm sub a cărui valoare nu pot fi mai mult de 5% din rezistențele la compresiune determinate exprimată în N/mm² este:\n- a) clasa betonului (S.R);\n- b) clasa betonului (STAS);\n- c) duritatea betonului;\n- d) marca betonului;\n- e) omogenitatea betonului.\n**Răspuns: a**\n### Factori de Influiență în Prepararea Betonului\n19) La alegerea tipului de liant se ține seama de:\n- a) clasa betonului;\n- b) viteza de întărire a betonului;\n- c) condițiile de preparare, transport și punere în operă a betonului;\n- d) condițiile de exploatare a structurii care se realizează cu betonul;\n- e) cantitatea de beton necesară.\n**Răspuns: a,b,c,d**\n20) Raportul A/C la calculul rețetei de beton se alege funcție de:\n- a) clasa betonului;\n- b) tipul de ciment;\n- c) dimensiunea granulelor;\n- d) modalitatea de vibrare a betonului;\n- e) gradul de impermeabilitate impus prin proiect.\n**Răspuns: a,b**\n21) Dozajul de ciment este în funcție de:\n- a) clasa betonului;\n- b) dimensiunea granulelor;\n- c) condițiile de expunere;\n- d) condițiile de transport;\n- e) modalitatea de vibrare a betonului;\n**Răspuns: a,c**\n22) Cantitatea de apă de amestecare este funcție de:\n- a) consistența betonului impusă prin proiect;\n- b) dimensiunea maximă a granulei de agregat;\n- c) tipul de agregat utilizat;\n- d) existența aditivului (da sau nu);\n- e) tipul de liant utilizat.\n**Răspuns: a,b,c,d,e**\n### Dimensiuni și Granulozitate\n23) Dimensiunea maximă a granulei de agregat este funcție de:\n- a) tipul construcției;\n- b) consistența betonului;\n- c) dimensiunea minimă a elementului în care se toarnă betonul;\n- d) condițiile de preparare și transport;\n- e) distanța dintre armături.\n**Răspuns: c,e**\n24) Zona granulometrică a agregatului este determinată de:\n- a) tipul de impurități;\n- b) tipul liantului;\n- c) dozajul liantului;\n- d) clasa de tasare a betonului;\n- e) tehnologia de punere în operă a betonului:\n**Răspuns: c,d**\n### Aditivi și Adaosuri\n25) Aditivii sunt:\n- a) materiale omogene fine care se adaugă în beton pentru a-i îmbunătăți anumite proprietăți în proporție mai mare de 5% din cantitatea de liant;\n- b) materiale naturale, artificiale sub formă de granule poroase care au densitate în grămadă în stare afânată mai mică de 900 kg/m³;\n- c) materiale de construcții bogate în hidroxid de siliciu, solubil în soluții alcaline, întrebuințate ca adausuri hidraulice la fabricarea cimentului;\n- d) materiale granulare naturale sau artificiale sub formă de granule care au densitatea în grămadă în stare afânată mai mare de 2000 kg/m³;\n- e) produse chimice ce se adaugă în betoane în cantități mici, până la 5% din cantitatea de liant înainte sau în timpul amestecării lui în scopul modificării proprietăților betonului în stare proaspătă sau întărită.\n**Răspuns: e**\n26) Adaosurile sunt:\n- a) substanțe solide, insolubile în apă, care se adaugă în beton pentru a-i îmbunătăți anumite proprietăți în proporție mai mare de 5% din cantitatea de liant;\n- b) materiale naturale, artificiale sub formă de granule poroase care au densitate în grămadă în stare afânată mai mică de 900 kg/m³;\n- c) materiale de construcții bogate în hidroxid de siliciu, solubil în soluții alcaline, întrebuințate ca adausuri hidraulice la fabricarea cimentului;\n- d) materiale granulare naturale sau artificiale sub formă de granule care au densitatea în grămadă în stare afânată mai mare de 2000 kg/m³;\n- e) produse chimice ce se adaugă în betoane în cantități mici, până la 5% din cantitatea de liant înainte sau în timpul amestecării lui în scopul modificării proprietăților betonului în stare proaspătă sau întărită.\n**Răspuns: a**\n27) Agregatele ușoare sunt:\n- a) materiale omogene fine care se adaugă în beton pentru a-i îmbunătăți anumite proprietăți în proporție mai mare de 5% din cantitatea de liant;\n- b) materiale naturale, artificiale sub formă de granule poroase care au densitate în grămadă în stare afânată mai mică de 1200 kg/m³;\n- c) materiale de construcții bogate în hidroxid de siliciu, solubil în soluții alcaline, întrebuințate ca adausuri hidraulice la fabricarea cimentului;\n- d) materiale granulare naturale sau artificiale sub formă de granule care au densitatea în grămadă în stare afânată mai mare de 2000 kg/m³;\n- e) produse chimice ce se adaugă în betoane în cantități mici, până la 5% din cantitatea de liant înainte sau în timpul amestecării lui în scopul modificării proprietăților betonului în stare proaspătă sau întărită.\n**Răspuns: b**\n28) Agregatele grele sunt:\n- a) materiale omogene fine care se adaugă în beton pentru a-i îmbunătăți anumite proprietăți în proporție mai mare de 5% din cantitatea de liant;\n- b) materiale naturale, artificiale sub formă de granule poroase care au densitate în grămadă în stare afânată mai mică de 900 kg/m³;\n- c) materiale de construcții bogate în hidroxid de siliciu, solubil în soluții alcaline, întrebuințate ca adausuri hidraulice la fabricarea cimentului;\n- d) materiale granulare naturale sau artificiale sub formă de granule care au densitatea în grămadă în stare afânată mai mare de 1200 kg/m³;\n- e) produse chimice ce se adaugă în betoane în cantități mici, până la 5% din cantitatea de liant în scopul modificării proprietăților betonului.\n**Răspuns: d**\n### Rolul Aditivilor și Adaosurilor\n29) Aditivii utilizați la betoane sunt:\n- a) organici și anorganici;\n- b) electrolitii și plastifianti;\n- c) inerți și activi;\n- d) întârzietori de priză;\n- e) acceleratori de priză.\n**Răspuns: a,d,e**\n30) Aditivii utilizați la prepararea betonului au rolul de a:\n- a) accelera priza liantului;\n- b) accelera întărirea betonului;\n- c) mări gelivitatea și impermeabilitatea betonului;\n- d) îmbunătăți lucrabilitatea betonului;\n- e) îmbunătăți rezistența la agresivitate chimică a betonului;\n**Răspuns: a,b,c,d,e**\n31) Adaosurile utilizate la prepararea betonului sunt:\n- a) insolubile în apă;\n- b) electrolite și plastifiante;\n- c) inerte și/sau activ-hidraulice;\n- d) întârzietoare de priză;\n- e) acceleratoare de priză.\n**Răspuns: a,c**\n32) Rolul adaosurilor la prepararea betoanelor este:\n- a) de a accelera priza liantului;\n- b) de a îmbunătăți proprietățile betonului;\n- c) de a mări compactitatea betonului;\n- d) de a îmbunătăți lucrabilitatea betonului;\n- e) de a îmbunătăți rezistența la agresivitate chimică a betonului;\n**Răspuns: b,c,d,e**\n### Punerea în Operă a Betonului\n33) Betonul se poate pune în operă (după modul de turnare):\n- a) normal;\n- b) prin injectare;\n- c) prin pompare;\n- d) prin turnare sub apă;\n- e) prin autoclavizare.\n**Răspuns: a,b,c,d**\n34) Compactarea betonului se face prin:\n- a) compactare manuală;\n- b) vibrare;\n- c) vacuumare;\n- d) supervibrare;\n- e) torcretare.\n**Răspuns: a,b,c,e**\n### Condiții de Întărire\n35) Mediul exterior influențează proprietățile betonului prin:\n- a) umiditate;\n- b) capilaritate;\n- c) temperatură;\n- d) permeabilitate;\n- e) absorbție.\n**Răspuns: a,c**\n36) Pentru a preîntâmpina pierderea masivă a apei în primele 7-14 zile betonul va fi:\n- a) acoperit cu folie de aluminiu;\n- b) acoperit cu rogojini;\n- c) acoperit cu folie de polietilenă;\n- d) stropit cât se poate de des cu jet de apă;\n- e) protejat prin împrăștierea pe suprafața lui a unor substanțe hidrofobe.\n**Răspuns: b,c,e**\n37) Condițiile ideale pentru întărirea betonului sunt între temperaturile:\n- a) -4°C și +4°C;\n- b) -4°C și 0°C;\n- c) 0°C și 20°C;\n- d) +5°C și 20°C;\n- e) 0°C și 10°C.\n**Răspuns: d**\n### Tratamente Termice\n38) Turnarea betonului pe timp friguros se face luând următoarele măsuri:\n- a) se încălzesc agregatele și apa;\n- b) se adaugă până la 5% din cantitatea de liant un accelerator de priză;\n- c) se adaugă ipsos pentru a accelera întărirea;\n- d) se încălzesc cofrajele;\n- e) se înfășoară elementele turnate în elemente termoizolante minim 3 zile.\n**Răspuns: a,b,d,e**\n39) Influența acțiunii umidității mari, concomitent cu temperaturi ridicate, la presiune constantă, are asupra betonului un efect:\n- a) benefic prin creșterea timpului de decofrare;\n- b) distructiv prin reducerea timpului de decofrare;\n- c) benefic prin creșterea compactității;\n- d) benefic prin reducerea timpului de decofrare;\n- e) de reducere a rezistențelor mecanice finale față de betonul întărit normal.\n**Răspuns: d,e**\n40) Supunerea elementelor de beton la acțiunea simultană a temperaturilor și umidităților ridicate, la presiune constantă, poate fi numită:\n- a) tratament termic;\n- b) tratament baric;\n- c) tratament chimic la umiditate mare;\n- d) aburire;\n- e) autoclavizare.\n**Răspuns: a,d**\n41) Aburirea este tratamentul termic de:\n- a) supunere a betonului la presiune normală, umiditate 90 – 95% și o temperatură de 80 – 90°C;\n- b) supunere a betonului la presiune de 1,5 atm, umiditate 90 – 95% și o temperatură de 100 – 120°C;\n- c) supunere a betonului la acțiunea unor aburi suprasaturați la presiunea de 4 – 8 atm. și la o temperatură de 150 – 180°C;\n- d) supunere a betonului la acțiunea unor aburi suprasaturați la presiunea de 8 – 12 atm. și la o temperatură de 120 – 150°C;\n- e) supunere a betonului la cicluri repetate de îngheț-dezgheț.\n**Răspuns: a**\n42) Autoclavizarea este tratamentul termic de:\n- a) supunere a betonului la presiune normală, umiditate 90 – 95% și o temperatură de 80 – 90°C;\n- b) supunere a betonului la presiune de 1,5 atm, umiditate 90 – 95% și o temperatură de 100 – 120°C;\n- c) supunere a betonului la acțiunea unor aburi suprasaturați la presiunea de 4 – 8 atm. și la o temperatură de 150 – 180°C;\n- d) supunere a betonului la acțiunea unor aburi suprasaturați la presiunea de 2 – 12 atm. și la o temperatură de 120 – 190°C;\n- e) supunere a betonului la acțiunea unor aburi suprasaturați la presiunea de 2 – 4 atm. și la o temperatură de 150 – 180°C.\n**Răspuns: d**\n### Efectele Tratamentelor Termice\n43) Aburirea:\n- a) reduce timpul de decofrare;\n- b) reduce rezistentele mecanice finale;\n- c) crește rezistentele mecanice finale;\n- d) duce la o întărire rapidă a betonului;\n- e) este bine să înceapă după zece ore de la turnare.\n**Răspuns: a,b,d**\n44) Vacumarea:\n- a) duce la o întărire mai rapidă a betonului;\n- b) reduce raportul A/C;\n- c) crește rezistentele mecanice finale;\n- d) crește rezistența la gelivitate;\n- e) scade permeabilitatea.\n**Răspuns: a,b,c,d,e**\n### Tipuri Speciale de Beton\n45) Betoanele de mare rezistență se obțin utilizând:\n- a) cimenturi de clasă normală;\n- b) dozaj sporit de ciment portland fără adaosuri;\n- c) raportul A/C redus;\n- d) agregate de concasaj;\n- e) agregate de râu.\n**Răspuns: b,c,d**\n46) Betoanele de mare rezistență:\n- a) au clasa mai mare de 40 N/mm²;\n- b) se utilizează la clădiri cu deschideri mari;\n- c) se utilizează la realizarea elementelor de dimensiuni mici;\n- d) au o rezistență foarte bună la transfer termic;\n- e) sunt bune izolatoare fonice.\n**Răspuns: a,b**\n47) Betoanele hidrotehnice sunt betoane care:\n- a) au zone aflate permanent în contact cu apa;\n- b) au zone aflate periodic în contact cu apa;\n- c) rezistă la îngheț-dezgheț;\n- d) prezintă fenomenul de umflare;\n- e) rezistă la acțiunea corozivă a apelor.\n**Răspuns: a,b,c,e**\n48) Betoanele hidrotehnice se:\n- a) obțin prin utilizarea lianților speciali;\n- b) obțin prin utilizarea de agregate speciale rezistente la apă;\n- c) obțin utilizând adausuri hidrofobe;\n- d) utilizează la realizarea rezervoarelor de mare capacitate pentru cereale;\n- e) utilizează la construcția de baraje.\n**Răspuns: e**\n### Betoane Rutiere și Antiacide\n49) Betoanele rutiere:\n- a) se obțin utilizând un agregat cu o curbă granulometrică bună, cimenturi normale, raport A/C sub 0,30 și aditivi DISAN sub 5% din cantitatea de liant;\n- b) se obțin utilizând un agregat cu o curbă granulometrică bună, cimenturi normale, un raport A/C sub 0,30;\n- c) se utilizează la realizarea stratului de rezistență și de uzură la drumuri;\n- d) se utilizează la realizarea platformelor de orice fel, a pistelor de aerodromuri, a pistelor de încercare;\n- e) se utilizează la construcții hidrotehnice.\n**Răspuns: c,d**\n50) Betoanele antiacide:\n- a) rezistă la acțiunea mediilor cu agresivitate chimică;\n- b) rezistă la acțiunea agenților cu agresivitate eoliană;\n- c) folosesc lianți pe bază de sticlă solubilă;\n- d) folosesc ca liant cimentul de clasă superioară;\n- e) folosesc agregate-roci rezistente la agenți chimici.\n**Răspuns: a,c,e**\n### Betoane Ușoare și Refractare\n51) Betoanele ușoare:\n- a) au densitatea aparentă < 2000 kg/m³;\n- b) au capacitate de izolare termică și fonică scăzută;\n- c) au capacitate de izolare termică și fonică ridicată;\n- d) au rezistență la foc sporită în comparație cu betoanele grele;\n- e) se obțin amestecând ciment, fibre de azbest și apă.\n**Răspuns: a,c,d**\n52) Betoanele rezistente la temperaturi înalte sunt:\n- a) betoane slab termorezistente – refractaritatea < 1200°C utilizate între 200 –1100°C;\n- b) betoane termorezistente – refractaritatea < 1500 °C utilizate între 200–1100°C;\n- c) betoane refractare cu refractaritatea cuprinsă între 1500 °C și 1790 °C utilizate între 1100 – 1300 °C;\n- d) betoane foarte refractare cu refractaritatea > 1790 °C utilizate la temperaturi > 1300 °C;\n- e) betoane multi refractare cu refractaritatea > 1500 °C utilizate la temperaturi > 1100 °C.\n**Răspuns: b,c,d**\n53) Betoanele refractare:\n- a) se obțin utilizând lianți speciali pe bază de ciment belitic;\n- b) se obțin utilizând lianți speciali pe bază de ciment aluminos;\n- c) utilizând ca agregate: granulit, bazalt, mozaic de marmură etc.;\n- d) utilizând ca agregate: șamotă, minereu de crom, bauxite albe etc.;\n- e) se utilizează ca înlocuitor pentru produsele ceramice la căptușirea cuptoarelor, coșurilor de fum etc.\n**Răspuns: b,d,e**\n### Betoane Decorative și de Protecție\n54) Betoanele decorative:\n- a) sunt utilizate pentru realizarea elementelor din beton aparent;\n- b) sunt utilizate pentru obținerea unor efecte arhitecturale deosebite;\n- c) sunt utilizate pentru prețul de cost redus;\n- d) pot fi colorate;\n- e) pot avea fața văzută netedă sau în relief.\n**Răspuns: a,b,d,e**\n55) Azbocimentul:\n- a) se obține amestecând ciment, aracet și apă;\n- b) se obține amestecând ciment, fibre de azbest și apă;\n- c) se folosește pentru învelitori;\n- d) se toarnă în tipare plane și ondulate;\n- e) se folosește sub formă de pereți termoizolatori.\n**Răspuns: b,c,d,e**\n56) Avantajele utilizării azbocimentului sunt:\n- a) greutate redusă a elementelor de învelitori;\n- b) izolare fonică foarte bună;\n- c) durabilitate mare;\n- d) rezistența la foc bună;\n- e) manoperă de montare și întreținere redusă.\n**Răspuns: a,c,d,e**\n57) Betoanele de protecție împotriva radiațiilor:\n- a) trebuie să aibă o densitate mai mare de 3000 kg/m³;\n- b) se obțin cu dozaje mari de ciment;\n- c) se obțin cu agregate de concasaj provenite din roci foarte grele;\n- d) se obțin cu raport A/C sub 0,25;\n- e) se obțin utilizând materiale radioactive.\n**Răspuns: b,c**\n### Betoane cu Polimeri\n58) Betoanele cu polimeri:\n- a) se utilizează la realizarea elementelor compacte și impermeabile;\n- b) se obțin din beton obișnuit la care porii sunt umpluți cu emulsii de polimeri prin adăugarea acestor emulsii în timpul preparării;\n- c) se obțin prin impregnarea betonului obișnuit cu var și polimerizarea lui în masa betonului;\n- d) se obțin din agregat, var, polimer și apă;\n- e) sunt foarte rezistente la temperaturi mari.\n**Răspuns: a,b**\n59) Betonul ușor se caracterizează prin:\n- a) au capacitate de izolare termică ridicată;\n- b) au rezistența la compresiune mai mare decât 100 N/mm²;\n- c) au capacitate de izolare fonică ridicată;\n- d) au densitatea aparentă mai mare decât 2500 kg/m³;\n- e) au densitatea aparentă mai mică decât 2000 kg/m³.\n**Răspuns: a,c,e**\n### Clasificarea Betoanelor Ușoare\n60) Betoanele ușoare, după natura agregatului folosit, pot fi:\n- a) gazobetoane;\n- b) minerale;\n- c) spumobetoane;\n- d) vegetale;\n- e) din polimeri.\n**Răspuns: b,d**\n61) După domeniul de utilizare betoanele ușoare sunt:\n- a) termorezistente de rezistență;\n- b) termoizolatoare;\n- c) termoizolatoare și de rezistență;\n- d) termorezistente de structură;\n- e) de rezistență.\n**Răspuns: b,c,e**\n62) Betoanele macroporoase:\n- a) se realizează cu agregate cu granulozitate continuă;\n- b) se realizează cu agregate cu granulozitate discontinuă;\n- c) se realizează cu agregate cu un dozaj de ciment de cel mult 300 kg/m³;\n- d) se realizează fără agregate fine;\n- e) se utilizează la realizarea șapelor termoizolante.\n**Răspuns: b,d,e**\n63) Betoanele celulare:\n- a) se obțin prin amestecarea într-un mortar de ciment a unor substanțe generatoare de spumă;\n- b) se obțin prin amestecarea într-un mortar de ciment a unor substanțe generatoare de lichide;\n- c) se obțin prin amestecarea într-un mortar de ciment a unor substanțe generatoare de gaz;\n- d) au o bună izolare termică și fonică;\n- e) se utilizează pentru obținerea unor elemente de zidărie.\n**Răspuns: a,c,d,e**\n### Produse din Beton\n64) Din beton simplu se fabrică următoarele produse:\n- a) plăci de pavaj, borduri de beton și tuburi pentru canalizare;\n- b) plăci și stâlpișori;\n- c) fâșii, panouri, grinzi și stâlpi pentru structuri de rezistență;\n- d) blocuri mici din beton pentru zidării;\n- e) plăci plane, plăci ondulate și tuburi pentru alimentări cu apă.\n**Răspuns: a,d**\n65) Din beton armat se fabrică următoarele produse:\n- a) plăci de pavaj, borduri de beton și tuburi pentru canalizare;\n- b) plăci și stâlpi pentru garduri;\n- c) fâșii, panouri, grinzi și stâlpi pentru structuri de rezistență;\n- d) blocuri mici din beton pentru zidării;\n- e) plăci plane, plăci ondulate și tuburi pentru alimentări cu apă sau canalizări nearmate.\n**Răspuns: b,c**\n66) Din beton armat cu fibre de azbest se fabrică următoarele produse:\n- a) plăci de pavaj, borduri de beton și tuburi pentru canalizare;\n- b) plăci și stâlpi pentru garduri;\n- c) fâșii, panouri, grinzi și stâlpi pentru structuri de rezistență;\n- d) blocuri mici din beton pentru zidări;\n- e) plăci plane, plăci ondulate și tuburi pentru alimentări cu apă sau canalizări nearmate.\n**Răspuns: e**\n### Determinări asupra Betonului\n67) Lucrabilitatea betoanelor se determină prin:\n- a) metoda tasării;\n- b) metoda picnometrului;\n- c) metoda răspândirii;\n- d) metoda sferturilor;\n- e) metoda volumului de lichid dislocuit.\n**Răspuns: a,c**\n68) Asupra betonului proaspăt se fac următoarele determinări:\n- a) lucrabilitatea;\n- b) densitatea aparentă;\n- c) compacticitatea;\n- d) rezistența la întindere prin încovoiere;\n- e) permeabilitatea.\n**Răspuns: a,b**\n69) Asupra betonului întărit se fac următoarele determinări:\n- a) lucrabilitatea;\n- b) densitatea aparentă;\n- c) compacticitatea;\n- d) rezistența la întindere prin încovoiere;\n- e) permeabilitate.\n**Răspuns: b,d,e**\n70) Rezistența la compresiune a betonului se determină pe:\n- a) prisme 10x10x55 cm;\n- b) cuburi cu latura de 15 cm;\n- c) cilindri cu diametrul 150 mm și h = 300 mm;\n- d) resturi de prisme;\n- e) prisme 4x4x16 cm.\n**Răspuns: b,c,d**\n71) Rezistența la întindere din încovoiere a betonului se determină pe:\n- a) prisme 10x10x55 cm;\n- b) cuburi cu latura de 15 cm;\n- c) cilindrii cu diametrul 150 mm și h = 300 mm;\n- d) resturi de prisme;\n- e) prisme 4x4x16 cm.\n**Răspuns: a**\n### Relații de Calcul\n72) Rezistența de compresiune a betonului se determină cu relația:\n- a) Rt = N/A\n- b) Rti = (3/2) * (P * l)/(b * h²)\n- c) Rc = P/A\n- d) Rc = A/N\n- e) Rti = M/W\n**Răspuns: c**\n73) Rezistența la întindere prin încovoiere a betonului se determină cu relația:\n- a) Rt = N/A\n- b) Rti = (3/2) * (P * l)/(b * h²)\n- c) Rc = P/A\n- d) Rc = N/A\n- e) Rti = M/W\n**Răspuns: b,e**\n74) Întotdeanuna rezistența la compresiune a betonului este mai ... ca și rezistența lui la întindere din încovoiere:\n- a) mică;\n- b) egală;\n- c) aproximativ egală;\n- d) mare;\n- e) nu se poate compara.\n**Răspuns: d**\n## 9. Produse ceramice și refractare\n### Definiții și Clasificări\n1) Materialele ceramice se obțin prin:\n- a) arderea bioxidului de siliciu fasonat în forme;\n- b) arderea calcarului fasonat în forme;\n- c) arderea calcarului cu ghips fasonat în forme;\n- d) arderea produselor din argilă fasonate în forme;\n- e) arderea argilei și calcarului fasonate în forme;\n**Răspuns: d**\n2) După gradul de prelucrare, produsele ceramice pot fi:\n- a) brute;\n- b) finite;\n- c) semifinite;\n- d) grosiere;\n- e) filiforme.\n**Răspuns: a,b,c**\n3) Faianțele sunt materiale ceramice:\n- a) brute, colorate și poroase;\n- b) fine, colorate și clincherizate;\n- c) finite, poroase, albe și/sau colorate;\n- d) fine, albe și poroase;\n- e) fine, albe și vitrificate.\n**Răspuns: c**\n4) Cărămizile sunt materiale ceramice:\n- a) brute, colorate și poroase;\n- b) fine, colorate și clincherizate;\n- c) fine, colorate și poroase;\n- d) fine, albe și poroase;\n- e) fine, albe și vitrificate.\n**Răspuns: a**\n5) Tuburile de drenaj sunt materiale ceramice:\n- a) brute, colorate și poroase;\n- b) fine, colorate și clincherizate;\n- c) fine, colorate și poroase;\n- d) fine, albe și poroase;\n- e) fine, albe și vitrificate.\n**Răspuns: a**\n6) Țiglele sunt materiale ceramice:\n- a) brute, colorate și poroase;\n- b) fine, colorate și clincherizate;\n- c) fine, colorate și poroase;\n- d) fine, albe și poroase;\n- e) fine, albe și vitrificate.\n**Răspuns: a**\n7) Materialele pentru învelitori sunt materiale ceramice:\n- a) brute, colorate și poroase;\n- b) fine, colorate și clincherizate;\n- c) fine, colorate și poroase;\n- d) fine, albe și poroase;\n- e) fine, albe și vitrificate.\n**Răspuns: a**\n8) Materialele refractare sunt produse ceramice:\n- a) brute, colorate și rezistente la temperaturi mai mari de 1580°C;\n- b) fine, colorate și clincherizate;\n- c) fine, colorate și poroase;\n- d) fine, albe și poroase;\n- e) fine, albe și compacte.\n**Răspuns: a**\n9) Porțelanul este un produs ceramic:\n- a) brute, colorate și poroase;\n- b) fine, colorate și clincherizate;\n- c) fine, colorate și poroase;\n- d) fine, albe și poroase;\n- e) finite, albe și vitrificate.\n**Răspuns: e**\n10) Obiectele sanitare sunt produse ceramice:\n- a) brute, colorate și poroase;\n- b) fine, colorate și clincherizate;\n- c) finite;\n- d) fine, albe și poroase;\n- e) fine, albe și vitrificate.\n**Răspuns: c**\n### Proprietăți și Clasificări\n11) Care este proprietatea argilei pe care se bazează fabricarea produselor ceramice:\n- a) absorbția de apă;\n- b) ductilitatea;\n- c) volumul de goluri;\n- d) elasticitatea;\n- e) plasticitatea.\n**Răspuns: e**\n12) În funcție de porozitate, produsele ceramice se numesc:\n- a) clincherizate (n < 8%);\n- b) topite (n < 8%);\n- c) vitrificate (n < 2%);\n- d) solidificate (n < 5%);\n- e) compacte (n < 4%).\n**Răspuns: a,c**\n13) În funcție de indicele de plasticitate argilele pot fi cu:\n- a) plasticitate superioară;\n- b) plasticitate medie;\n- c) plasticitate moderată;\n- d) plasticitate scăzută;\n- e) neplastice.\n**Răspuns: a,b,d,e**\n14) Temperatura de deformare a argilelor sub greutate proprie se numește:\n- a) punct de clincherizare;\n- b) punct de topire;\n- c) punct de refractaritate;\n- d) punct de vitrificare;\n- e) punct de fuzibilitate.\n**Răspuns: c**\n15) În funcție de punctul de refractaritate argilele sunt:\n- a) fuzibile;\n- b) clincherizate;\n- c) vitrificabile;\n- d) ductibile;\n- e) refractare.\n**Răspuns: a,c,e**\n### Materiale Auxiliare și Utilizări\n16) La fabricarea produselor ceramice se folosesc ca materiale auxiliare:\n- a) degresanți pentru reducerea plasticității și contractiei la uscare (nisip, etc.);\n- b) aglomeranți pentru mărirea plasticității (varul, gudronul, melasa etc.);\n- c) fondanți pentru a mări temperatura de vitrificare (feldspat, calcar, creta etc.);\n- d) fondanți pentru a reduce temperatura de vitrificare (feldspat, calcar, creta etc.);\n- e) adaosuri refractare pentru a ridica temperatura de topire a produselor refractare (cuarțul, cuarțitele).\n**Răspuns: a,b,d,e**\n17) Materialele ceramice utilizate la zidării sunt:\n- a) cărămizi pline, cărămizi cu goluri;\n- b) blocuri mici de beton;\n- c) blocuri ceramice pentru planșee;\n- d) cărămizi radiale pentru coșuri;\n- e) cărămizi pentru placaje.\n**Răspuns: a**\n18) Materialele ceramice pentru învelitori sunt:\n- a) țigle;\n- b) olane;\n- c) coame;\n- d) jgheaburi;\n- e) burlane.\n**Răspuns: a,b,c**\n19) Materialele ceramice pentru drenaj sunt:\n- a) tuburi de canalizare din beton;\n- b) tuburi de drenaj din beton;\n- c) tuburi de drenaj ceramice;\n- d) blocuri ceramice cu goluri orizontale;\n- e) blocuri ceramice cu lambă și uluc.\n**Răspuns: c**\n20) Materialele ceramice pentru planșee sunt:\n- a) cărămizi ceramice cu lambă și uluc;\n- b) blocuri ceramice cu nervuri dese din beton armat;\n- c) blocuri ceramice radiale;\n- d) blocuri ceramice pentru pardoseli;\n- e) blocuri ceramice pentru zidării.\n**Răspuns: b**\n### Utilizări Speciale\n21) Cărămizile de clincher din gresie ceramică se utilizează la:\n- a) drumuri;\n- b) pardoseli rezistente la agresivitate chimică;\n- c) bolți și fundații solicitate puternic;\n- d) placarea în băi, holuri, încăperi cu umiditate mare;\n- e) placarea pilelor și culeelor de poduri.\n**Răspuns: a,b,e**\n22) Produse ceramice utilizate în lucrări de protecție și finisaj sunt:\n- a) cărămizile de placaj;\n- b) cahlele pentru sobe de teracotă;\n- c) faianțele;\n- d) gresiile;\n- e) porțelanul și semiporțelanul.\n**Răspuns: a,c,d**\n### Tehnologia de Fabricație\n23) Tehnologia de fabricație a materialelor ceramice cuprinde următoarele etape:\n- a) pregătirea amestecului de materii prime, uscarea formelor, arderea;\n- b) pregătirea amestecului de materii prime, fasonarea formelor crude; arderea, tratamentele de suprafață;\n- c) pregătirea amestecului de materii prime, fasonarea formelor crude; uscarea formelor, arderea, tratamentele de suprafață;\n- d) pregătirea amestecului de materii prime, fasonarea formelor crude; uscarea formelor, tratamentele de suprafață;\n- e) pregătirea amestecului de materii prime, fasonarea formelor crude; uscarea formelor, autoclavizarea.\n**Răspuns: c**\n24) Fasonarea materialelor ceramice determină:\n- a) eliminarea tensiunilor interne;\n- b) forma definitivă a produselor;\n- c) eliminarea controlată a apei;\n- d) creșterea durabilității;\n- e) reducerea contractiei la uscare.\n**Răspuns: b**\n25) Uscarea formelor crude ale materialelor ceramice determină:\n- a) eliminarea tensiunilor interne;\n- b) forma definitivă a produselor;\n- c) eliminarea controlată a apei;\n- d) creșterea durabilității;\n- e) reducerea contractiei la uscare.\n**Răspuns: c,e**\n26) Tratamentele de suprafață aplicate materialelor ceramice determină:\n- a) eliminarea tensiunilor interne;\n- b) forma definitivă a produselor;\n- c) eliminarea controlată a apei;\n- d) creșterea durabilității;\n- e) reducerea contractiei la uscare.\n**Răspuns: d**\n27) Pentru creșterea durabilității și un aspect mai frumos produselor ceramice li se aplică:\n- a) angobe;\n- b) glazuri;\n- c) smalțuri;\n- d) emailuri;\n- e) lacuri.\n**Răspuns: a,b,c,d**\n### Procedee de Fabricație\n28) Tigilele se obțin prin procedeul de:\n- a) tragere;\n- b) suflare;\n- c) laminare;\n- d) presare;\n- e) centrifugare.\n**Răspuns: a,d**\n29) Din gresie ceramică se pot realiza:\n- a) blocuri pentru planșee;\n- b) plăci;\n- c) cărămizi;\n- d) tuburi și piese de legătură;\n- e) plăci de majolică.\n**Răspuns: b,c,d**\n### Verificări și Proprietăți\n30) Asupra cărămizilor se fac următoarele verificări de ordinul I:\n- a) culoarea;\n- b) sageata;\n- c) sunetul;\n- d) crăpăturile pe fețele laterale și de așezare;\n- e) efluorescențele.\n**Răspuns: a,b,c,d,e**\n31) Verificarile periodice asupra cărămizilor sunt:\n- a) verificarea dimensiunilor;\n- b) determinarea densității;\n- c) determinarea densității aparente;\n- d) calculul compactității;\n- e) determinarea absorbției de apă.\n**Răspuns: a,b,c,d,e**\n32) Asupra materialelor pentru învelitori se fac următoarele verificări curente:\n- a) sunetul;\n- b) masa;\n- c) influența granulelor de var;\n- d) planeitatea (săgeata);\n- e) impermeabilitatea.\n**Răspuns: a,b,d,e**\n33) Asupra materialelor pentru învelitoare se fac următoarele verificări perioadice:\n- a) verificarea dimensiunilor;\n- b) impermeabilitatea la apă;\n- c) verificarea dimensiunilor crăpăturilor;\n- d) capacitatea portantă;\n- e) rezistența la îngheț – dezgheț.\n**Răspuns: a,b,d,e**\n34) Capacitatea portantă a țiglei se determină cu:\n- a) presa hidraulică;\n- b) aparatul Fruhling-Michaelis;\n- c) aparatul Vicat;\n- d) aparatul Sutard;\n- e) masa vibrantă.\n**Răspuns: b**\n35) Capacitatea portantă a unei țigle trebuie să fie:\n- a) 50 daN/cm²;\n- b) 60 daN/cm²;\n- c) un om cu trusa de scule în spate;\n- d) 70 daN/cm²;\n- e) 80 daN/cm²;\n**Răspuns: c**\n36) Impermeabilitatea la apă a unei țigle este corespunzătoare dacă:\n- a) la partea inferioară nu apar picături de apă după 72 ore;\n- b) la partea inferioară nu apar picături de apă după 3 ore;\n- c) la partea inferioară nu apar picături de apă după 12 ore;\n- d) la partea inferioară nu apar picături de apă după 24 ore;\n- e) la partea inferioară nu apar picături de apă după 48 ore;\n**Răspuns: b**\n### Calculul Proprietăților\n37) Cu relația ρs/ρ se calculează:\n- a) absorbtia de apă a cărămizii;\n- b) rezistența la compresiune a cărămizii;\n- c) densitatea reală a cărămizii;\n- d) compactitatea cărămizii;\n- e) porozitatea cărămizii.\n**Răspuns: d**\n38) Cu relația 1 - ρs/ρ se calculează:\n- a) absorbtia de apă a cărămizii;\n- b) rezistența la compresiune a cărămizii;\n- c) densitatea reală a cărămizii;\n- d) compactitatea cărămizii;\n- e) porozitatea cărămizii.\n**Răspuns: e**\n39) Cu relația (msat - m)/m * 100 se calculează:\n- a) absorbtia de apă în masă, a cărămizii;\n- b) rezistența la compresiune a cărămizii;\n- c) densitatea reală a cărămizii;\n- d) compactitatea cărămizii;\n- e) porozitatea cărămizii.\n**Răspuns: a**\n40) Cu relația P/A se calculează:\n- a) absorbtia de apă a cărămizii;\n- b) rezistența la compresiune a cărămizii;\n- c) densitatea reală a cărămizii;\n- d) compactitatea cărămizii;\n- e) porozitatea cărămizii.\n**Răspuns: b**\n## 10. Sticla și produse din sticlă utilizate în construcții\n### Definiții și Clasificări\n1) Componentul de bază la fabricarea sticlei este:\n- a) calcar și oxid de plumb pentru stabilitatea lor;\n- b) bioxidul de siliciu cu punctul de topire foarte ridicat;\n- c) carbonatul de sodiu pentru a coborî temperatura de topire a amestecului;\n- d) carbonatul de potasiu pentru a coborî temperatura de topire a amestecului;\n- e) oxizi metalici pentru a obține sticle colorate.\n**Răspuns: b**\n2) Pentru obținerea sticlelor colorate în procesul de fabricare se adaugă în amestecul de bază:\n- a) fosfat de calciu;\n- b) trioxid de aluminiu și oxid de magneziu;\n- c) calcar sau oxid de plumb;\n- d) carbonatul de sodiu sau carbonatul de potasiu;\n- e) oxizi metalici.\n**Răspuns: e**\n3) În funcție de substanțele folosite ca adaosuri topitoare sau stabilizatoare, sticla poate fi:\n- a) calco-sodică;\n- b) calco-potasica;\n- c) plumbo-potasica;\n- d) plumbo-sodică;\n- e) sodică.\n**Răspuns: a,b,c**\n### Fabricația Sticlei\n4) Faza I de fabricare a sticlei cuprinde:\n- a) topirea amestecului de materii prime;\n- b) fasonarea produselor din sticlă;\n- c) măcinarea fină și omogenizarea amestecului de materie primă;\n- d) recoacerea produselor din sticlă în vederea anulării tensiunilor interioare cauzate de răcirea bruscă a sticlei;\n- e) finisarea și decorarea produselor din sticlă.\n**Răspuns: c**\n5) Faza a-II-a de fabricare a sticlei cuprinde:\n- a) topirea amestecului de materii prime;\n- b) fasonarea produselor din sticlă;\n- c) măcinarea fină și omogenizarea amestecului de materie primă;\n- d) recoacerea produselor din sticlă în vederea anulării tensiunilor interioare cauzate de răcirea bruscă a sticlei;\n- e) finisarea și decorarea produselor din sticlă.\n**Răspuns: a**\n6) În faza a-III-a de fabricare a sticlei se face:\n- a) topirea amestecului de materii prime;\n- b) fasonarea produselor din sticlă;\n- c) măcinarea fină și omogenizarea amestecului de materie primă;\n- d) finisarea și decorarea produselor din sticlă.\n- e) recoacerea produselor din sticlă în vederea anulării tensiunilor interioare cauzate de răcirea bruscă a sticlei;\n**Răspuns: b**\n7) În faza a-IV-a de obținere a produselor din sticlă se face:\n- a) topirea amestecului de materii prime;\n- b) fasonarea produselor din sticlă;\n- c) măcinarea fină și omogenizarea amestecului de materie primă;\n- d) recoacerea produselor din sticlă în vederea anulării tensiunilor interioare cauzate de răcirea bruscă a sticlei;\n- e) finisarea și decorarea produselor din sticlă.\n**Răspuns: d**\n8) În faza a-V-a de obținere a produselor din sticlă se face:\n- a) topirea amestecului de materii prime;\n- b) fasonarea obiectelor din sticlă;\n- c) măcinarea fină și omogenizarea amestecului de materie primă;\n- d) recoacerea produselor din sticlă în vederea anulării tensiunilor interioare cauzate de răcirea bruscă a sticlei;\n- e) finisarea și decorarea produselor din sticlă.\n**Răspuns: e**\n### Fasonare și Finisare\n9) Fasonarea obiectelor din sticlă se face prin:\n- a) gravare;\n- b) șlefuire;\n- c) suflare;\n- d) laminare;\n- e) pictare.\n**Răspuns: c,d**\n10) Etapa de fasonare pentru obținerea geamurilor se face prin:\n- a) suflare;\n- b) presare;\n- c) laminare;\n- d) tragere;\n- e) procedee combinate (tragere – laminare).\n**Răspuns: e**\n11) Etapa de recoarcere a produselor din stică presupune:\n- a) încălzirea produselor fasonate la (550-600)°C;\n- b) încălzirea produselor fasonate la (1450-1550)°C;\n- c) răcirea lor treptată;\n- d) eliminarea tensiunilor interne;\n- e) arderea produselor fasonate la (500-600)°C;\n**Răspuns: a,c,d**\n12) Finisarea și decorarea obiectelor de sticlă se face prin:\n- a) gravare;\n- b) șlefuire și polizare;\n- c) suflare și tragere;\n- d) laminare și turnare;\n- e) pictare.\n**Răspuns: a,b,e**\n### Utilizări ale Sticlei\n13) Sticla poate fi utilizată în construcții ca:\n- a) materiale pentru uși, ferestre și luminatoare;\n- b) materiale pentru protecție și finisaj;\n- c) materiale pentru pereți și planșee;\n- d) materiale pentru drenaje, cablări, transport substanțe agresive și gaze;\n- e) materiale pentru termoizolații.\n**Răspuns: a,b,c,d,e**\n14) Ca material termoizolator sticla se folosește sub formă de:\n- a) tuburi de sticlă cu lungimi și diametre diferite;\n- b) vată de sticlă, fibre de sticlă, sticla poroasă;\n- c) blocuri de sticlă, geam termoizolant, profile din sticlă și corpuri Rotalit, dale Nevada;\n- d) plăci de sticlă opaxit, plăci de sticlă cristalizată, plăci de sticlă mozaic;\n- e) geam pentru vitrine, geam securit, geam triplex, geam armat, geam riglat și geam tras.\n**Răspuns: b**\n15) Produsele din sticlă pentru iluminat natural sunt:\n- a) tuburi de sticlă cu lungimi și diametre diferite;\n- b) vată de sticlă, fibre de sticlă, sticla poroasă;\n- c) blocuri de sticlă, geam termoizolant (termopan), profile din sticlă și corpuri Rotalit, dale Nevada;\n- d) plăci de sticlă opaxit, plăci de sticlă cristalizată, plăci de sticlă mozaic;\n- e) geam pentru vitrine, geam securit, geam triplex, geam armat, geam riglat și geam tras.\n**Răspuns: c,e**\n16) În cazul lucrărilor de protecție și finisaj se folosesc următoarele produse din sticlă:\n- a) tuburi de sticlă cu lungimi și diametre diferite;\n- b) vată de sticlă, fibre de sticlă, sticla poroasă;\n- c) blocuri de sticlă, geam termoizolant, profile din sticlă și corpuri Rotalit, dale Nevada;\n- d) plăci de sticlă opaxit, plăci de sticlă cristalizată, plăci de sticlă mozaic;\n- e) geam pentru vitrine, geam securit, geam triplex, geam armat, geam riglat și geam tras.\n**Răspuns: d**\n17) În cazul realizării planșeelor și pereților din produse din sticlă se utilizează:\n- a) tuburi de sticlă cu lungimi și diametre diferite;\n- b) vată de sticlă, fibre de sticlă, sticla poroasă;\n- c) blocuri de sticlă, geam termoizolant, profile din sticlă și corpuri Rotalit, dale Nevada;\n- d) plăci de sticlă opaxit, plăci de sticlă cristalizată, plăci de sticlă mozaic;\n- e) geam pentru vitrine, geam securit, geam triplex, geam armat, geam riglat și geam tras.\n**Răspuns: c**\n18) Pentru executarea drenajelor subterane, protecția unor cabluri de telefon și la transportul soluțiilor agresive și gaze se utilizează:\n- a) tuburi de sticlă cu lungimi și diametre diferite;\n- b) vata de sticlă, fibre de sticlă, sticla poroasă;\n- c) blocuri de sticlă, geam termoizolant, profile din sticlă și corpuri Rotalit, dale Nevada;\n- d) plăci de sticlă opaxit, plăci de sticlă cristalizată, plăci de sticlă mozaic;\n- e) geam pentru vitrine, geam securit, geam triplex, geam armat, geam riglat și geam tras.\n**Răspuns: a**\n19) Produsele pentru izolarea termică, pe bază de sticlă sunt:\n- a) geam armat;\n- b) cărămidă;\n- c) beton celular autoclavizat;\n- d) vata de sticlă;\n- e) tuful vulcanic.\n**Răspuns: d**\n### Tipuri de Geamuri\n20) În construcții, din sticlă se realizează:\n- a) geam tras;\n- b) geam colorat;\n- c) geam armat;\n- d) geam ornamental;\n- e) geam termopan.\n**Răspuns: a,b,c,d,e**\n21) Geamul care la spargere se sfarmă în bucăți, dar nu taie, se numește:\n- a) termopan;\n- b) triplex;\n- c) duplex;\n- d) securit;\n- e) armat.\n**Răspuns: d**\n22) Geamul alcătuit din mai multe foi de sticlă lipite între ele cu folii se numește:\n- a) termopan;\n- b) triplex;\n- c) duplex;\n- d) securit;\n- e) armat.\n**Răspuns: b,c**\n23) Geamul care folosește proprietățile termoizolatoare ale vidului, aerului sau a unor gaze, se numește:\n- a) termopan;\n- b) triplex;\n- c) duplex;\n- d) securit;\n- e) armat.\n**Răspuns: a**\n### Plăci și Corpuri din Sticlă\n24) Plăcile de sticlă cristalizată sunt:\n- a) utilizate la placarea pereților;\n- b) utilizate la executarea pardoselilor;\n- c) mai scumpe decât faianța;\n- d) mai ieftine decât faianța;\n- e) utilizate la realizarea planșeelor luminoase.\n**Răspuns: a,b,d**\n25) Plăcile din sticlă opaxit sunt:\n- a) plăci albe sau colorate;\n- b) cu fața văzută netedă iar fața opusă este cu striuri;\n- c) cu fața văzută cu striuri iar fața opusă este netedă;\n- d) folosite la placarea pereților interiori și a încăperilor cu umiditate mare;\n- e) folosite la placarea pereților interiori și a încăperilor cu umiditate mică.\n**Răspuns: a,b,d**\n26) Plăcile de sticlă – mozaic pentru fațade sunt:\n- a) pătrate;\n- b) cu fața văzută mată sau lucioasă iar partea opusă cu striuri;\n- c) cu fața văzută cu striuri sau lucioasă iar partea opusă mată;\n- d) folosite la placarea pereților interiori și exteriori;\n- e) folosite la placarea coloanelor și a altor elemente de construcții înlocuind plăcuțele ceramice.\n**Răspuns: a,b,d,e**\n27) Corpurile rotalit sunt:\n- a) folosite la realizarea planșeelor luminoase;\n- b) cu fața superioară cu striuri antiderapante;\n- c) cu zonele laterale cu adâncituri și striațiuni;\n- d) cu fața inferioară scobită;\n- e) din sticlă incoloră sau verzuie.\n**Răspuns: a,b,c,d,e**\n28) Dalele de sticlă pentru pereți - dale Nevada sunt:\n- a) pătrate;\n- b) din sticlă incoloră sau în diferite nuanțe ale culorii verzi;\n- c) biconcave sau monocave;\n- d) armate sau nearmate;\n- e) cu muchiile cu un șanț și striuri pentru montare.\n**Răspuns: a,b,c,e**\n29) Dalele de sticlă pentru pereți - dale Nevada sunt:\n- a) folosite la executarea pereților luminoși în holurile clădirilor publice, spitale, aerogări, gări, cinematografe;\n- b) așezate una peste alta, pe cant;\n- c) în spațiile tubulare se introduce armătura atât în rosturile orizontale cât și în cele verticale monolizarea realizându-se cu pasta de ciment;\n- d) armate sau nearmate;\n- e) îmbinate la un singur rând, la un rând și jumătate sau la două rânduri.\n**Răspuns: a,b,c**\n30) Profilele U sunt:\n- a) armate sau nearmate;\n- b) din sticlă colorată sau incoloră;\n- c) cu ambele fețe netede sau cu una din fețe ornamentată;\n- d) folosite la executarea pereților interiori;\n- e) îmbinate la un singur rând, la un rând și jumătate sau la două rânduri.\n**Răspuns: a,b,c,d,e**\n### Geam Termopan și Blocuri de Sticlă\n31) Geamul dublu termoizolant – Termopan se identifică prin:\n- a) manevrabilitate diversificată (deschidere pivotantă, pivotant - basculantă, basculantă, glisantă etc);\n- b) termoizolațiile pentru pereți;\n- c) tâmplăria - PVC, lemn, aluminiu;\n- d) albă sau colorată (verde, galben, albastru, roșu, etc);\n- e) 1, 2, 3, 4, 5 camere de aer.\n**Răspuns: a,c,d,e**\n32) Geamul dublu termoizolant – Termopan se identifică prin:\n- a) 2 foi de geam izolator, aflate la o distanță bine stabilită;\n- b) etanșeizarea - cu 2 rânduri de garnituri de cauciuc;\n- c) la învelitorile șarpantelor;\n- d) protecția perfectă împotriva agenților atmosferici;\n- e) reducerea pierderilor de energie din interior.\n**Răspuns: a,b,d,e**\n33) Blocurile de sticlă, cărămizile de sticlă:\n- a) pereți despărțitori în clădiri publice și de locuit;\n- b) la învelitorile șarpantelor și a luminatoarelor;\n- c) formă pătrată, dreptunghiulară, triunghiulară;\n- d) transparente, clare, semitransparente;\n- e) colorate prin injectare, colorate în masă.\n**Răspuns: a,c,d,e**\n34) Tiglele de sticlă:\n- a) țigle solzi sau cu jgheab;\n- b) la învelitorile șarpantelor și a luminatoarelor;\n- c) la drenajele subterane;\n- d) transportul soluțiilor agresive și al gazelor;\n- e) cabluri de forță și de telefon.\n**Răspuns: a,b**\n35) Tuburi de sticlă:\n- a) la drenajele subterane;\n- b) structură fibroasă;\n- c) transportul soluțiilor agresive și al gazelor;\n- d) cabluri de forță și de telefon;\n- e) materiale termoizolante la izolarea planșeelor.\n**Răspuns: a,c,d**\n### Sticlă Spongioasă și Vată de Sticlă\n36) Sticla spongioasă:\n- a) materie primă - deșeuri de sticlă + adaos de calcar, sulfat de sodiu + cărbune;\n- b) la topirea sticlei, adaosurile se descompun, elimină ( CO₂ și SO₂ );\n- c) structură compactă;\n- d) rămân prinse în topitură, iar la răcire ⇒ structură foarte poroasă și rigidă;\n- e) aspect de burete cu o densitate aparentă foarte mică (150-250) kg/m³.\n**Răspuns: a,b,d,e**\n37) Sticla spongioasă:\n- a) porozitate totală care poate ajunge la 90 %;\n- b) se poate tăia cu ferestrăul;\n- c) termoizolațiile pentru pereți;\n- d) structură fibroasă;\n- e) la drenajele subterane.\n**Răspuns: a,b,c**\n38) Vata de sticlă se identifică prin:\n- a) structură fibroasă;\n- b) obținută prin suflarea unei topituri vâscoase de sticlă, tragere sau prin centrifugare;\n- c) fibrele se presează sub formă de saltele, prinse între plase de sârmă, carton ondulat;\n- d) ca materiale termoizolante la izolarea planșeelor, conductelor;\n- e) este atacată de rozătoare.\n**Răspuns: a,b,c,d**\n## 11. Metale și aliaje în construcții\n### Proprietăți și Clasificări\n1) Metalele au următoarele proprietăți:\n- a) în stare normală toate sunt solide;\n- b) bune conductoare de căldură și electricitate;\n- c) maleabile și ductile;\n- d) luciu și sunet caracteristic;\n- e) predispuse să formeze ioni pozitivi prin acapararea de electroni pe ultimul strat.\n**Răspuns: b,c,d**\n2) Trecerea unui metal din starea topită în starea solidă se face prin:\n- a) cristalizare;\n- b) topire;\n- c) înghețare;\n- d) întărire;\n- e) metalizare.\n**Răspuns: a**\n3) Proprietatea metalelor de a cristaliza în mai multe tipuri de rețele cristaline funcție de temperatura la care are loc cristalizarea se numește:\n- a) izomorfism;\n- b) polimorfism;\n- c) polimerizare;\n- d) metalotropie;\n- e) cristalotropie.\n**Răspuns: b**\n### Fonte și Oțeluri\n4) Fontele obținute în furnale sunt:\n- a) fontă cenușie (de turnătorie);\n- b) fontă colorată (obținerea oțelului inox);\n- c) fontă albă (obținerea oțelului);\n- d) fonte speciale (obținerea oțelurilor speciale);\n- e) fonte de aliere (obținerea metalelor aliate).\n**Răspuns: a,c,d**\n5) Materia primă pentru obținerea fontei este:\n- a) minereurile de fier (min. 55 % fier);\n- b) cocsul + fondanți;\n- c) minereu de fier natural + cocsul + fondanți;\n- d) minereu de fier natural + cocsul;\n- e) minereu de fier natural + fondanți.\n**Răspuns: c**\n6) Fonta cenușie este:\n- a) relativ moale;\n- b) servesc la fabricarea oțelurilor speciale;\n- c) servește la fabricarea oțelurilor;\n- d) se prelucrează la mașini unelte;\n- e) foarte dură.\n**Răspuns: a,d**\n7) Fonta albă este:\n- a) relativ moale\n- b) servește la fabricarea oțelurilor speciale;\n- c) servește la fabricarea oțelurilor;\n- d) se prelucrează la mașini unelte;\n- e) foarte dură.\n**Răspuns: c,e**\n8) Fontele speciale:\n- a) conțin în diferite proporții unul sau mai multe elemente de aliere (Si, Al, Mn, Cr, Ti, Mo);\n- b) servesc la fabricarea oțelurilor speciale;\n- c) servește la fabricarea oțelurilor;\n- d) se prelucrează la mașini unelte;\n- e) foarte dură.\n**Răspuns: a,b**\n9) Produsele din fontă sunt:\n- a) plăci, capace;\n- b) elemente de rezemare;\n- c) obiecte pentru instalații electrice;\n- d) obiecte pentru instalații de canalizare;\n- e) obiecte pentru instalații de alimentare cu apă.\n**Răspuns: a,b,c,d,e**\n10) Dezavantajele produselor din fontă sunt:\n- a) nu pot fi prelucrate prin laminare;\n- b) nu pot fi prelucrate prin forjare;\n- c) se rup casant;\n- d) rezistă la șoc foarte bine;\n- e) nu rezistă la compresiune.\n**Răspuns: a,b,c**\n### Aliaje și Utilizări\n11) Bronzurile sunt aliajele cuprului cu:\n- a) zincul;\n- b) aluminiul;\n- c) siliciul;\n- d) staniul;\n- e) magneziul.\n**Răspuns: d**\n12) Alamele sunt aliajele cuprului cu:\n- a) zincul;\n- b) aluminiul;\n- c) siliciul;\n- d) staniul;\n- e) magneziul.\n**Răspuns: a**\n13) Laminatele, armăturile pentru beton armat și precomprimat se vor realiza din:\n- a) aliaje cu crom;\n- b) aliaje cu nichel;\n- c) aliaje cu mangan;\n- d) aliaje cu siliciu;\n- e) oțeluri carbon.\n**Răspuns: e**\n14) Aluminiul se utilizează în construcții la:\n- a) profile din Al pentru tâmplărie;\n- b) folie de Al pentru izolații hidrofuge;\n- c) fundații;\n- d) strat de protecție împotriva coroziunii;\n- e) table și plăci.\n**Răspuns: a,b,d,e**\n### Protecția Metalelor\n15) Protecția metalelor împotriva coroziunii prin acoperirea cu straturi protectoare se face prin:\n- a) vopsire, lăcuire, emailare;\n- b) zincare;\n- c) galvanizare;\n- d) vălțuire;\n- e) metalizare.\n**Răspuns: a,b,c,e**\n16) Protecția metalelor împotriva coroziunii prin aplicarea de straturi din compuși chimici se face prin:\n- a) vopsire, lăcuire, emailare;\n- b) metalizare;\n- c) oxidare;\n- d) fosfatare;\n- e) cromatare.\n**Răspuns: a**\n17) Aliajele metalice:\n- a) se obțin prin răcirea unei topituri;\n- b) nu prezintă ductilitate;\n- c) se obțin prin precipitare electrolitică concomitentă din soluții apoase;\n- d) sunt formate din cel puțin doi componenti dintre care cel puțin unul este metal;\n- e) au rezistența la tracțiune redusă.\n**Răspuns: a,c,d**\n18) Fontele au un conținut de carbon de:\n- a) (2-3)%;\n- b) (2,5-3,5)%;\n- c) (2,5-5)%;\n- d) (3-4)%;\n- e) (3,5-5)%.\n**Răspuns: c**\n### Utilizări în Beton\n19) În furnale se obțin următoarele tipuri de fonte:\n- a) fonta gri;\n- b) fonta albă;\n- c) fonta cenușie;\n- d) fonta neagră;\n- e) fonte speciale.\n**Răspuns: b,c,e**\n20) Pentru betonul armat și betonul precomprimat se utilizează:\n- a) oțeluri cu profil neted;\n- b) oțeluri cu profil periodic;\n- c) plase din sarmă trasă netedă;\n- d) fonta cenușie;\n- e) fonte speciale.\n**Răspuns: a,b,c**\n21) Pentru betonul precomprimat se utilizează:\n- a) oțeluri mediu aliate;\n- b) sârmă netedă;\n- c) sârmă cu amprente;\n- d) toroane;\n- e) plase din sârmă trasă netedă.\n**Răspuns: b,c,d**\n22) Prin alierea Al cu:\n- a) Si rezultă siluminurile;\n- b) Sn rezultă bronzurile;\n- c) Cu, Mg, Mn rezultă duraluminiul;\n- d) Zn rezultă alamele;\n- e) Ni rezultă constantanul.\n**Răspuns: a,c**\n23) Prin alierea Cu cu:\n- a) Si rezultă siluminurile;\n- b) Sn rezultă bronzurile;\n- c) Cu, Mg, Mn rezultă duraluminiul;\n- d) Zn rezultă alamele;\n- e) Ni rezultă constantanul.\n**Răspuns: b,d,e**\n24) Plumbul este un metal:\n- a) ușor fuzibil;\n- b) rezistent la unii agenți agresivi;\n- c) de culoare roșcată;\n- d) foarte greu;\n- e) care nu rezistă în mediu bazic.\n**Răspuns: a,b,d**\n25) Folosirea armăturii în beton duce la:\n- a) scăderea densității betonului armat;\n- b) creșterea densității betonului armat;\n- c) creșterea rezistenței la compresiune a betonului armat;\n- d) creșterea rezistenței la întindere a betonului armat;\n- e) mărirea deformărilor înainte de rupere a betonului armat.\n**Răspuns: b,d,e**\n## 12. Lemn și produse din lemn\n### Avantaje și Dezavantaje\n1) Avantajele utilizării lemnului în construcții sunt:\n- a) masă mică (greutate);\n- b) rezistențe mecanice foarte mari;\n- c) ușurință în prelucrare;\n- d) textură plăcută;\n- e) poate fi un izolator termic.\n**Răspuns: a,c,d,e**\n2) Dezavantajele utilizării lemnului în construcții sunt:\n- a) nu rezistă bine la microorganisme;\n- b) nu rezistă bine la foc;\n- c) nu rezistă bine la transfer termic;\n- d) nu rezistă bine la acțiunea apei;\n- e) nu este stabil la temperaturi mai mari de 110°C.\n**Răspuns: a,b,d,e**\n3) Sub acțiunea temperaturii, lemnul devine:\n- a) t = 50°C amorf;\n- b) t ≥ 110°C instabil;\n- c) t = 200°C combustibil;\n- d) t = 250°C compresibil;\n- e) t = 300°C inflamabil luând foc în aer fără flacără.\n**Răspuns: b,c,e**\n4) La tăiere, apa din lemn se găsește în următoarele stări:\n- a) apă din umidități;\n- b) apă liberă;\n- c) apă capilară;\n- d) apă de hignoscopicitate;\n- e) apă legată chimic.\n**Răspuns: b,d,e**\n5) Umiditatea cea mai mare a lemnului se întâlnește în lemn:\n- a) vara în țesuturile mai vârstnice;\n- b) toamna în țesuturile tinere;\n- c) iarna în țesuturile tinere;\n- d) vara în țesuturile tinere;\n- e) toamna în țesuturile mai vârstnice.\n**Răspuns: d**\n6) Densitatea aparentă a lemnului este de:\n- a) 1200 kg/m³;\n- b) 1200-1500 kg/m³;\n- c) 1500 kg/m³;\n- d) 1500-1800 kg/m³;\n- e) 1800 kg/m³.\n**Răspuns: c**\n### Clasificarea Lemnului\n7) Densitatea aparentă a lemnului depinde de:\n- a) umiditatea lemnului;\n- b) absorbția de apă a lemnului;\n- c) anotimpul în care se face debitarea;\n- d) esența lemnului;\n- e) vârsta lemnului.\n**Răspuns: a,c,d**\n8) Din categoria materialului lemnos tare face parte:\n- a) bradul;\n- b) stejarul;\n- c) molidul;\n- d) nucul;\n- e) frasinul.\n**Răspuns: b,d,e**\n9) Din categoria materialului lemnos tare face parte:\n- a) plopul;\n- b) salcia;\n- c) salcâmul;\n- d) teiul;\n- e) fagul.\n**Răspuns: c,e**\n10) Din categoria materialului lemnos moale face parte:\n- a) bradul;\n- b) stejarul;\n- c) molidul;\n- d) nucul;\n- e) frasinul.\n**Răspuns: a,c**\n11) Din categoria materialului lemnos moale face parte:\n- a) plopul;\n- b) salcia;\n- c) salcâmul;\n- d) teiul;\n- e) fagul.\n**Răspuns: a,b,d**\n### Rezistențe Mecanice\n12) Rezistențele mecanice care se determină la lemn sunt:\n- a) rezistența la compresiune paralelă cu fibrele;\n- b) rezistența la compresiune perpendiculară pe fibre;\n- c) rezistența la întindere cu forțe perpendiculare pe fibre;\n- d) rezistența la întindere prin încovoiere;\n- e) rezistența la întindere paralelă cu fibrele.\n**Răspuns: a,b,c,d,e**\n13) Relațiile Re⊥ = 20 daN/cm² și Re∥ = 80 daN/cm², sunt valabile la:\n- a) lemnul de esență tare;\n- b) lemnul de esență moale;\n- c) lemnul de esență mijlocie;\n- d) rășinoase;\n- e) foioase.\n**Răspuns: b,d**\n14) Relațiile Ri⊥ = 40 daN/cm² și Ri∥ = 100 daN/cm², sunt valabile la:\n- a) lemnul de esență tare;\n- b) lemnul de esență moale;\n- c) lemnul de esență mijlocie;\n- d) rășinoase;\n- e) foioase.\n**Răspuns: a,e**\n15) Pentru o umiditate de 15% sunt valabile următoarele relații:\n- a) Ri∥ = 2 Ri⊥ pentru rășinoase și foioase\n- b) Ri⊥ = 1,5 Ri∥ pentru rășinoase\n- c) Ri⊥ = 2 Ri∥ pentru foioase;\n- d) Ri⊥ = 1,5 Ri∥ pentru foioase;\n- e) Ri⊥ = 2 Ri∥ pentru rășinoase\n**Răspuns: a,b,c**\n### Defecte ale Lemnului\n16) Contragerea și umflarea lemnului:\n- a) variază funcție de umiditate;\n- b) variază funcție de specia arborelui;\n- c) sunt hotărătoare la debitarea cherestelei din cilindru lemnos;\n- d) variază funcție de înălțimea arborelui;\n- e) variază funcție de vârsta arborelui.\n**Răspuns: a,b**\n17) Materialul lemnos poate avea următoarele defecte:\n- a) datorită crăpăturilor;\n- b) determinate de umiditatea de 15%;\n- c) noduri;\n- d) de structură;\n- e) a trunchiului lemnos.\n**Răspuns: a,c,d,e**\n18) Defectele de formă a trunchiului sunt:\n- a) scobitura;\n- b) fibra răsucită;\n- c) rulura;\n- d) ovalitatea;\n- e) canelura.\n**Răspuns: a,d,e**\n19) Defectele de formă a trunchiului sunt:\n- a) cadranura;\n- b) lăbărțarea;\n- c) fibra înclinată;\n- d) conicitatea anormală;\n- e) curbura.\n**Răspuns: b,d,e**\n20) Defectele de formă a trunchiului sunt:\n- a) inima stelată;\n- b) concrescența;\n- c) fibra creată;\n- d) înfurcirea;\n- e) excentricitatea.\n**Răspuns: b,d,e**\n21) Defectele de structură sunt:\n- a) fibra creată;\n- b) fibra răsucită;\n- c) fibra înclinată;\n- d) lăbărțarea;\n- e) contracția.\n**Răspuns: a,b,c**\n22) Defectele de structură sunt:\n- a) loviturile de trasnet;\n- b) nodurile;\n- c) inelele anuale neuniforme;\n- d) ovalitatea;\n- e) pungile de rășină.\n**Răspuns: c,e**\n23) Defectele de structură sunt:\n- a) părțile moi;\n- b) gelivurile;\n- c) excrescențele;\n- d) inima stelată;\n- e) înfurcirea.\n**Răspuns: a,c**\n24) Defectele datorită crăpăturilor sunt:\n- a) pungile moi;\n- b) gelivurile;\n- c) loviturile de trăsnet;\n- d) curbura;\n- e) rulura.\n**Răspuns: b,c,e**\n25) Defectele datorită crăpăturilor sunt:\n- a) conicitatea anormală;\n- b) concrescența;\n- c) contracția;\n- d) cadranura;\n- e) canelura.\n**Răspuns: c,d**\n26) Defectele datorită crăpăturilor sunt:\n- a) inima stelată;\n- b) gelivurile;\n- c) părțile moi;\n- d) gâlmele;\n- e) nodurile căzătoare.\n**Răspuns: a,b**\n### Uscarea și Prelucrarea Lemnului\n27) Uscarea lemnului cu ajutorul curenților de înaltă frecvență presupune:\n- a) încălzirea corpurilor în interiorul lemnului;\n- b) așezarea scândurilor în stive lăsând să treacă aerul prin ele;\n- c) utilizarea unui spațiu de depozitare mare;\n- d) un timp de uscare foarte redus, fiind un procedeu foarte costisitor;\n- e) aplicarea pe suprafața lemnului a unor săruri (sare, uree, glucoză).\n**Răspuns: a,d**\n28) Care este produsul lemnos obținut prin tăierea lemnului rotund în direcție longitudinală, având toate fețele plane și paralele, două câte două, sau numai două fețe plane și paralele?\n- a) cioplitura,\n- b) stâlpii pentru linii aeriene;\n- c) buștenii;\n- d) parchetul;\n- e) cheresteaua.\n**Răspuns: e**\n29) Ce produse din lemn își păstrează structura materialului lemnos din care provin:\n- a) brute, semifabricatele, finite;\n- b) moderne din lemn;\n- c) bilele, manelele și prăjinile;\n- d) stâlpii pentru linii aeriene;\n- e) traversele de cale ferată.\n**Răspuns: a,c,d,e**\n30) Ce produse din lemn nu își păstrează structura materialului lemnos din care provin:\n- a) brute, semifabricatele, finite;\n- b) moderne din lemn;\n- c) bilele, manelele și prăjinile;\n- d) stâlpii pentru linii aeriene;\n- e) traversele de cale ferată.\n**Răspuns: b**\n### Produse din Lemn\n31) Din categoria produselor brute lemnoase, fac parte:\n- a) lemnul rotund pentru mină;\n- b) moderne din lemn;\n- c) bilele, manelele și prăjinile;\n- d) stâlpii pentru liniile aeriene;\n- e) traversele de cale ferată.\n**Răspuns: a,c,d**\n32) Care produse lemnoase sunt utilizate pentru lucrările de sprijinire în mine:\n- a) cioplitura,\n- b) lemnul rotund de mină;\n- c) buștenii;\n- d) parchetul;\n- e) cheresteaua.\n**Răspuns: b**\n33) Din ce material prin prelucrare se pot obține scânduri, dulapi, șipci, rigle, grinzi?\n- a) cioplitură;\n- b) cherestea;\n- c) stâlpi pentru linii aeriene;\n- d) bușteni;\n- e) parchet.\n**Răspuns: b**\n34) Materialele brute lemnoase sunt:\n- a) lemn lamelar;\n- b) cioplitura;\n- c) bilele, manelele, prăjinile;\n- d) lemnul rotund de mină;\n- e) stâlpii pentru liniile aeriene.\n**Răspuns: c,d,e**\n35) Produsele semifabricate din lemn sunt:\n- a) cioplitura;\n- b) cheresteaua;\n- c) furnirurile;\n- d) placajele;\n- e) panelele.\n**Răspuns: a,b,c,d,e**\n36) Elementele de construcție din lemn obținute prin tăiere și cioplire sunt:\n- a) elemente de șarpantă - grinzi, pane, căpriori;\n- b) stâlpi pentru rețele electrice;\n- c) stâlpi pentru mină;\n- d) cherestea;\n- e) furnirul.\n**Răspuns: a,d**\n37) Din cherestea se obțin:\n- a) scânduri;\n- b) dulapi;\n- c) manele;\n- d) margini;\n- e) șipci.\n**Răspuns: a,b,e**\n38) Din cherestea se obțin:\n- a) scânduri;\n- b) dulapi;\n- c) bile;\n- d) șipci;\n- e) rigle și grinzi.\n**Răspuns: a,b,d,e**\n### Tehnologii de Prelucrare\n39) Retezarea la capete, curățarea de crengi, îndepărtarea scoarței fără alte operații asupra cilindrului lemnos duce la formarea produselor lemnoase:\n- a) brute,\n- b) semifabricatele,\n- c) finite;\n- d) moderne din lemn;\n- e) bilele, manelele și prăjinile.\n**Răspuns: a,e**\n40) Care produse lemnoase sunt utilizate pentru obținerea produselor finite din lemn și a semifabricatelor:\n- a) cioplitură,\n- b) stâlpii pentru linii aeriene;\n- c) buștenii;\n- d) parchetul;\n- e) cheresteaua.\n**Răspuns: c**\n41) Furnirul se obține prin:\n- a) acoperirea unor șipci din lemn moale pe ambele fețe cu foi subțiri (0,4-0,6) mm din lemn cu direcția fibrelor perpendiculară pe cea a șipcilor;\n- b) lipirea unui număr impar de foi de lemn subțiri (0,4-0,6) mm între ele, fibrele foilor vor fi perpendiculare unele pe altele;\n- c) tăierea trunchiului de lemn în foi subțiri (0,4-0,6) mm în lungul trunchiului sau tangențial la el;\n- d) prin debitarea cu grijă a trunchiului de copac;\n- e) prin tăierea în foi perpendiculare pe înălțimea trunchiului.\n**Răspuns: c**\n42) Placajele se obțin prin:\n- a) acoperirea unor șipci din lemn moale pe ambele fețe cu foi subțiri (0,4-0,6) mm din lemn cu direcția fibrelor perpendiculară pe cea a șipcilor;\n- b) lipirea unui număr impar de foi de lemn subțiri (0,4-0,6) mm între ele, fibrele foilor vor fi perpendiculare unele pe altele;\n- c) tăierea trunchiului de lemn în foi subțiri (0,4-0,6) mm în lungul trunchiului sau tangențial la el;\n- d) prin debitarea cu grijă a trunchiului de copac;\n- e) prin tăierea în foi perpendiculare pe înălțimea trunchiului.\n**Răspuns: b**\n43) Panelele se obțin prin:\n- a) acoperirea unor șipci din lemn moale pe ambele fețe cu foi subțiri (0,4-0,6) mm din lemn cu direcția fibrelor perpendiculară pe cea a șipcilor;\n- b) lipirea unui număr impar de foi de lemn subțiri (0,4-0,6) mm între ele, fibrele foilor vor fi perpendiculare unele pe altele;\n- c) tăierea trunchiului de lemn în foi subțiri (0,4-0,6) mm în lungul trunchiului sau tangențial la el;\n- d) prin debitarea cu grijă a trunchiului de copac;\n- e) prin tăierea în foi perpendiculare pe înălțimea trunchiului.\n**Răspuns: a**\n44) Produsele finite din lemn sunt:\n- a) plăcile celulare;\n- b) scândurile faltuite;\n- c) dușumelele lambă și uluc;\n- d) parchetul;\n- e) frizurile.\n**Răspuns: a,b,c,d**\n### Materiale Moderne din Lemn\n45) Plăcile din așchii de lemn (PAL) se obțin prin:\n- a) presarea la cald a fibrelor lemnoase;\n- b) aglomerarea așchiilor din lemn cu un adeziv chimic sub efectul temperaturii și presiunii;\n- c) impregnarea și îmbinarea cu rășini a deșeurilor de cherestea;\n- d) impregnarea și îmbinarea cu rășini a foilor de furnir din placaje;\n- e) impregnarea și îmbinarea cu rășini a blocurilor mari de lemn.\n**Răspuns: b**\n46) Plăcile fibrolemnoase (PFL) se obțin prin:\n- a) presarea la cald a fibrelor lemnoase;\n- b) aglomerarea așchiilor din lemn cu un adeziv chimic;\n- c) impăslirea și încleierea fibrelor izolate și a fascicolelor de fibre de lemn;\n- d) impregnarea și îmbinarea cu rășini a foilor de furnir din placaje;\n- e) impregnarea și îmbinarea cu rășini a blocurilor mari de lemn.\n**Răspuns: c**\n47) Lemnul stratificat densificat (lignofolul) se obține prin:\n- a) presarea la cald a fibrelor lemnoase;\n- b) aglomerarea așchiilor din lemn cu un adeziv chimic;\n- c) impregnarea și îmbinarea cu rășini a deșeurilor de cherestea;\n- d) impregnarea și îmbinarea cu rășini a foilor de furnir din placaje;\n- e) impregnarea și îmbinarea cu rășini a blocurilor mari de lemn.\n**Răspuns: d**\n48) Lemnul impregnat și presat (lignostonul) se obține prin:\n- a) presarea la cald a fibrelor lemnoase;\n- b) aglomerarea așchiilor din lemn cu un adeziv chimic;\n- c) impregnarea și îmbinarea cu rășini a deșeurilor de cherestea;\n- d) impregnarea și îmbinarea cu rășini a foilor de furnir din placaje;\n- e) impregnarea și îmbinarea cu rășini a blocurilor mari de lemn.\n**Răspuns: e**\n### 49) Lemnul lamelar încleiat se obține prin:\n- a) îmbinarea cu un adeziv a unor piese din lemn;\n- b) aglomerarea așchiilor din lemn cu un adeziv chimic;\n- c) impregnarea și îmbinarea cu rășini a deșeurilor de cherestea;\n- d) impregnarea și îmbinarea cu rășini a foilor de furnir din placaje;\n- e) impregnarea și îmbinarea cu rășini a blocurilor mari de lemn.\n**Răspuns: a**\n### 50) Protecția lemnului împotriva coroziunii și a focului se face prin:\n- a) uscarea naturală, artificială și chimică;\n- b) carbonizarea superficială;\n- c) aplicarea de straturi protectoare de lacuri și vopsele;\n- d) impregnarea cu substanțe antiseptice și hidrofuge;\n- e) acoperirea cu sticlă solubilă, tencuială de var sau ipsos.\n**Răspuns: b,d,e**\n### 51) Materialele moderne din lemn sunt obținute prin:\n- a) debitare;\n- b) îndepărtarea scoarței și a crengilor;\n- c) presare și tratare la cald;\n- d) impregnare cu rășini sintetice;\n- e) rindeluire.\n**Răspuns: c,d**\n### 52) Din categoria materialelor moderne din lemn fac parte:\n- a) plăci aglomerate din lemn;\n- b) plăci fibro-lemnoase;\n- c) lemnul stratificat;\n- d) parchetul laminat;\n- e) parchetul lamelar.\n**Răspuns: a,b,c**\n### 53) Care este umiditatea relativă standard a lemnului utilizat ca material de construcție:\n- a) 5-10%;\n- b) 15%;\n- c) 5-25%;\n- d) 30%;\n- e) 10%.\n**Răspuns: b**\n### 54) Ce produse lemnoase sunt alcătuite dintr-un miez de șipci din lemn moale, lipite între ele și acoperite pe ambele fețe cu foi de furnir?\n- a) furnirul;\n- b) panelele;\n- c) placajul;\n- d) plăcile celulare;\n- e) scândurile fălțuite.\n**Răspuns: b**\n### 55) Umiditarea lemnului este alcătuită din:\n- a) apa liberă;\n- b) apa liberă și de higroscopicitate;\n- c) apa legată chimic;\n- d) apa liberă, de higroscopicitate și apa legată chimic;\n- e) apa liberă și apa legată chimic.\n**Răspuns: d**\n### 56) Ce produs se obține prin retezarea la capete, curățarea de crengi, îndepărtarea scoarței:\n- a) bușteni, bile, manele;\n- b) furnir;\n- c) panele;\n- d) lemn rotund de mină;\n- e) stâlpi de linii aeriene.\n**Răspuns: a,d,e**\n### 57) Din categoria produselor semifabricate din lemn fac parte:\n- a) stâlpii de linii aeriene;\n- b) bulumacii;\n- c) cioplitura;\n- d) traversele de cale ferată;\n- e) prăjinile.\n**Răspuns: b,c,d**\n### 58) Furnirul se obține din:\n- a) lemn de rășinoase;\n- b) lemn de foioase;\n- c) plăci aglomerate din lemn;\n- d) plăci fibro-lemnoase;\n- e) lemn rotund de mină.\n**Răspuns: b**\n### 59) Produsele finite din lemn sunt:\n- a) placajul;\n- b) plăcile celulare;\n- c) furnirul;\n- d) șindrila;\n- e) dușumele cu lamba și uluc.\n**Răspuns: b,d,e**\n### 60) Ce produse lemnoase se obțin prin tăierea buștenilor de foioase - în foi subțiri, plane h = (0,4 – 0,6) mm?\n- a) furnirul;\n- b) panelele;\n- c) placajul;\n- d) plăcile celulare;\n- e) scândurile fălțuite.\n**Răspuns: a**\n### 61) Uscarea lemnului se face:\n- a) în aer condiționat;\n- b) în mod natural;\n- c) prin metoda chimică;\n- d) prin metoda mecanică;\n- e) cu ajutorul curenților de înaltă frecvență.\n**Răspuns: a,b,c,e**\n### 62) Ce produse lemnoase sunt alcătuite dintr-un cadru rigid de lemn acoperite pe ambele fețe cu furnir sau placaj?\n- a) furnirul;\n- b) panelele;\n- c) placajul;\n- d) plăcile celulare;\n- e) scândurile fălțuite.\n**Răspuns: d**\n### 63) Ce produse lemnoase se obțin prin lipirea foilor de furnir (3-9) cu adezivi de foarte bună calitate și presarea la cald astfel încât fibrele a două foi consecutive să facă un unghi drept (uneori se formează unghiuri de 30, 45 sau 60°)?\n- a) furnirul;\n- b) panelele;\n- c) placajul;\n- d) plăcile celulare;\n- e) scândurile fălțuite.\n**Răspuns: c**\n### 64) Ce produse lemnoase se obțin din scânduri de lemn de rășinoase rindeluite pe fața văzută?\n- a) furnirul;\n- b) panelele;\n- c) placajul;\n- d) plăcile celulare;\n- e) scândurile fălțuite.\n**Răspuns: e**\n## 13. Metode nedestructive pentru determinarea caracteristicilor mecanice ale betonului\n### 1) Încercarea nedestructivă care se bazează pe măsurarea urmei lăsate pe suprafața elementului de o masă mobilă proiectată pe suprafața cu o anumită energie, se numește:\n- a) încercare mecanică cu amprentă;\n- b) încercare acustică;\n- c) încercare atomică;\n- d) încercare mecanică cu recul;\n- e) încercare acustică cu recul.\n**Răspuns: a**\n### 2) Încercarea nedestructivă care se bazează pe proprietatea ultrasunetelor de a nu se propaga prin aer se numește:\n- a) încercare mecanică cu amprentă;\n- b) încercare acustică;\n- c) încercare atomică;\n- d) încercare mecanică cu recul;\n- e) încercare acustică cu recul.\n**Răspuns: b**\n### 3) Încercarea nedestructivă în care se măsoară energia de recul a unui material se numește:\n- a) încercare mecanică cu amprentă;\n- b) încercare acustică;\n- c) încercare atomică;\n- d) încercare mecanică cu recul;\n- e) încercare acustică cu recul.\n**Răspuns: d**\n### 4) Metodele cu radiații penetrante și metodele cu neutroni fac parte din categoria metodelor nedestructive:\n- a) mecanice cu amprentă;\n- b) acustice;\n- c) atomice;\n- d) mecanice cu recul;\n- e) acustice cu recul.\n**Răspuns: c**\n### 5) Biografia betonului încercat cu betonoscopul este dată de:\n- a) tipul de liant;\n- b) tipul de cofraj;\n- c) tipul de utilaj de transport;\n- d) tipul de agregat;\n- e) tipul de macara utilizată la punerea în operă.\n**Răspuns: a,d**\n### 6) Cele mai vechi metode nedestructive sunt:\n- a) metodele acustice;\n- b) metodele mecanice;\n- c) metodele atomice;\n- d) metodele electro-magnetice;\n- e) metodele combinate.\n**Răspuns: b**\n### 7) Din grupa metodelor mecanice de suprafață fac parte:\n- a) metoda ultrasonică;\n- b) metoda cu amprentă;\n- c) metoda cu neutroni;\n- d) metoda cu recul;\n- e) metoda de rezonanță.\n**Răspuns: b,d**\n### 8) Sclerometrul cu amprentă se utilizează la:\n- a) determinarea rezistenței la compresiune;\n- b) determinarea rezistenței la uzură;\n- c) determinarea rezistenței la oboseală;\n- d) determinarea rezistenței la compresiune prin șoc;\n- e) determinarea rezistenței la încovoiere.\n**Răspuns: a**\n### 9) Dezavantajele metodelor nedestructive mecanice de suprafață sunt:\n- a) determinările pot fi repetate pe același element;\n- b) rezultatele pot introduce erori;\n- c) pe același element pot fi determinate mai multe caracteristici;\n- d) se pot utiliza „in situ”;\n- e) rezistențele dau informații pentru un strat superficial din material.\n**Răspuns: b,e**\n### 10) Avantajele metodelor nedestructive sunt:\n- a) determinările pot fi repetate pe același element;\n- b) rezistențele sunt orientative;\n- c) pe același element pot fi determinate mai multe caracteristici;\n- d) se pot utiliza „in situ”;\n- e) rezistențele au valori exacte.\n**Răspuns: a,c,d**\n### 11) Betonoscopul se utilizează la determinarea rezistenței la compresiune prin:\n- a) metoda ultrasonică;\n- b) metoda cu amprentă;\n- c) metoda cu neutroni;\n- d) metoda cu recul;\n- e) metoda de rezonanță.\n**Răspuns: a**\n### 12) Timpul în care ultrasunetele străbat proba (între cei doi palpatori), exprimat în μ, se înregistrează în cazul utilizării:\n- a) metodei acustice;\n- b) metodei mecanice cu amprentă;\n- c) metodei mecanice cu recul;\n- d) metodelor atomice;\n- e) metodelor cu neutroni.\n**Răspuns: a**\n### 13) Două diametre perpendiculare ale urmei lăsate de sclerometru, pe elementul de construcție pe care se face determinarea, se citesc în cazul:\n- a) metodei acustice;\n- b) metodei mecanice cu amprentă;\n- c) metodei mecanice cu recul;\n- d) metodelor atomice;\n- e) metodelor cu neutroni.\n**Răspuns: b**\n### 14) În cazul metodelor nedestructive, (coeficientul de etalonare a aparatului) este obligatoriu a corecta mărimea înregistrată de aparat, pentru că:\n- a) utilizatorul nu are calificarea corespunzătoare;\n- b) aparatul este defect;\n- c) în timp, aparatul se decalibrează;\n- d) nu se dispune de aparatul corespunzător metodei;\n- e) proba nu e bine curățată.\n**Răspuns: c**\n### 15) Coeficientul de etalonare (în cazul metodelor nedestructive), corectează:\n- a) rezistențele mecanice;\n- b) rezistența la compresiune;\n- c) factorul de maturitate;\n- d) mărimea citită pe aparatul utilizat;\n- e) biografia betonului.\n**Răspuns: d**\n### 16) Prin biografia betonului se înțelege:\n- a) informații în legătură cu modul de rezemare al epruvetelor;\n- b) informații în legătură cu forma epruvetelor;\n- c) data turnării betonului;\n- d) informații în legătură cu compoziția betonului și condițiile de păstrare;\n- e) informații în legătură cu gradul de agresivitate.\n**Răspuns: c,d**\n## 14. Materiale din polimeri\n### 1) Proprietățile caracteristice fundamentale a maselor plastice care le recomandă a fi utilizate în construcții sunt:\n- a) plasticitatea;\n- b) elasticitatea;\n- c) flexibilitatea;\n- d) rigiditatea;\n- e) ductilitatea.\n**Răspuns: a,b,c,e**\n### 2) Adaosurile utilizate la fabricarea maselor plastice sunt:\n- a) plastifiantii;\n- b) elastomerii;\n- c) antioxidanții;\n- d) pigmentii;\n- e) substanțe de umplutură.\n**Răspuns: a,c,d,e**\n### 3) Masele plastice se prelucrează prin:\n- a) turnare, presare;\n- b) injectare și torcretare;\n- c) laminare;\n- d) extrudare;\n- e) peliculizare.\n**Răspuns: a,b,c,d,e**\n### 4) Esterii celulozei sunt mase plastice:\n- a) pe bază de izopren;\n- b) pe bază de celuloză;\n- c) pe bază de sinteză;\n- d) pe bază de proteine;\n- e) pe bază de policaridusare.\n**Răspuns: b**\n### 5) Celuloidul este o masă plastică:\n- a) pe bază de izopren;\n- b) pe bază de celuloză;\n- c) pe bază de sinteză;\n- d) pe bază de proteine;\n- e) pe bază de policaridusare.\n**Răspuns: b**\n### 6) Cauciucul sintetic se obține ca un polimer:\n- a) pe bază de izopren;\n- b) pe bază de celuloză;\n- c) pe bază de sinteză;\n- d) pe bază de proteine;\n- e) prin polimerizarea butadienei.\n**Răspuns: e**\n### 7) Polietilena este o masă plastică:\n- a) pe bază de izopren;\n- b) pe bază de celuloză;\n- c) pe bază de sinteză;\n- d) pe bază de proteine;\n- e) prin polimerizare.\n**Răspuns: e**\n### 8) Polistirenul este o masă plastică:\n- a) pe bază de izopren;\n- b) pe bază de celuloză;\n- c) pe bază de sinteză;\n- d) pe bază de proteine;\n- e) prin polimerizare.\n**Răspuns: e**\n### 9) Prelucrarea materialelor din polimeri se poate realiza prin:\n- a) turnare;\n- b) expandare;\n- c) calandrare;\n- d) peliculizare;\n- e) forjare.\n**Răspuns: a,b,c,d**\n### 10) Prelucrarea materialelor din polimeri se poate realiza prin:\n- a) sudare;\n- b) forjare;\n- c) laminare;\n- d) injectare;\n- e) presare.\n**Răspuns: c,d,e**\n### 11) Prelucrarea materialelor din polimeri se poate realiza prin:\n- a) expandare;\n- b) extrudare;\n- c) injectare;\n- d) forjare;\n- e) calandrare.\n**Răspuns: a,b,c,e**\n### 12) Masele plastice sunt alcătuite din:\n- a) polimeri și diferite adaosuri cu rol de plastifiere, stabilizare, armare sau pigmentare;\n- b) macromolecule monodimensionale cu elasticitate mare;\n- c) macromolecule care își măresc reversibil plasticitatea la încălzire;\n- d) macromolecule bidimensionale care la încălzire trec în structuri tridimensionale devenind rigide;\n- e) celuloză hidratată prin tratare cu o soluție concentrată de clorură de zinc.\n**Răspuns: a**\n### 13) Din polietilenă, în construcții se realizează:\n- a) conducte pentru fluide calde;\n- b) foi subțiri transparente;\n- c) protecții anticorozive;\n- d) țevi pentru alimentări cu apă și canalizare;\n- e) garnituri de etanșare, plăci și covoare, tapete.\n**Răspuns: b,d**\n### 14) Din polipropilenă, în construcții, se realizează:\n- a) conducte pentru fluide calde;\n- b) foi subțiri transparente;\n- c) protecții anticorozive;\n- d) țevi pentru alimentări cu apă și canalizare;\n- e) garnituri de etanșare, plăci și covoare, tapete.\n**Răspuns: a,c**\n### 15) Din policlorură de vinil (PCV), în construcții, se realizează:\n- a) conducte pentru fluide calde;\n- b) foi subțiri transparente;\n- c) protecții anticorozive;\n- d) țevi pentru alimentări cu apă și canalizare;\n- e) garnituri de etanșare, plăci și covoare, tapete.\n**Răspuns: e**\n### 16) Din policlorură de vinil (PCV), în construcții, se realizează:\n- a) tuburi pentru instalații electrice;\n- b) jgheaburi, burlane;\n- c) rame de ferestre;\n- d) mâna curentă la scări;\n- e) materiale termo și fonoizolante.\n**Răspuns: a,b,c,d,e**\n### 17) Prin reacțiile de polimerizare se obțin:\n- a) policlorura de vinil;\n- b) polietilena;\n- c) cleiul de cazeină;\n- d) polipropilena;\n- e) polistirenul.\n**Răspuns: a,b,d,e**\n### 18) Prin reacțiile de polimerizare se obțin:\n- a) poliacetatul de vinil;\n- b) cauciucul de siliconi;\n- c) politetrafluoretilena;\n- d) polimetacrilatul de metil;\n- e) rășinile de siliconi.\n**Răspuns: a,c,d**\n### 19) Prin reacțiile de policondensare se obțin:\n- a) polistirenul;\n- b) rășinile epoxidice;\n- c) polietilena;\n- d) poliuretanii;\n- e) poliesterii.\n**Răspuns: b,d,e**\n### 20) Prin reacțiile de policondensare se obțin:\n- a) uleiurile de siliconi;\n- b) polipropilena;\n- c) rășinile de siliconi;\n- d) cauciucuri și siliconi;\n- e) policlorura de vinil.\n**Răspuns: a,c,d**\n### 21) Din poliacetatul de vinil (P.A.V.) se obține:\n- a) Aracet-impermeabilizator pentru mortare și betoane;\n- b) Vinarom - adeziv pentru lemn;\n- c) Aracet – adeziv pentru covoare P.C.V;\n- d) Vinarom – pentru zugrăveli;\n- e) Aracet – adeziv pentru plăci de sticlă, ceramică.\n**Răspuns: a,c,d,e**\n### 22) Politetrafluoretilena (teflonul) se folosește ca:\n- a) impermeabilizator pentru mortare și betoane;\n- b) protecție anticorozivă;\n- c) sticlă organică;\n- d) etanșare;\n- e) izolant electric.\n**Răspuns: b,d,e**\n### 23) Rășinile epoxidice se folosesc ca adezivi pentru:\n- a) beton vechi, beton nou;\n- b) beton-metal, metal-metal, metal-sticlă;\n- c) uleiuri;\n- d) siliconi;\n- e) rășini.\n**Răspuns: a,b**\n## 15. Materiale de izolație, protecție și finisaj\n### 1) Ca materiale de izolare termică și fonică se utilizează:\n- a) beton, BCA, vată de sticlă, vată minerală;\n- b) BCA, cărămidă, plută, stufit, bumlitzul;\n- c) BCA, vată de sticlă, plută, stufit, plăci de stabilit;\n- d) plăci de talaș, betoane cu agregate vegetale, pâsla;\n- e) betoane, cărămizi, carton bitumat.\n**Răspuns: c,d**\n### 2) Materialele utilizate la hidroizolații sunt:\n- a) bitum;\n- b) carton bitumat;\n- c) pânză bitumată;\n- d) împăslituri din fibră metalică bitumate;\n- e) împăslituri din fibră de sticlă bitumate.\n**Răspuns: a,b,c,d,e**\n### 3) Materialele anorganice pentru izolații termice sunt:\n- a) vată de sticlă;\n- b) plută expandată, plută bitumată;\n- c) vată minerală;\n- d) produse ceramice poroase;\n- e) plăci de stufit.\n**Răspuns: a,c,d**\n### 4) Materialele organice pentru izolații termice sunt:\n- a) vată de sticlă;\n- b) plută expandată, plută bitumată;\n- c) vată minerală;\n- d) produse ceramice poroase;\n- e) plăci de stufit.\n**Răspuns: b,e**\n### 5) Materialele mixte pentru izolații termice sunt:\n- a) plăci rigide din vată minerală;\n- b) plăci semirigide din vată minerală;\n- c) betoane cu agregate vegetale;\n- d) betoane cu agregate din șamotă;\n- e) betoane cu agregate și polimeri.\n**Răspuns: a,b,c,e**\n### 6) Materialele pentru izolații fonice se pot realiza din:\n- a) membrane din placaj;\n- b) plăci fonoabsorbante din vată minerală;\n- c) plăci de ipsos;\n- d) plăci ceramice;\n- e) plăci pe bază de nisip și rășini epoxidice.\n**Răspuns: a,b,e**\n### 7) Izolațiile împotriva vibrațiilor și impactului pot fi realizate din:\n- a) plăci PFL, PAL;\n- b) plută;\n- c) pâsle;\n- d) vată minerală;\n- e) arcuri.\n**Răspuns: a,b,c,d,e**\n### 8) Izolația hidrofugă se poate realiza cu:\n- a) plăci din PFL, PAL;\n- b) plăci ceramice;\n- c) membrane bituminoase;\n- d) betoane asfaltice;\n- e) cartoane și pânze bitumate.\n**Răspuns: c,e**\n### 9) Adezivii sunt:\n- a) suspensii de pigmenti în lacuri cu sau fără adaus de ulei, după întărire dau pelicule colorate și opace;\n- b) amestecuri de gelatină, caseină, polimeri sau bitum cu alte materiale care le fac să adere bine la materialele cu care vin în contact;\n- c) amestecuri de adezivi și materiale de umplutură;\n- d) dispersii de pigmenti și materiale de umplutură în firnăisuri și lacuri, după uscare devin dure și mate;\n- e) soluții de substanțe peliculogene în solvenți volatili cu sau fără adausuri de ulei, după întărire devin lucioase.\n**Răspuns: b**\n### 10) Adezivii sunt pe bază de:\n- a) gelatină (din resturile de piei și oase prin fierberea acestora în apă la presiune);\n- b) caseină- se prepară din caseină separată din lapte;\n- c) rășini sintetice – soluții coloide de rășini sintetice în solvenți volatili;\n- d) uleiuri;\n- e) pigmenti.\n**Răspuns: a,b,c**\n### 11) Emailurile sunt:\n- a) suspensii de pigmenti în lacuri cu sau fără adaus de ulei, după întărire dau pelicule colorate și opace;\n- b) amestecuri de gelatină, caseină, polimeri sau bitum cu alte materiale care le fac să adere bine la materialele cu care vin în contact;\n- c) amestecuri de adezivi și materiale de umplutură;\n- d) dispersii de pigmenti și materiale de umplutură în firnăisuri și lacuri, după uscare devin dure și mate;\n- e) soluții de substanțe peliculogene în solvenți volatili cu sau fără adausuri de ulei, după întărire devin lucioase.\n**Răspuns: a**\n### 12) Chiturile sunt:\n- a) suspensii de pigmenti în lacuri cu sau fără adaus de ulei, după întărire dau pelicule colorate și opace;\n- b) amestecuri de gelatină, caoseină, polimeri sau bitum cu alte materiale care le fac să adere bine la materialele cu care vin în contact;\n- c) amestecuri de adezivi și materiale de umplutură;\n- d) dispersii de pigmenti și materiale de umplutură în firnașuri și lacuri, după uscare devin dure și mate;\n- e) soluții de substanțe peliculogene în solvenți volatili cu sau fără adausuri de ulei, după întărire devin lucioase.\n**Răspuns: d**\n### 13) Grundurile sunt:\n- a) suspensii de pigmenti în lacuri cu sau fără adaus de ulei, după întărire dau pelicule colorate și opace;\n- b) amestecuri de gelatină, caseină, polimeri sau bitum cu alte materiale care le fac să adere bine la materialele cu care vin în contact;\n- c) amestecuri de adezivi și materiale de umplutură;\n- d) dispersii de pigmenti și materiale de umplutură în firnașuri și lacuri, după uscare devin dure și mate;\n- e) soluții de substanțe peliculogene în solvenți volatili cu sau fără adausuri de ulei, după întărire devin lucioase.\n**Răspuns: c**\n### 14) Zugrăvelile pot fi:\n- a) simple cu apă și clei - pe suprafețe tencuite (huma – pudră din argilă uscată);\n- b) cu silicați - pe suprafețele tencuite de cărămidă, beton sau piatră;\n- c) cu caseină - pe suprafețele tencuite din beton, cărămidă sau lemn;\n- d) decorative - zugrăveli cu liniatură, șprițuite;\n- e) lavabile și semilavabile.\n**Răspuns: a,b,c,d,e**\n### 15) Zugrăvelile pot fi:\n- a) în ulei;\n- b) în relief (calciu-vecchio) - peretilor interiori;\n- c) cu caseină - pe suprafețele tencuite din beton;\n- d) cu silicați – pe suprafețele din lemn;\n- e) cu gelatină.\n**Răspuns: b,c**\n### 16) Vopsitoriile pot fi:\n- a) pe bază de bază de poliacetat de vinil (PVA) în emulsie apoasă;\n- b) în ulei;\n- c) decorative;\n- d) în relief (calciu-vecchio în ulei);\n- e) cu silicați - pe suprafețele tencuite de cărămidă, beton sau piatră.\n**Răspuns: a,b,c,d**\n### 17) Materiale pentru finisarea uscată a pereților – Tapetele pot fi:\n- a) nelavabile - hârtie netedă sau presată, țesături textile, mătase sau împăslitură de trestie;\n- b) semilavabile - hârtie specială acoperită pe una din fețe (cea văzută) cu un strat de polimer, în relief, permeabil la vapori de apă;\n- c) lavabile sunt cu suport de hârtie acoperit cu o peliculă de polimer;\n- d) placajele interioare;\n- e) placajele exterioare.\n**Răspuns: a,b,c**\n### 18) Materialele pentru pardoseli pot fi din:\n- a) piatră naturală (marmură, calcar, granit);\n- b) linoleum sau PVC;\n- c) din pământ;\n- d) piatră artificială (beton, ciment, ipsos, ceramice, mozaic);\n- e) din lemn.\n**Răspuns: a,b,c,d,e**\n### 19) Vopselele pe bază de ulei sunt:\n- a) suspensii de pigmenti în substanțe peliculogene cu sau fără material de umplutură;\n- b) suspensii de var, ciment, humă în apă sau soluții coloidale de clei-apă;\n- c) suspensii de pigmenti în uleiuri sicative;\n- d) suspensii sau emulsii apoase de polimeri care conțin materiale de umplutură și pigmenti;\n- e) soluții apoase de gelatină, clei de oase și pigmenti.\n**Răspuns: c**\n### 20) Vopselele pe bază de polimeri sunt:\n- a) suspensii de pigmenti în substanțe peliculogene cu sau fără material de umplutură;\n- b) suspensii de var, ciment, humă în apă sau soluții coloidale de clei-apă;\n- c) suspensii de pigmenti în uleiuri sicative;\n- d) suspensii sau emulsii apoase de polimeri care conțin materiale de umplutură și pigmenti;\n- e) soluții apoase de gelatină, clei de oase și pigmenti.\n**Răspuns: d**\n## 16. Materiale compozite\n### 1) În funcție de perioada de apariție, materialele compozite se clasifică în:\n- a) două generații;\n- b) trei generații;\n- c) patru generații;\n- d) cinci generații;\n- e) șase generații.\n**Răspuns: b**\n### 2) Din prima generație de materiale compozite fac parte:\n- a) bachelita armată;\n- b) papirusul;\n- c) cărămizile armate;\n- d) materialele metalice armate;\n- e) hârtia.\n**Răspuns: b,c,d,e**\n### 3) Din a doua generație de materiale compozite fac parte:\n- a) zidăria de piatră și mortar din var hidraulic;\n- b) hârtia;\n- c) bachelita armată;\n- d) zidăria din cărămidă arsă și mortar;\n- e) materialele metalice armate.\n**Răspuns: c,e**\n### 4) Din a doua generație de materiale compozite fac parte:\n- a) papirusul;\n- b) betoanele armate dispers;\n- c) cărămizile armate;\n- d) materiale plastice armate cu fibre de sticlă;\n- e) betoane armate cu fibre de bor.\n**Răspuns: b,d**\n### 5) Din a doua generație de materiale compozite fac parte:\n- a) materialele plastice armate cu fibre de carbon;\n- b) zidăria din cărămidă arsă și mortar;\n- c) betoane armate dispers;\n- d) cărămizile armate cu paie;\n- e) poliesteri armați cu fibre.\n**Răspuns: c**\n### 6) Materialul compozit se definește ca un sistem multifazic obținut pe cale:\n- a) naturală;\n- b) artificială;\n- c) prin polimerizare;\n- d) prin policondensare;\n- e) prin poliaditie.\n**Răspuns: b**\n### 7) Materialul compozit este un sistem creat prin asamblarea artificială a:\n- a) unui component de armare și a unei mase de bază;\n- b) unei mase de bază simplu armată;\n- c) a unei mase de bază și a doi componenti de armare;\n- d) adaosurilor tehnologice;\n- e) ramforsantului și a adaosurilor tehnologice.\n**Răspuns: a**\n### 8) Structura unui material compozit este alcătuită din:\n- a) matrice, ranforsant, adaosuri tehnologice, interfața fibra-matrice;\n- b) masa de bază, materialul de armare, adaosurile tehnologice, interfața fibra-matrice;\n- c) ranforsantul, matricea, aditivi;\n- d) matrice, ranforsant;\n- e) ranforsant, adaosuri topitoare.\n**Răspuns: a,b**\n### 9) Structura unui material compozit este alcătuită din:\n- a) matrice, ranforsant, adaosuri tehnologice;\n- b) ranforsant, întăritor, accelerator;\n- c) ranforsantul, matricea, ancolant;\n- d) masa de bază, materialul de armare, adaosurile tehnologice, interfața fibra-matrice;\n- e) termoplaste, termorigide, catalizatori.\n**Răspuns: d**\n### 10) Matricea poate fi:\n- a) metalică;\n- b) carbonică;\n- c) minerală;\n- d) magnetică;\n- e) polimerică.\n**Răspuns: a,c,e**\n### 11) Matricea polimerică poate fi sub formă de:\n- a) catalizatori;\n- b) accelerator;\n- c) catalizatori;\n- d) termoplaste;\n- e) termorigide.\n**Răspuns: d,e**\n### 12) Matricea minerală poate fi din:\n- a) ciment;\n- b) ipsos;\n- c) var;\n- d) ceramică;\n- e) metalică.\n**Răspuns: a,b,d**\n### 13) Termoplastele își păstrează proprietățile mecanice și electrice până la temperatura:\n- a) 80°C;\n- b) 100°C;\n- c) 120°C;\n- d) 200°C;\n- e) 220°C.\n**Răspuns: c**\n### 14) Matricea minerală poate fi din:\n- a) ceramică;\n- b) metalică;\n- c) termoplaste, termorigide;\n- d) ipsos, ciment;\n- e) ignifuganți.\n**Răspuns: a,d**\n### 15) Ranforsantul poate fi:\n- a) mineral;\n- b) organic;\n- c) anti ultraviolete;\n- d) fibre de carbon;\n- e) fibre din carbură de siliciu.\n**Răspuns: a,b**\n### 16) Ranforsantul poate fi:\n- a) organic;\n- b) metallic;\n- c) sub formă de umpluturi;\n- d) sub formă de catalizatori;\n- e) ceramic.\n**Răspuns: a,b,e**\n### 17) Adaosurile tehnologice pot fi:\n- a) termoplaste;\n- b) catalizatori;\n- c) umpluturi;\n- d) termorigide;\n- e) protectori.\n**Răspuns: b,c,e**\n### 18) Adaosurile tehnologice pot fi:\n- a) anti ultraviolete;\n- b) whiskers;\n- c) din titan;\n- d) acceleratori;\n- e) ignifuganți.\n**Răspuns: a,d,e**\n### 19) Adaosurile tehnologice pot fi:\n- a) termorigide;\n- b) umpluturi;\n- c) catalizatori;\n- d) din bachelită;\n- e) poliesteri armați.\n**Răspuns: b,c**\n### 20) Matricea îndeplinește funcțiunile:\n- a) împiedică flambajul fibrelor de armare;\n- b) majorează rezistența la întindere;\n- c) constituie mediul de transmisie a eforturilor în compozit;\n- d) stabilește forma definitivă a produsului;\n- e) împiedică smulgerea fibrelor.\n**Răspuns: a,c,d**\n### 21) Termoplastele au:\n- a) rezistență mare la șoc mecanic;\n- b) rezistență mare la temperaturi înalte;\n- c) coeficient mare de dilatare termică;\n- d) conductivitate termică ridicată;\n- e) o bună stabilitate dimensională.\n**Răspuns: c,e**\n### 22) Termoplastele au:\n- a) slabă rezistență la coroziune;\n- b) rezistența mică la șoc mecanic;\n- c) rezistență mecanică redusă la temperaturi înalte;\n- d) conductivitate termică redusă;\n- e) coeficient mare de dilatare termică.\n**Răspuns: a,b,c,d,e**\n### 23) Termoplastele au o structură:\n- a) liniară;\n- b) reticulară;\n- c) hexagonală;\n- d) ramificată;\n- e) rectangulară.\n**Răspuns: a,d**\n### 24) Termorigidele au o structură:\n- a) liniară;\n- b) reticulară;\n- c) hexagonală;\n- d) ramificată;\n- e) rectangulară.\n**Răspuns: b**\n### 25) Matricea minerală poate fi realizată din:\n- a) ciment, ipsos, ceramică;\n- b) ceramică, ciment, var;\n- c) ciment, var, ipsos;\n- d) var, ciment;\n- e) ipsos, var.\n**Răspuns: a**\n### 26) Matricea metalică poate fi sub formă de aliaje pe bază de:\n- a) Al, Ca, Mn, Ti, Fe;\n- b) Al, Cu, Mg, Ti, Te;\n- c) Mg, Ti, Al, Cu, Fe;\n- d) Cu, Na, Ti, Fe, Mn;\n- e) Al, Fe, K, Mg, Ca.\n**Răspuns: c**\n### 27) Pentru a evita smulgerea fibrelor din matrice, coeficientul de formă (l/d) trebuie să fie egal cu:\n- a) 29;\n- b) 25;\n- c) 30-50;\n- d) 52;\n- e) 55.\n**Răspuns: c**\n### 28) Interfața fibră-matrice are o grosime de:\n- a) 10⁻⁶ m;\n- b) 10⁻⁷ m;\n- c) 10⁻⁸ m;\n- d) 10⁻⁹ m;\n- e) 10⁻¹⁰ m.\n**Răspuns: c**\n### 29) Avantajele materialelor compozite:\n- a) stabilitate chimică;\n- b) deformății neliniare;\n- c) capacitate de amortizare a vibrațiilor;\n- d) cheltuieli mici de întreținere și reparații;\n- e) grad ridicat de finisare.\n**Răspuns: a,c,d,e**\n### 30) Dezavantajele materialelor compozite:\n- a) (rezistență la rupere/greutate specifică) mult mai mare decât la materialele tradiționale;\n- b) deformății neliniare;\n- c) flexibilitate mare la pânzele cu grosime variabilă;\n- d) asamblarea dificilă cu materialele tradiționale;\n- e) capacitatea de amortizare a vibrațiilor.\n**Răspuns: b,d**\n## 17. Betoane armate cu fibre\n### 1) Betoanele cu armare dispersă sunt alcătuite din:\n- a) beton+fibre continue;\n- b) beton+fibre discontinue;\n- c) beton+fibre continue și discontinue;\n- d) ciment + fibre de azbest;\n- e) ciment + whiskers.\n**Răspuns: b,d**\n### 2) Betoanele cu armare dispersă utilizează ca liant:\n- a) cimentul aluminos;\n- b) cimentul magnezian;\n- c) cimentul portland;\n- d) ipsos;\n- e) bitum.\n**Răspuns: c**\n### 3) Betoanele cu armare dispersă utilizează agregate cu φmax:\n- a) 1mm;\n- b) 3mm;\n- c) 7(10)mm;\n- d) 15mm;\n- e) 31mm.\n**Răspuns: c**\n### 4) Betoanele cu armare dispersă utilizează fibre:\n- a) naturale și artificiale;\n- b) numai naturale;\n- c) numai artificiale;\n- d) doar naturale minerale;\n- e) doar artificiale organice.\n**Răspuns: a**\n### 5) Din fibrele naturale organice fac parte:\n- a) părul de animale;\n- b) carbonul;\n- c) celuloza;\n- d) bazalt;\n- e) zgura de furnal înalt.\n**Răspuns: a,c**\n### 6) Din fibrele naturale organice fac parte:\n- a) polietilena;\n- b) soia;\n- c) loes;\n- d) fibre de nuci de cocos;\n- e) iuta.\n**Răspuns: b,d,e**\n### 7) Fibrele naturale minerale sunt din:\n- a) fibre de nuci de cocos;\n- b) soia;\n- c) azbest;\n- d) bumbac;\n- e) celuloză de lemn.\n**Răspuns: c**\n### 8) Fibrele artificiale organice sunt din:\n- a) carbon;\n- b) polietilena;\n- c) vâscoză;\n- d) in, sisal;\n- e) poliesteri sau acrilice.\n**Răspuns: b,c,e**\n### 9) Fibrele artificiale organice sunt din:\n- a) acetat de celuloză;\n- b) poliesteri;\n- c) sisal;\n- d) silico-aluminoase;\n- e) polipropilenă modificată.\n**Răspuns: a,b,e**\n### 10) Fibrele artificiale minerale sunt din:\n- a) bazalt;\n- b) polietilenă;\n- c) polipropilenă modificată;\n- d) grafit;\n- e) sticlă zirconică.\n**Răspuns: a,d,e**\n### 11) Fibrele artificiale minerale sunt din:\n- a) oțel;\n- b) zgură de furnal înalt;\n- c) azbest;\n- d) fibre de nuci de cocos;\n- e) celuloză de lemn și vegetale.\n**Răspuns: a,b**\n### 12) Azbocimentul se obține din:\n- a) beton+azbest;\n- b) beton+aditivi+azbest;\n- c) ciment+azbest;\n- d) ciment+ nisip + azbest;\n- e) azbest+ nisip.\n**Răspuns: c**\n### 13) Fibrele de azbest se obțin:\n- a) prin polimerizare;\n- b) prin policondensare;\n- c) prin poliaditie;\n- d) prin defibrare;\n- e) pe cale mecanică sau chimică.\n**Răspuns: d,e**\n### 14) Materia primă pentru fibrele de carbon poate fi:\n- a) solidă;\n- b) lichidă;\n- c) gazoasă;\n- d) plasmă;\n- e) vâscoasă.\n**Răspuns: a,b,c**\n### 15) Materia primă solidă pentru fibrele de carbon este:\n- a) gudoanele;\n- b) cărbunele amorf;\n- c) asfaltul de petrol;\n- d) acetilena;\n- e) uleiurile aromatice.\n**Răspuns: b,c**\n### 16) Materia primă lichidă pentru fibrele de carbon este:\n- a) asfaltul de petrol;\n- b) petrolul;\n- c) acetilena;\n- d) cărbunele amorf;\n- e) hidrocarburile.\n**Răspuns: b**\n### 17) Materia primă lichidă pentru fibrele de carbon este:\n- a) uleiuri aromatice;\n- b) hidrocarburi;\n- c) gudoane;\n- d) fibrele organice;\n- e) azbocimentul.\n**Răspuns: a,c**\n### 18) Materia primă gazoasă pentru fibrele de carbon este:\n- a) acetilena;\n- b) hidrocarburi;\n- c) petrol;\n- d) cărbunele amorf;\n- e) fibrele organice.\n**Răspuns: a,b**\n### 19) Fibrele de oțel au secțiunea:\n- a) circulară;\n- b) eliptică;\n- c) triunghiulară;\n- d) pătrată;\n- e) rectangulară.\n**Răspuns: a,d,e**\n### 20) Fibrele de oțel au forma:\n- a) rectilinie;\n- b) în zig-zac;\n- c) cu ciocuri la extremități;\n- d) rugoasă;\n- e) ondulată.\n**Răspuns: a,c,e**\n### 21) Fibrele de sticlă pot fi:\n- a) cu calciu;\n- b) cu potasiu;\n- c) cu titan;\n- d) cu magneziu;\n- e) cu zirconiu.\n**Răspuns: a,e**\n### 22) Fibrele de sticlă pot fi:\n- a) cu polipropilenă;\n- b) cu zirconiu;\n- c) cu aluminiu;\n- d) cu bazosilicăți;\n- e) cu sodiu.\n**Răspuns: b,d,e**\n### 23) La armarea betoanelor cu ciment portland se folosesc fibrele de sticlă:\n- a) cu zirconiu;\n- b) cu silice;\n- c) cu sodiu;\n- d) cu titan;\n- e) cu magneziu.\n**Răspuns: a**\n### 24) Fibrele de sticlă obișnuită se folosesc la betoane având ca liant:\n- a) ipsosul;\n- b) cimentul portland;\n- c) cimentul aluminos;\n- d) cimentul alitic;\n- e) cimentul belitic.\n**Răspuns: a,c**\n### 25) Fibrele de sticlă obișnuită se folosesc la betoane având ca liant:\n- a) cimentul portland;\n- b) cimentul aluminos;\n- c) cimentul magnezian;\n- d) cimentul celitic;\n- e) cimenturile speciale.\n**Răspuns: b,c**\n### 26) Modulul de elasticitate al betonului cu fibre este dat de relația:\n- a) Ebf = Ef μ + Em (1 - μ);\n- b) Ebf = Ef (1 - μ) + Em μ;\n- c) Ebf = Em (1 - μ) + Ef (1 + μ);\n- d) Ebf = Efμ + Em(1 + μ);\n- e) Ebf = Emμ + Ef(1 - μ).\n**Răspuns: a**\n### 27) În betoanele cu fibre de sticlă, granulele de ciment au dimensiunile de aproximativ:\n- a) 20μ;\n- b) 30μ;\n- c) 40μ;\n- d) 50μ;\n- e) 60μ.\n**Răspuns: a**\n### 28) După câte luni de păstare în apă, întreg filamentul de fibre de stică este acoperit cu ciment:\n- a) două luni;\n- b) trei luni;\n- c) (2 - 4) luni;\n- d) (1 - 2) luni;\n- e) (6 -12) luni.\n**Răspuns: e**\n### 29) Procentul optim (în masă) de fibre de sticlă înglobate în beton este:\n- a) 2%;\n- b) 3%;\n- c) (5 - 6)%;\n- d) 7%;\n- e) 9%.\n**Răspuns: c**\n### 30) Betoanele cu fibre de sticlă au dimensiunea maximă a granuleului de nisip:\n- a) 0,25mm;\n- b) 1mm;\n- c) 4mm;\n- d) 8mm;\n- e) 16mm.\n**Răspuns: d**\n### 31) Sticla zirconică a apărut prima oară în:\n- a) 1920;\n- b) 1948;\n- c) 1967;\n- d) 1973;\n- e) 1985.\n**Răspuns: c**\n### 32) Betoanele cu fibre de oțel - fibrele au diametre de:\n- a) 0,15mm;\n- b) 0,25mm;\n- c) 0,35mm;\n- d) 0,45mm;\n- e) 0,55mm.\n**Răspuns: b,c,d**\n### 33) Lungimea minimă a fibrelor pentru ca acestea să nu se smulgă la apariția primelor fisuri este dată de relația:\n- a) l = d (Ef/τm) εt;\n- b) l = d (Ef/Em) εt;\n- c) l = d (Ef/τm) dt;\n- d) l = d (Ef/En) εt;\n- e) l = d (Et/Em) εt.\n**Răspuns: a**\n### 34) Intervalul dintre fibre este dat de relația:\n- a) S = ³√(Vb/n);\n- b) S = √(Vb/n);\n- c) S = ³√(Vb/d);\n- d) S = ³√(Vm/d);\n- e) S = ³√(Vb/d²).\n**Răspuns: a**\n### 35) Betoanele cu fibre de oțel folosesc ca liant:\n- a) ipsosul;\n- b) cimentul portland;\n- c) cimentul aluminos;\n- d) cimentul belitic;\n- e) cimentul alitic.\n**Răspuns: b**\n### 36) Betoanele cu fibre de oțel au diametrul maxim al agregatelor de:\n- a) 1 mm;\n- b) 3 mm;\n- c) 7 mm;\n- d) 10 mm;\n- e) 15 mm.\n**Răspuns: d**\n### 37) Betoanele cu fibre de carbon - la elementele întinse – procentul maxim de armare:\n- a) 2%;\n- b) 4%;\n- c) 6%;\n- d) 8%;\n- e) 10%.\n**Răspuns: e**\n### 38) Betoanele cu fibre de carbon - la elemente încovoiate - procentul maxim de armare:\n- a) 6%;\n- b) 8%;\n- c) 10%;\n- d) 12%;\n- e) 14%.\n**Răspuns: b**\n## 18. Betoane cu polimeri\n### 1) Ce procent din producția de polimeri este folosit în construcții:\n- a) 10%;\n- b) 20%;\n- c) 30%;\n- d) 40%;\n- e) 50%.\n**Răspuns: c**\n### 2) Betoanele cu polimeri pot fi:\n- a) acoperiri;\n- b) permanente;\n- c) temporare;\n- d) betoane propriu-zise;\n- e) impregnate și polimerizate.\n**Răspuns: a,d,e**\n### 3) Acoperirile cu polimeri:\n- a) pătrund în elementul de construcție;\n- b) nu pătrund în elementul de construcție;\n- c) modifică proprietățile fizico-mecanice;\n- d) protejează elementele de beton;\n- e) modifică proprietățile chimice ale betonului.\n**Răspuns: b,d**\n### 4) Acoperirile cu polimeri:\n- a) modifică proprietățile masei de beton;\n- b) nu modifică proprietățile masei de beton;\n- c) modifică proprietățile doar la suprafață;\n- d) influențează permeabilitatea;\n- e) influențează rezistențele mecanice.\n**Răspuns: b,c**\n### 5) Acoperirile cu polimeri se utilizează pentru:\n- a) a micșora permeabilitatea;\n- b) a mări gelivitatea;\n- c) a mări rezistențele mecanice;\n- d) a mări durabilitatea betonului;\n- e) a reduce rezistența la acțiuni chimice.\n**Răspuns: a,b,d**\n### 6) Acoperirile cu polimeri folosesc următorii polimeri:\n- a) epoxidici;\n- b) latexul;\n- c) poliuretanii;\n- d) rășini sintetice;\n- e) polietilena.\n**Răspuns: a,c,e**\n### 7) Betoanele propriu-zise cu polimeri pot fi:\n- a) betoane de ciment cu polimeri;\n- b) betoane de ciment fără polimeri;\n- c) betoane de ciment impregnate;\n- d) betoane cu polimeri, fără ciment;\n- e) betoane cu acoperiri superficiale.\n**Răspuns: a,d**\n### 8) Betoanele de ciment cu polimeri se mai numesc:\n- a) plastobeton;\n- b) betoane cu latex;\n- c) betoane impregnate;\n- d) betoane artificiale;\n- e) betoane de ultimă generație.\n**Răspuns: a,b**\n### 9) Betoanele de ciment cu polimeri se mai numesc:\n- a) betoane cu rășini sintetice;\n- b) betoane polimerizate;\n- c) betoane cu latex;\n- d) betoane moderne;\n- e) betoane aditivate.\n**Răspuns: a,c**\n### 10) Betoanele de ciment cu polimeri se obțin prin adăugarea în masa lor a:\n- a) unui aditiv;\n- b) unui compus macromolecular;\n- c) unui adaos;\n- d) unui adaos tehnologic;\n- e) unui compus micromolecular.\n**Răspuns: b**\n### 11) Liantul mineral la betoanele de ciment cu polimeri poate fi:\n- a) ciment portland;\n- b) ipsosul;\n- c) bitumul;\n- d) cimentul alitic;\n- e) cimentul aluminos.\n**Răspuns: a,b,e**\n### 12) Liantul mineral la betoanele de ciment cu polimeri poate fi:\n- a) varul;\n- b) cauciucul butadienic;\n- c) ipsosul;\n- d) cimentul belitic;\n- e) cimentul brawmilleritic.\n**Răspuns: c**\n### 13) Liantul organic la betoanele de ciment cu polimeri poate fi:\n- a) natural;\n- b) artificial;\n- c) mineral;\n- d) bitumul;\n- e) bitumul aditivat.\n**Răspuns: a,b**\n### 14) Liantul organic sintetic la betoanele de ciment cu polimeri poate fi:\n- a) policlorura de vinil;\n- b) poliacetatul de vinil;\n- c) bitumul;\n- d) uleiurile silicative;\n- e) gudroanele.\n**Răspuns: a,b**\n### 15) Liantul organic sintetic la betoanele de ciment cu polimeri poate fi:\n- a) cauciucul butadienic;\n- b) cauciucul natural;\n- c) etil celuloza;\n- d) hidrații de carbon;\n- e) polistirenul.\n**Răspuns: a**\n### 16) Liantul organic natural la betoanele de ciment cu polimeri poate fi:\n- a) bitumul;\n- b) asfalturile;\n- c) gudroanele;\n- d) polimetacrilății;\n- e) serul sangvin.\n**Răspuns: a,b,c,e**\n### 17) Liantul organic natural la betoanele de ciment cu polimeri poate fi:\n- a) cauciucul natural;\n- b) cazeina;\n- c) cauciucul butadienic;\n- d) polistirenul;\n- e) metil-celuloza.\n**Răspuns: a**\n### 18) În betoanele de ciment cu polimeri, preponderent este:\n- a) părți egale de liant mineral și organic;\n- b) liantul mineral;\n- c) liantul organic;\n- d) apa;\n- e) aditivul.\n**Răspuns: b**\n### 19) La betoanele de ciment cu polimeri dozajele uzuale Ag/C sunt:\n- a) 5;\n- b) 4;\n- c) 3;\n- d) 2;\n- e) 1.\n**Răspuns: c**\n### 20) La betoanele de ciment cu polimeri dozajele uzuale P/C sunt:\n- a) 0,02;\n- b) 0,05-0,2;\n- c) 0,29;\n- d) 0,21;\n- e) 0,23.\n**Răspuns: b**\n### 21) Betoanele de ciment cu polimeri se utilizează la:\n- a) repararea elementelor de beton;\n- b) creșterea gelivității;\n- c) elemente de finisaj;\n- d) creșterea rezistențelor mecanice;\n- e) protecții anticorozive.\n**Răspuns: a,b,e**\n### 22) Betoanele cu polimeri fără ciment conțin:\n- a) liant mineral + agregate + polimer;\n- b) polimer + agregat + agent de întărire;\n- c) polimer + agregate + apă;\n- d) liant mineral + liant organic;\n- e) polimer + agregat + apă.\n**Răspuns: b**\n### 23) La betoanele cu polimeri fără ciment se folosesc polimerii:\n- a) epoxidici;\n- b) vinilici;\n- c) poliesterii;\n- d) metil-celuloza;\n- e) fenolici.\n**Răspuns: a,c,e**\n### 24) La betoanele cu polimeri fără ciment se folosesc agregate:\n- a) de balastieră;\n- b) calcar;\n- c) granulit;\n- d) de concasaj;\n- e) piatra de ghips.\n**Răspuns: a,d**\n### 25) La betoanele cu polimeri fără ciment se folosesc ca agregate:\n- a) filerul;\n- b) granule de cauciuc;\n- c) granulit;\n- d) spărturi ceramice;\n- e) bolovăniș.\n**Răspuns: a**\n### 26) Betoanele impregnate și polimerizate se obțin:\n- a) din beton obișnuit impregnat cu un monomer și polimerizat;\n- b) beton cu liant mixt (mineral + organic);\n- c) prin introducerea unui compus macromolecular;\n- d) microbeton acoperit cu polimeri;\n- e) beton impregnat cu polimeri.\n**Răspuns: a**\n### 27) Betoanele impregnate și polimerizate se obțin din:\n- a) ciment + agregat + apă;\n- b) ciment + agregat + apă + monomer;\n- c) ciment + polimer + agregat + apă;\n- d) polimer + agregate + ciment;\n- e) ipsos + agregat + apa + monomer.\n**Răspuns: b**\n### 28) Impregnarea cu monomer se face la:\n- a) 90°C;\n- b) 5,3 atm și 20°C;\n- c) 10 atm și 25°C;\n- d) 15 atm și 55°C;\n- e) 20 atm și 215°C.\n**Răspuns: e**\n### 29) Betoanele impregnate și polimerizate au rezistențe mecanice mai mari față de betonul obișnuit:\n- a) de două ori;\n- b) de trei ori;\n- c) de patru ori;\n- d) de 1,5 ori;\n- e) de zece ori.\n**Răspuns: b**\n### 30) Betoanele impregnate și polimerizate – polimerizarea se face:\n- a) înainte de întărire;\n- b) după întărire;\n- c) după uscare;\n- d) înainte de punere în operă;\n- e) după punerea în operă.\n**Răspuns: b**";
+
+    const EMBEDDED_QUESTIONS = [
+      { "question": "Which of the following are primary colors of light?", "options": ["Red", "Green", "Blue", "Yellow", "Cyan"], "answer": [0, 1, 2] },
+      { "question": "What is the capital of France?", "options": ["London", "Berlin", "Paris", "Madrid", "Rome"], "answer": [2] },
+      { "question": "Which planets in our solar system are known as gas giants?", "options": ["Mercury", "Venus", "Jupiter", "Saturn", "Mars"], "answer": [2, 3] },
+      { "question": "In which year did World War II end?", "options": ["1943", "1944", "1945", "1946", "1947"], "answer": [2] },
+      { "question": "Which of the following are programming languages?", "options": ["Python", "HTML", "Java", "CSS", "C++"], "answer": [0, 2, 4] }
+    ];
+
+
+    const STORAGE_KEY = 'quiz-personal-v1';
+
+    function savePreferences() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          questionTimeSec: questionTimeSec,
+          waitBetweenSec: waitBetweenSec,
+          noTimersMode: noTimersMode
+        }));
+      } catch (e) { /* ignore */ }
+    }
+
+    function loadPreferences() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        var saved = JSON.parse(raw);
+        if (typeof saved.questionTimeSec === 'number') questionTimeSec = saved.questionTimeSec;
+        if (typeof saved.waitBetweenSec === 'number') waitBetweenSec = saved.waitBetweenSec;
+        if (typeof saved.noTimersMode === 'boolean') noTimersMode = saved.noTimersMode;
+      } catch (e) { /* ignore */ }
+    }
+
+    function applyPreferencesToUI() {
+      var qInput = document.getElementById('setting-question-time');
+      var wInput = document.getElementById('setting-wait-between');
+      var noTimersInput = document.getElementById('setting-no-timers');
+      if (qInput) qInput.value = String(questionTimeSec);
+      if (wInput) wInput.value = String(waitBetweenSec);
+      if (noTimersInput) noTimersInput.checked = noTimersMode;
+      var qVal = document.getElementById('question-time-value');
+      var wVal = document.getElementById('wait-between-value');
+      if (qVal) qVal.textContent = questionTimeSec;
+      if (wVal) wVal.textContent = waitBetweenSec;
+    }
+
+    function shuffleArray(arr) {
+
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function shuffleQuestionOptions(question) {
+      const pairs = question.options.map((text, i) => ({ text, originalIndex: i }));
+      const shuffled = shuffleArray(pairs);
+      const newOptions = shuffled.map(p => p.text);
+      const newAnswer = [];
+      shuffled.forEach((p, newIdx) => {
+        if (question.answer.includes(p.originalIndex)) newAnswer.push(newIdx);
+      });
+      var out = { question: question.question, options: newOptions, answer: newAnswer };
+      if (question.number !== undefined) out.number = question.number;
+      return out;
+    }
+
+    function shuffleQuestions(questionsList) {
+      const shuffled = shuffleArray(questionsList);
+      return shuffled.map(q => shuffleQuestionOptions(q));
+    }
+
+    function showLoadWarning(msg) {
+      const el = document.getElementById('load-warning');
+      if (el) {
+        el.textContent = msg;
+        el.classList.remove('hidden');
+      }
+    }
+
+    function hideLoadWarning() {
+      const el = document.getElementById('load-warning');
+      if (el) el.classList.add('hidden');
+    }
+
+    function parseMarkdownQuiz(mdText) {
+      var structured = {};
+      var names = {};
+      for (var c = 6; c <= 18; c++) structured[c] = [];
+      var lines = mdText.split(/\r?\n/);
+      var i = 0;
+      var currentCategory = 6;
+      var reCategory = /^##\s+(\d+)\.\s*(.*)$/;
+      var reSubheading = /^###\s+(?!\d+\))/;
+      var reQuestion = /^(?:###\s*)?(\d+)\)\s*(.+)$/;
+      var reOption = /^-\s*([a-e])\)\s*(.+)$/;
+      var reAnswer = /^\*\*Răspuns:\s*([a-e,]+)/i;
+      while (i < lines.length) {
+        var catMatch = lines[i].match(reCategory);
+        if (catMatch) {
+          var num = parseInt(catMatch[1], 10);
+          if (num >= 6 && num <= 18) {
+            currentCategory = num;
+            if (catMatch[2]) names[num] = catMatch[2].trim();
+          }
+          i++;
+          continue;
+        }
+        var qLine = lines[i];
+        var qMatch = qLine.match(reQuestion);
+        if (!qMatch) {
+          if (lines[i].match(reSubheading)) { i++; continue; }
+          i++;
+          continue;
+        }
+        var questionNum = parseInt(qMatch[1], 10);
+        var questionText = qMatch[2].trim();
+        var options = [];
+        var optionsByLetter = {};
+        i++;
+        while (i < lines.length) {
+          if (lines[i].match(reCategory)) break;
+          if (lines[i].match(reSubheading) && !lines[i].match(reQuestion)) break;
+          if (lines[i].match(reQuestion)) break;
+          var optMatch = lines[i].match(reOption);
+          if (optMatch) {
+            var letter = optMatch[1].toLowerCase();
+            var optText = optMatch[2].replace(/\s*;\s*$/, '').trim();
+            var idx = options.length;
+            options.push(optText);
+            optionsByLetter[letter] = idx;
+            i++;
+          } else if (lines[i].match(reAnswer)) {
+            break;
+          } else {
+            i++;
+          }
+        }
+        if (i >= lines.length) break;
+        var ansMatch = lines[i].match(reAnswer);
+        if (!ansMatch) {
+          if (lines[i].match(reQuestion)) continue;
+          i++;
+          continue;
+        }
+        var answerLetters = ansMatch[1].toLowerCase().replace(/\s/g, '').split(',');
+        var answer = [];
+        for (var k = 0; k < answerLetters.length; k++) {
+          var letter = answerLetters[k].trim();
+          if (optionsByLetter.hasOwnProperty(letter)) {
+            answer.push(optionsByLetter[letter]);
+          }
+        }
+        answer.sort(function (a, b) { return a - b; });
+        if (questionText && options.length > 0 && answer.length > 0) {
+          structured[currentCategory].push({ question: questionText, options: options, answer: answer, number: questionNum });
+        }
+        i++;
+      }
+      return { questions: structured, names: names };
+    }
+
+    function flattenStructured(structured) {
+      var flat = [];
+      for (var c = 6; c <= 18; c++) {
+        if (structured[c] && structured[c].length) flat = flat.concat(structured[c]);
+      }
+      return flat;
+    }
+
+    function showMainMenu() {
+      var questionEl = document.querySelector('.question-text');
+      var optionsContainer = document.getElementById('options-container');
+      stopQuestionTimer();
+      stopWaitTimer();
+      clearPauseState();
+      questionEl.textContent = 'Main menu';
+      questionEl.closest('section').classList.remove('category-screen');
+      questionEl.closest('section').classList.add('main-menu-screen');
+      optionsContainer.innerHTML = '';
+      var wrap = document.createElement('div');
+      wrap.className = 'main-menu-buttons';
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'main-menu-btn';
+      btn.textContent = 'Chemistry Sem 2';
+      btn.addEventListener('click', function () {
+        questionEl.closest('section').classList.remove('main-menu-screen');
+        showCategoryScreen();
+      });
+      wrap.appendChild(btn);
+      optionsContainer.appendChild(wrap);
+      var timerEl = document.querySelector('.timer');
+      if (timerEl) timerEl.textContent = '0:00';
+      var showBtn = document.getElementById('btn-show-answer');
+      if (showBtn) showBtn.disabled = true;
+      var backBtn = document.getElementById('btn-back');
+      if (backBtn) backBtn.classList.add('hidden');
+      var tracker = document.getElementById('progress-tracker');
+      if (tracker) tracker.classList.add('hidden');
+      var nextBtn = document.getElementById('btn-next-question');
+      if (nextBtn) nextBtn.classList.add('hidden');
+    }
+
+    function showCategoryScreen() {
+      var questionEl = document.querySelector('.question-text');
+      var optionsContainer = document.getElementById('options-container');
+      stopQuestionTimer();
+      stopWaitTimer();
+      clearPauseState();
+      if (!questions || Object.keys(questions).length === 0) return;
+      questionEl.textContent = 'Select a category';
+      questionEl.closest('section').classList.remove('main-menu-screen');
+      questionEl.closest('section').classList.add('category-screen');
+      optionsContainer.innerHTML = '';
+      var wrap = document.createElement('div');
+      wrap.className = 'category-buttons';
+      for (var c = 6; c <= 18; c++) {
+        var count = questions[c] ? questions[c].length : 0;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'category-btn';
+        var label = document.createElement('span');
+        label.className = 'category-btn-label';
+        label.textContent = c + '.';
+        var nameEl = document.createElement('span');
+        nameEl.className = 'category-btn-name';
+        nameEl.textContent = (categoryNames[c] || 'Category ' + c) + ' (' + count + ' question' + (count === 1 ? '' : 's') + ')';
+        btn.appendChild(label);
+        btn.appendChild(nameEl);
+        btn.dataset.category = String(c);
+        btn.disabled = count === 0;
+        if (count > 0) btn.addEventListener('click', function () { startQuizForCategory(parseInt(this.dataset.category, 10)); });
+        wrap.appendChild(btn);
+      }
+      optionsContainer.appendChild(wrap);
+      var timerEl = document.querySelector('.timer');
+      if (timerEl) timerEl.textContent = '0:00';
+      var showBtn = document.getElementById('btn-show-answer');
+      if (showBtn) showBtn.disabled = true;
+      var backBtn = document.getElementById('btn-back');
+      if (backBtn) backBtn.classList.add('hidden');
+      var tracker = document.getElementById('progress-tracker');
+      if (tracker) tracker.classList.add('hidden');
+      var nextBtn = document.getElementById('btn-next-question');
+      if (nextBtn) nextBtn.classList.add('hidden');
+    }
+
+    function startQuizForCategory(cat) {
+      var list = questions[cat];
+      if (!list || list.length === 0) return;
+      document.querySelector('.question-container').classList.remove('category-screen', 'main-menu-screen');
+      activeQuestions = shuffleQuestions(list.slice());
+      currentQuestionIndex = 0;
+      score = 0;
+      wrongCount = 0;
+      answerResults = new Array(activeQuestions.length);
+      var backBtn = document.getElementById('btn-back');
+      if (backBtn) backBtn.classList.remove('hidden');
+      var tracker = document.getElementById('progress-tracker');
+      if (tracker) tracker.classList.remove('hidden');
+      displayQuestion(currentQuestionIndex);
+    }
+
+    function handleBackClick() {
+      stopQuestionTimer();
+      stopWaitTimer();
+      clearPauseState();
+      showCategoryScreen();
+    }
+
+    async function loadQuestions() {
+      hideLoadWarning();
+      try {
+        var result = parseMarkdownQuiz(EMBEDDED_MARKDOWN);
+        var flat = flattenStructured(result.questions);
+        if (flat.length > 0) {
+          questions = result.questions;
+          categoryNames = result.names || {};
+          showMainMenu();
+          return;
+        }
+      } catch (err) {
+        console.warn('Embedded markdown parse failed:', err.message);
+      }
+
+      if (typeof window.QUIZ_QUESTIONS === 'object' && Array.isArray(window.QUIZ_QUESTIONS) && window.QUIZ_QUESTIONS.length > 0) {
+        questions = {};
+        for (var c = 6; c <= 18; c++) questions[c] = [];
+        questions[6] = window.QUIZ_QUESTIONS;
+        categoryNames[6] = 'All questions';
+        showMainMenu();
+        showLoadWarning('Loaded fallback embedded question list.');
+        return;
+      }
+
+      questions = {};
+      for (var c = 6; c <= 18; c++) questions[c] = [];
+      questions[6] = EMBEDDED_QUESTIONS;
+      categoryNames[6] = 'All questions';
+      showMainMenu();
+      showLoadWarning('Embedded category dataset could not be parsed. Using built-in demo questions.');
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function stopQuestionTimer() {
+      if (questionTimerId !== null) {
+        clearInterval(questionTimerId);
+        questionTimerId = null;
+      }
+    }
+
+    function stopWaitTimer() {
+      if (waitTimerId !== null) {
+        clearInterval(waitTimerId);
+        waitTimerId = null;
+      }
+    }
+
+    function updateProgressTracker() {
+      var total = activeQuestions.length;
+      var current = Math.min(currentQuestionIndex + 1, total) || 1;
+      var curEl = document.getElementById('progress-current-total');
+      var corEl = document.getElementById('progress-correct');
+      var wrongEl = document.getElementById('progress-wrong');
+      var barEl = document.getElementById('progress-bar');
+      var pctEl = document.getElementById('progress-pct');
+      if (curEl) curEl.textContent = current + ' / ' + total;
+      if (corEl) corEl.textContent = 'Correct: ' + score;
+      if (wrongEl) wrongEl.textContent = 'Wrong: ' + wrongCount;
+      if (barEl) {
+        barEl.innerHTML = '';
+        for (var i = 0; i < total; i++) {
+          var seg = document.createElement('div');
+          seg.className = 'progress-segment';
+          if (answerResults[i] === true) seg.classList.add('correct');
+          else if (answerResults[i] === false) seg.classList.add('wrong');
+          else seg.classList.add('pending');
+          barEl.appendChild(seg);
+        }
+      }
+      var answered = score + wrongCount;
+      var pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+      if (pctEl) pctEl.textContent = pct + '%';
+    }
+
+    function setPauseResumeVisibility(paused) {
+      const pauseBtn = document.querySelector('.btn-pause');
+      const resumeBtn = document.querySelector('.btn-resume');
+      if (pauseBtn) pauseBtn.classList.toggle('hidden', paused);
+      if (resumeBtn) resumeBtn.classList.toggle('hidden', !paused);
+    }
+
+    function goToNextQuestion() {
+      currentQuestionIndex += 1;
+      if (currentQuestionIndex >= activeQuestions.length) {
+        showResults();
+      } else {
+        displayQuestion(currentQuestionIndex);
+      }
+    }
+
+    function showResults() {
+      const questionEl = document.querySelector('.question-text');
+      const optionsContainer = document.getElementById('options-container');
+      stopQuestionTimer();
+      stopWaitTimer();
+      clearPauseState();
+
+      const total = activeQuestions.length;
+      const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+      const answered = score + wrongCount;
+      const progressPct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
+      questionEl.textContent = 'Quiz complete!';
+      optionsContainer.innerHTML = '<div class="results-panel">' +
+        '<h2>Your results</h2>' +
+        '<p class="results-score">' + score + ' / ' + total + '</p>' +
+        '<p class="results-percentage">' + percentage + '% correct</p>' +
+        '<p class="results-summary">Correct: ' + score + ' &middot; Wrong: ' + wrongCount + ' &middot; Progress: ' + progressPct + '%</p>' +
+        '</div>';
+      updateProgressTracker();
+
+      const timerEl = document.querySelector('.timer');
+      if (timerEl) timerEl.textContent = formatTime(0);
+      var showBtn = document.getElementById('btn-show-answer');
+      if (showBtn) showBtn.disabled = true;
+      var backBtn = document.getElementById('btn-back');
+      if (backBtn) backBtn.classList.remove('hidden');
+      var nextBtn = document.getElementById('btn-next-question');
+      if (nextBtn) nextBtn.classList.add('hidden');
+    }
+
+    function startWaitCountdown(startRemaining) {
+      stopWaitTimer();
+      if (noTimersMode) {
+        goToNextQuestion();
+        return;
+      }
+      waitRemainingSec = startRemaining !== undefined ? startRemaining : waitBetweenSec;
+      if (waitRemainingSec <= 0) {
+        goToNextQuestion();
+        return;
+      }
+      const timerEl = document.querySelector('.timer');
+      if (timerEl) timerEl.textContent = formatTime(waitRemainingSec) + ' until next';
+
+      waitTimerId = setInterval(() => {
+        if (isPaused) return;
+        waitRemainingSec -= 1;
+        if (timerEl) timerEl.textContent = formatTime(waitRemainingSec) + ' until next';
+        if (waitRemainingSec <= 0) {
+          stopWaitTimer();
+          goToNextQuestion();
+        }
+      }, 1000);
+    }
+
+    function handleTimeUp(question, optionsContainer) {
+      stopQuestionTimer();
+      clearPauseState();
+      if (answerResults[currentQuestionIndex] === undefined) {
+        answerResults[currentQuestionIndex] = false;
+        wrongCount += 1;
+        updateProgressTracker();
+      }
+      const timerEl = document.querySelector('.timer');
+      if (timerEl) timerEl.textContent = formatTime(0);
+
+      const buttons = optionsContainer.querySelectorAll('.option-btn');
+      buttons.forEach((btn) => { btn.disabled = true; });
+      question.answer.forEach((idx) => {
+        if (buttons[idx]) buttons[idx].classList.add('correct');
+      });
+      var showBtn = document.getElementById('btn-show-answer');
+      if (showBtn) showBtn.disabled = true;
+      if (!noTimersMode) startWaitCountdown();
+    }
+
+    function clearPauseState() {
+      isPaused = false;
+      pausePhase = null;
+      pauseRemaining = 0;
+      pauseQuestion = null;
+      pauseOptionsContainer = null;
+      setPauseResumeVisibility(false);
+    }
+
+    function startQuestionTimer(question, optionsContainer, startRemaining) {
+      stopQuestionTimer();
+      clearPauseState();
+      if (noTimersMode) return;
+      questionRemainingSec = startRemaining !== undefined ? startRemaining : questionTimeSec;
+      const timerEl = document.querySelector('.timer');
+      if (timerEl) timerEl.textContent = formatTime(questionRemainingSec);
+
+      questionTimerId = setInterval(() => {
+        if (isPaused) return;
+        questionRemainingSec -= 1;
+        if (timerEl) timerEl.textContent = formatTime(questionRemainingSec);
+        if (questionRemainingSec <= 0) {
+          handleTimeUp(question, optionsContainer);
+        }
+      }, 1000);
+    }
+
+    function displayQuestion(index) {
+      const questionEl = document.querySelector('.question-text');
+      const optionsContainer = document.getElementById('options-container');
+      stopQuestionTimer();
+      stopWaitTimer();
+      clearPauseState();
+
+      if (index < 0 || index >= activeQuestions.length) {
+        showResults();
+        return;
+      }
+
+      const question = activeQuestions[index];
+      questionEl.textContent = (question.number !== undefined ? question.number + ') ' : '') + question.question;
+
+      optionsContainer.innerHTML = '';
+      question.options.forEach((optionText, i) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn option-btn';
+        btn.dataset.index = String(i);
+        btn.textContent = optionText;
+        btn.addEventListener('click', () => handleOptionClick(btn, question, optionsContainer));
+        optionsContainer.appendChild(btn);
+      });
+
+      var showBtn = document.getElementById('btn-show-answer');
+      if (showBtn) showBtn.disabled = false;
+      var nextBtn = document.getElementById('btn-next-question');
+      var timerEl = document.querySelector('.timer');
+      if (noTimersMode) {
+        if (nextBtn) nextBtn.classList.remove('hidden');
+        if (timerEl) timerEl.textContent = 'No limit';
+      } else {
+        if (nextBtn) nextBtn.classList.add('hidden');
+        startQuestionTimer(question, optionsContainer);
+      }
+      updateProgressTracker();
+    }
+
+    function handleOptionClick(clickedBtn, question, optionsContainer) {
+      const buttons = optionsContainer.querySelectorAll('.option-btn');
+      if (buttons[0].disabled) return;
+      if (clickedBtn.classList.contains('correct') || clickedBtn.classList.contains('wrong')) return;
+
+      const clickedIndex = parseInt(clickedBtn.dataset.index, 10);
+      const correctIndices = question.answer;
+      const isCorrect = correctIndices.includes(clickedIndex);
+
+      clickedBtn.classList.add(isCorrect ? 'correct' : 'wrong');
+
+      if (isCorrect) {
+        const correctSelectedCount = optionsContainer.querySelectorAll('.option-btn.correct').length;
+        if (correctSelectedCount === correctIndices.length) {
+          score += 1;
+          answerResults[currentQuestionIndex] = true;
+          updateProgressTracker();
+          stopQuestionTimer();
+          buttons.forEach((btn) => { btn.disabled = true; });
+          if (!noTimersMode) startWaitCountdown();
+        }
+      } else {
+        answerResults[currentQuestionIndex] = false;
+        wrongCount += 1;
+        updateProgressTracker();
+        stopQuestionTimer();
+        correctIndices.forEach((idx) => {
+          if (buttons[idx]) buttons[idx].classList.add('correct');
+        });
+        buttons.forEach((btn) => { btn.disabled = true; });
+        if (!noTimersMode) startWaitCountdown();
+      }
+    }
+
+    function handlePauseClick() {
+      if (isPaused) return;
+      if (questionTimerId !== null) {
+        clearInterval(questionTimerId);
+        questionTimerId = null;
+        isPaused = true;
+        pausePhase = 'question';
+        pauseRemaining = questionRemainingSec;
+        pauseQuestion = activeQuestions[currentQuestionIndex];
+        pauseOptionsContainer = document.getElementById('options-container');
+        setPauseResumeVisibility(true);
+        const timerEl = document.querySelector('.timer');
+        if (timerEl) timerEl.textContent = formatTime(pauseRemaining) + ' (paused)';
+      } else if (waitTimerId !== null) {
+        clearInterval(waitTimerId);
+        waitTimerId = null;
+        isPaused = true;
+        pausePhase = 'wait';
+        pauseRemaining = waitRemainingSec;
+        setPauseResumeVisibility(true);
+        const timerEl = document.querySelector('.timer');
+        if (timerEl) timerEl.textContent = formatTime(pauseRemaining) + ' until next (paused)';
+      }
+    }
+
+    function handleResumeClick() {
+      if (!isPaused) return;
+      if (pausePhase === 'question' && pauseQuestion && pauseOptionsContainer) {
+        startQuestionTimer(pauseQuestion, pauseOptionsContainer, pauseRemaining);
+      } else if (pausePhase === 'wait') {
+        startWaitCountdown(pauseRemaining);
+      }
+      clearPauseState();
+    }
+
+    function handleSkipClick() {
+      if (waitTimerId !== null) {
+        stopWaitTimer();
+        clearPauseState();
+        goToNextQuestion();
+      } else if (questionTimerId !== null && activeQuestions[currentQuestionIndex]) {
+        const question = activeQuestions[currentQuestionIndex];
+        const optionsContainer = document.getElementById('options-container');
+        handleTimeUp(question, optionsContainer);
+      }
+    }
+
+    function handleShowAnswerClick() {
+      if (currentQuestionIndex < 0 || currentQuestionIndex >= activeQuestions.length) return;
+      const optionsContainer = document.getElementById('options-container');
+      const buttons = optionsContainer.querySelectorAll('.option-btn');
+      if (!buttons.length || buttons[0].disabled) return;
+      const question = activeQuestions[currentQuestionIndex];
+      handleTimeUp(question, optionsContainer);
+    }
+
+    function toggleSettingsPanel() {
+      document.getElementById('settings-panel').classList.toggle('open');
+    }
+
+    function updateSettingsFromUI() {
+      var qInput = document.getElementById('setting-question-time');
+      var wInput = document.getElementById('setting-wait-between');
+      var noTimersInput = document.getElementById('setting-no-timers');
+      if (qInput) {
+        questionTimeSec = parseInt(qInput.value, 10);
+        var qVal = document.getElementById('question-time-value');
+        if (qVal) qVal.textContent = questionTimeSec;
+      }
+      if (wInput) {
+        waitBetweenSec = parseInt(wInput.value, 10);
+        var wVal = document.getElementById('wait-between-value');
+        if (wVal) wVal.textContent = waitBetweenSec;
+      }
+      if (noTimersInput) {
+        noTimersMode = noTimersInput.checked;
+        if (activeQuestions.length > 0 && currentQuestionIndex < activeQuestions.length) {
+          var nextBtn = document.getElementById('btn-next-question');
+          var timerEl = document.querySelector('.timer');
+          if (noTimersMode) {
+            stopQuestionTimer();
+            stopWaitTimer();
+            if (nextBtn) nextBtn.classList.remove('hidden');
+            if (timerEl) timerEl.textContent = 'No limit';
+          } else {
+            if (nextBtn) nextBtn.classList.add('hidden');
+            if (timerEl) timerEl.textContent = formatTime(questionTimeSec);
+            startQuestionTimer(activeQuestions[currentQuestionIndex], document.getElementById('options-container'));
+          }
+        }
+      }
+      savePreferences();
+    }
+
+    function handleNextQuestionClick() {
+      if (activeQuestions.length === 0 || currentQuestionIndex >= activeQuestions.length) return;
+      var optionsContainer = document.getElementById('options-container');
+      var question = activeQuestions[currentQuestionIndex];
+      if (answerResults[currentQuestionIndex] === undefined) {
+        answerResults[currentQuestionIndex] = false;
+        wrongCount += 1;
+        updateProgressTracker();
+        var buttons = optionsContainer.querySelectorAll('.option-btn');
+        buttons.forEach(function (btn) { btn.disabled = true; });
+        question.answer.forEach(function (idx) {
+          if (buttons[idx]) buttons[idx].classList.add('correct');
+        });
+        var showBtn = document.getElementById('btn-show-answer');
+        if (showBtn) showBtn.disabled = true;
+      }
+      goToNextQuestion();
+    }
+
+    loadPreferences();
+    applyPreferencesToUI();
+
+    document.querySelector('.btn-pause').addEventListener('click', handlePauseClick);
+    document.querySelector('.btn-resume').addEventListener('click', handleResumeClick);
+    document.querySelector('.btn-skip').addEventListener('click', handleSkipClick);
+    document.getElementById('btn-back').addEventListener('click', handleBackClick);
+    document.getElementById('btn-show-answer').addEventListener('click', handleShowAnswerClick);
+    document.getElementById('btn-next-question').addEventListener('click', handleNextQuestionClick);
+    document.getElementById('btn-settings').addEventListener('click', toggleSettingsPanel);
+
+    document.getElementById('setting-question-time').addEventListener('input', updateSettingsFromUI);
+    document.getElementById('setting-question-time').addEventListener('change', updateSettingsFromUI);
+    document.getElementById('setting-wait-between').addEventListener('input', updateSettingsFromUI);
+    document.getElementById('setting-wait-between').addEventListener('change', updateSettingsFromUI);
+    document.getElementById('setting-no-timers').addEventListener('change', updateSettingsFromUI);
+
+    function loadQuestionsWhenReady() {
+      var base = location.href.replace(/[#?].*$/, '').replace(/[^/\\]+$/, '');
+      if (!base.endsWith('/') && !base.endsWith('\\')) base += '/';
+      var s = document.createElement('script');
+      s.src = base + 'questions1.data.js';
+      s.onload = s.onerror = function () { loadQuestions(); };
+      document.head.appendChild(s);
+    }
+    loadQuestionsWhenReady();
+  </script>
+</body>
+</html>
