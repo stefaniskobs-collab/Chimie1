@@ -302,6 +302,72 @@
       color: #721c24;
     }
 
+    .text-answer-feedback.shown {
+      display: block;
+      background: #e8eaf0;
+      border: 1px solid #c0c4cc;
+      color: #1a1a2e;
+    }
+
+    .text-answer-review {
+      margin: 0;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: #f5f6f8;
+      border: 1px solid #e1e4ea;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: #1a1a2e;
+      display: none;
+    }
+
+    .text-answer-review.visible {
+      display: block;
+    }
+
+    .text-answer-review strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .self-grade-actions {
+      display: none;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .self-grade-actions.visible {
+      display: flex;
+    }
+
+    .btn-grade-right {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .btn-grade-right:hover {
+      background: #218838;
+    }
+
+    .btn-grade-wrong {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .btn-grade-wrong:hover {
+      background: #c82333;
+    }
+
+    .btn-grade-unknown {
+      background: #ffc107;
+      color: #1a1a2e;
+    }
+
+    .btn-grade-unknown:hover {
+      background: #e0a800;
+    }
+
     .text-answer-hint {
       margin: -0.25rem 0 0 0;
       font-size: 0.86rem;
@@ -617,6 +683,7 @@
     let answerResults = [];
     let currentCategory = null;
     let currentQuizMode = 'normal';
+    let currentQuizFormat = 'multiple-choice';
     let chemistryQuestions = {};
     let chemistryCategoryNames = {};
     let activeQuestionSetTitle = 'Chemistry Sem 2';
@@ -2581,13 +2648,28 @@
       } catch (e) { /* ignore */ }
     }
 
-    function getWrongSetKey(cat) {
+    function normalizeQuizFormat(format) {
+      return format === 'text-box' ? 'text-box' : 'multiple-choice';
+    }
+
+    function getWrongSetKey(cat, quizFormat) {
+      var base = cat === null || cat === undefined ? 'all' : String(cat);
+      return base + '::' + normalizeQuizFormat(quizFormat || currentQuizFormat);
+    }
+
+    function getLegacyWrongSetKey(cat) {
       return cat === null || cat === undefined ? 'all' : String(cat);
     }
 
-    function getSavedWrongSetForCategory(cat) {
+    function inferQuizFormatFromList(list) {
+      if (!Array.isArray(list) || list.length === 0) return 'multiple-choice';
+      return list.some(function (question) { return isTextQuestion(question); }) ? 'text-box' : 'multiple-choice';
+    }
+
+    function getSavedWrongSetForCategory(cat, quizFormat) {
       var sets = loadSavedWrongSets();
-      var set = sets[getWrongSetKey(cat)];
+      var set = sets[getWrongSetKey(cat, quizFormat)];
+      if (!set && quizFormat === undefined) set = sets[getLegacyWrongSetKey(cat)];
       if (!set || !Array.isArray(set.questions) || set.questions.length === 0) return null;
       return set;
     }
@@ -2606,10 +2688,11 @@
       var wrongQuestions = getWrongQuestionsFromCurrentAttempt();
       if (wrongQuestions.length === 0) return { saved: false, count: 0 };
       var sets = loadSavedWrongSets();
-      var key = getWrongSetKey(currentCategory);
+      var key = getWrongSetKey(currentCategory, currentQuizFormat);
       sets[key] = {
         category: currentCategory,
         categoryName: currentCategory !== null ? (categoryNames[currentCategory] || ('Category ' + currentCategory)) : 'Mixed quiz',
+        quizFormat: normalizeQuizFormat(currentQuizFormat),
         questions: wrongQuestions,
         score: score,
         total: activeQuestions.length,
@@ -2620,9 +2703,10 @@
       return { saved: true, count: wrongQuestions.length };
     }
 
-    function clearSavedWrongSetForCategory(cat) {
+    function clearSavedWrongSetForCategory(cat, quizFormat) {
       var sets = loadSavedWrongSets();
-      delete sets[getWrongSetKey(cat)];
+      delete sets[getWrongSetKey(cat, quizFormat)];
+      if (quizFormat === undefined) delete sets[getLegacyWrongSetKey(cat)];
       saveSavedWrongSets(sets);
     }
 
@@ -2717,6 +2801,7 @@
           wrongCount: wrongCount,
           answerResults: answerResults,
           currentQuizMode: currentQuizMode,
+          currentQuizFormat: currentQuizFormat,
           questionTimeSec: questionTimeSec,
           waitBetweenSec: waitBetweenSec,
           noTimersMode: noTimersMode,
@@ -2754,6 +2839,7 @@
       wrongCount = typeof saved.wrongCount === 'number' ? saved.wrongCount : 0;
       answerResults = Array.isArray(saved.answerResults) ? saved.answerResults.slice() : new Array(activeQuestions.length);
       currentQuizMode = saved.currentQuizMode || 'normal';
+      currentQuizFormat = saved.currentQuizFormat || inferQuizFormatFromList(activeQuestions) || 'multiple-choice';
       if (typeof saved.questionTimeSec === 'number') questionTimeSec = saved.questionTimeSec;
       if (typeof saved.waitBetweenSec === 'number') waitBetweenSec = saved.waitBetweenSec;
       if (typeof saved.noTimersMode === 'boolean') noTimersMode = saved.noTimersMode;
@@ -2790,8 +2876,10 @@
 
     function refreshCurrentMenu() {
       var section = document.querySelector('.question-container');
-      if (section && section.classList.contains('category-screen')) showCategoryScreen();
-      else showMainMenu();
+      if (section && section.classList.contains('category-screen')) {
+        if (activeQuestionSetTitle === ARCHITECTURAL_CATEGORY_NAME) showArchitectureQuizTypeScreen();
+        else showCategoryScreen();
+      } else showMainMenu();
     }
 
     function appendProgressActions(parent, includeLifetimeSummary) {
@@ -2869,13 +2957,15 @@
         var set = sets[key];
         var row = document.createElement('div');
         row.className = 'practice-actions';
-        var label = (set.category !== null && set.category !== undefined ? set.category + '. ' : '') + (set.categoryName || 'Saved quiz');
+        var format = normalizeQuizFormat(set.quizFormat || inferQuizFormatFromList(set.questions));
+        var formatLabel = format === 'text-box' ? 'Text box' : 'Multiple choice';
+        var label = (set.category !== null && set.category !== undefined ? set.category + '. ' : '') + (set.categoryName || 'Saved quiz') + ' - ' + formatLabel;
         row.appendChild(createActionButton('Retake ' + label + ' (' + set.questions.length + ')', '#28a745', '#fff', function () {
-          startWrongPracticeForCategory(set.category);
+          startWrongPracticeForCategory(set.category, format);
         }, false));
         row.appendChild(createActionButton('Clear', '#f8d7da', '#721c24', function () {
           if (window.confirm('Clear this saved wrong-question practice set?')) {
-            clearSavedWrongSetForCategory(set.category);
+            clearSavedWrongSetForCategory(set.category, format);
             refreshCurrentMenu();
           }
         }, false));
@@ -2887,7 +2977,7 @@
 
     function appendResultsWrongPracticeActions(parent) {
       var wrongQuestions = getWrongQuestionsFromCurrentAttempt();
-      var existingSet = getSavedWrongSetForCategory(currentCategory);
+      var existingSet = getSavedWrongSetForCategory(currentCategory, currentQuizFormat);
       var box = document.createElement('div');
       box.className = 'practice-panel';
 
@@ -2897,9 +2987,9 @@
 
       var msg = document.createElement('p');
       if (wrongQuestions.length > 0) {
-        msg.textContent = 'You missed ' + wrongQuestions.length + ' question' + (wrongQuestions.length === 1 ? '' : 's') + '. Save them so you can retake only those questions later.';
+        msg.textContent = 'You marked ' + wrongQuestions.length + ' question' + (wrongQuestions.length === 1 ? '' : 's') + ' as wrong or don\'t know. Save them so you can retake only those questions later.';
       } else {
-        msg.textContent = 'No wrong questions to save from this attempt.';
+        msg.textContent = 'No wrong or don\'t know questions to save from this attempt.';
       }
       box.appendChild(msg);
 
@@ -2908,13 +2998,13 @@
       actions.appendChild(createActionButton('Save wrong questions', '#1a1a2e', '#fff', function () {
         var result = saveWrongQuestionsForCurrentAttempt();
         if (result.saved) {
-          msg.textContent = 'Saved ' + result.count + ' wrong question' + (result.count === 1 ? '' : 's') + '. You can retake them now or from the category screen later.';
+          msg.textContent = 'Saved ' + result.count + ' question' + (result.count === 1 ? '' : 's') + '. You can retake them now or from the category screen later.';
           refreshCurrentResultsActions(box);
         }
       }, wrongQuestions.length === 0));
       actions.appendChild(createActionButton('Save and retake now', '#28a745', '#fff', function () {
         var result = saveWrongQuestionsForCurrentAttempt();
-        if (result.saved) startWrongPracticeForCategory(currentCategory);
+        if (result.saved) startWrongPracticeForCategory(currentCategory, currentQuizFormat);
       }, wrongQuestions.length === 0));
       box.appendChild(actions);
 
@@ -2925,11 +3015,11 @@
         var savedActions = document.createElement('div');
         savedActions.className = 'practice-actions';
         savedActions.appendChild(createActionButton('Retake saved set', '#17a2b8', '#fff', function () {
-          startWrongPracticeForCategory(currentCategory);
+          startWrongPracticeForCategory(currentCategory, currentQuizFormat);
         }, false));
         savedActions.appendChild(createActionButton('Clear saved set', '#f8d7da', '#721c24', function () {
           if (window.confirm('Clear the saved wrong-question practice set for this quiz?')) {
-            clearSavedWrongSetForCategory(currentCategory);
+            clearSavedWrongSetForCategory(currentCategory, currentQuizFormat);
             refreshCurrentResultsActions(box);
           }
         }, false));
@@ -2970,7 +3060,7 @@
     }
 
     function shuffleQuestionOptions(question) {
-      if (question.type === 'text' || !Array.isArray(question.options)) {
+      if (isTextQuestion(question) || !Array.isArray(question.options)) {
         var textOut = Object.assign({}, question);
         if (Array.isArray(question.acceptedAnswers)) textOut.acceptedAnswers = question.acceptedAnswers.slice();
         return textOut;
@@ -3160,7 +3250,44 @@
     }
 
     function getDisplayAnswer(question) {
-      return question && question.answer !== undefined ? String(question.answer) : '';
+      if (!question) return '';
+      if (question.displayAnswer !== undefined) return String(question.displayAnswer);
+      if (Array.isArray(question.answer) && Array.isArray(question.options)) {
+        return question.answer.map(function (idx) { return question.options[idx]; }).filter(Boolean).join('; ');
+      }
+      return question.answer !== undefined ? String(question.answer) : '';
+    }
+
+    function isTextQuestion(question) {
+      return !!question && (question.type === 'text' || question.type === 'self-grade-text');
+    }
+
+    function makeSelfGradeTextQuestion(question) {
+      var answerTexts = [];
+      if (Array.isArray(question.answer) && Array.isArray(question.options)) {
+        question.answer.forEach(function (idx) {
+          if (question.options[idx]) answerTexts.push(question.options[idx]);
+        });
+      } else if (question.answer !== undefined) {
+        answerTexts.push(String(question.answer));
+      }
+      var out = {
+        type: 'self-grade-text',
+        selfGrade: true,
+        question: question.question,
+        answer: answerTexts.join('; '),
+        displayAnswer: answerTexts.join('; '),
+        acceptedAnswers: answerTexts.slice()
+      };
+      if (question.number !== undefined) out.number = question.number;
+      if (question.category !== undefined) out.category = question.category;
+      return out;
+    }
+
+    function makeSelfGradeTextQuestions(list) {
+      return (list || []).map(function (question) {
+        return isTextQuestion(question) ? Object.assign({}, question) : makeSelfGradeTextQuestion(question);
+      });
     }
 
     function showMainMenu() {
@@ -3170,6 +3297,7 @@
       stopWaitTimer();
       clearPauseState();
       currentQuizMode = 'normal';
+      currentQuizFormat = 'multiple-choice';
       questionEl.textContent = 'Main menu';
       questionEl.closest('section').classList.remove('category-screen');
       questionEl.closest('section').classList.add('main-menu-screen');
@@ -3195,7 +3323,7 @@
       architectureBtn.addEventListener('click', function () {
         useArchitecturalQuestionSet();
         questionEl.closest('section').classList.remove('main-menu-screen');
-        showCategoryScreen();
+        showArchitectureQuizTypeScreen();
       });
       wrap.appendChild(architectureBtn);
 
@@ -3213,7 +3341,75 @@
       if (nextBtn) nextBtn.classList.add('hidden');
     }
 
+    function showArchitectureQuizTypeScreen() {
+      var questionEl = document.querySelector('.question-text');
+      var optionsContainer = document.getElementById('options-container');
+      stopQuestionTimer();
+      stopWaitTimer();
+      clearPauseState();
+      currentQuizMode = 'normal';
+      currentCategory = ARCHITECTURAL_CATEGORY_ID;
+      currentQuizFormat = 'multiple-choice';
+      questionEl.textContent = 'Select quiz type - ' + ARCHITECTURAL_CATEGORY_NAME;
+      questionEl.closest('section').classList.remove('main-menu-screen');
+      questionEl.closest('section').classList.add('category-screen');
+      optionsContainer.innerHTML = '';
+
+      var menuActions = document.createElement('div');
+      menuActions.className = 'practice-actions';
+      menuActions.style.marginBottom = '0.75rem';
+      menuActions.appendChild(createActionButton('Back to main menu', '#6c757d', '#fff', function () {
+        showMainMenu();
+      }, false));
+      optionsContainer.appendChild(menuActions);
+
+      appendProgressActions(optionsContainer, false);
+      appendSavedWrongSetsPanel(optionsContainer);
+
+      var list = questions[ARCHITECTURAL_CATEGORY_ID] || ARCHITECTURAL_ELEMENTS_QUESTIONS || [];
+      var wrap = document.createElement('div');
+      wrap.className = 'category-buttons';
+      wrap.style.marginTop = '1rem';
+
+      var mcBtn = document.createElement('button');
+      mcBtn.type = 'button';
+      mcBtn.className = 'category-btn';
+      mcBtn.innerHTML = '<span class="category-btn-label">Multiple Choice Quiz</span><span class="category-btn-name">Pick the correct option or options (' + list.length + ' questions)</span>';
+      mcBtn.disabled = list.length === 0;
+      if (list.length > 0) mcBtn.addEventListener('click', function () {
+        startQuizFromList(ARCHITECTURAL_CATEGORY_ID, list, 'normal', 'multiple-choice');
+      });
+      wrap.appendChild(mcBtn);
+
+      var textBtn = document.createElement('button');
+      textBtn.type = 'button';
+      textBtn.className = 'category-btn';
+      textBtn.innerHTML = '<span class="category-btn-label">Text Box Quiz</span><span class="category-btn-name">Write your answer, reveal the correct answer, then grade yourself (' + list.length + ' questions)</span>';
+      textBtn.disabled = list.length === 0;
+      if (list.length > 0) textBtn.addEventListener('click', function () {
+        startQuizFromList(ARCHITECTURAL_CATEGORY_ID, list, 'normal', 'text-box');
+      });
+      wrap.appendChild(textBtn);
+
+      optionsContainer.appendChild(wrap);
+
+      var timerEl = document.querySelector('.timer');
+      if (timerEl) timerEl.textContent = '0:00';
+      var showBtn = document.getElementById('btn-show-answer');
+      if (showBtn) showBtn.disabled = true;
+      var backBtn = document.getElementById('btn-back');
+      if (backBtn) backBtn.classList.add('hidden');
+      var tracker = document.getElementById('progress-tracker');
+      if (tracker) tracker.classList.add('hidden');
+      var nextBtn = document.getElementById('btn-next-question');
+      if (nextBtn) nextBtn.classList.add('hidden');
+    }
+
     function showCategoryScreen() {
+      if (activeQuestionSetTitle === ARCHITECTURAL_CATEGORY_NAME) {
+        showArchitectureQuizTypeScreen();
+        return;
+      }
       var questionEl = document.querySelector('.question-text');
       var optionsContainer = document.getElementById('options-container');
       stopQuestionTimer();
@@ -3289,22 +3485,25 @@
 
     function startQuizForCategory(cat) {
       var list = questions[cat];
-      startQuizFromList(cat, list, 'normal');
+      startQuizFromList(cat, list, 'normal', 'multiple-choice');
     }
 
-    function startWrongPracticeForCategory(cat) {
-      var set = getSavedWrongSetForCategory(cat);
+    function startWrongPracticeForCategory(cat, quizFormat) {
+      var set = getSavedWrongSetForCategory(cat, quizFormat);
       if (!set) return false;
-      startQuizFromList(cat, set.questions, 'wrong-practice');
+      var format = normalizeQuizFormat(quizFormat || set.quizFormat || inferQuizFormatFromList(set.questions));
+      startQuizFromList(cat, set.questions, 'wrong-practice', format);
       return true;
     }
 
-    function startQuizFromList(cat, list, mode) {
+    function startQuizFromList(cat, list, mode, quizFormat) {
       if (!list || list.length === 0) return;
       document.querySelector('.question-container').classList.remove('category-screen', 'main-menu-screen');
       currentCategory = cat;
       currentQuizMode = mode || 'normal';
-      activeQuestions = shuffleQuestions(list.slice());
+      currentQuizFormat = normalizeQuizFormat(quizFormat || inferQuizFormatFromList(list));
+      var preparedList = currentQuizFormat === 'text-box' ? makeSelfGradeTextQuestions(list) : list.slice();
+      activeQuestions = shuffleQuestions(preparedList);
       currentQuestionIndex = 0;
       score = 0;
       wrongCount = 0;
@@ -3321,7 +3520,8 @@
       stopWaitTimer();
       clearPauseState();
       currentQuizMode = 'normal';
-      showCategoryScreen();
+      if (activeQuestionSetTitle === ARCHITECTURAL_CATEGORY_NAME) showArchitectureQuizTypeScreen();
+      else showCategoryScreen();
     }
 
     async function loadQuestions() {
@@ -3439,7 +3639,9 @@
       var currentList = questions[currentCategory] || (currentCategory === ARCHITECTURAL_CATEGORY_ID ? ARCHITECTURAL_ELEMENTS_QUESTIONS : []);
       const lifetime = currentCategory !== null ? getCategorySummary(currentCategory, currentList) : getLifetimeSummary();
 
-      questionEl.textContent = currentQuizMode === 'wrong-practice' ? 'Wrong-question practice complete!' : 'Quiz complete!';
+      var completeLabel = currentQuizMode === 'wrong-practice' ? 'Wrong-question practice complete!' : 'Quiz complete!';
+      if (currentQuizFormat === 'text-box') completeLabel += ' (Text Box)';
+      questionEl.textContent = completeLabel;
       optionsContainer.innerHTML = '<div class="results-panel">' +
         '<h2>Your results</h2>' +
         '<p class="results-score">' + score + ' / ' + total + '</p>' +
@@ -3489,7 +3691,7 @@
     function handleTimeUp(question, optionsContainer) {
       stopQuestionTimer();
       clearPauseState();
-      if (answerResults[currentQuestionIndex] === undefined) {
+      if (answerResults[currentQuestionIndex] === undefined && !(question && question.selfGrade)) {
         answerResults[currentQuestionIndex] = false;
         wrongCount += 1;
         recordQuestionResult(question, false);
@@ -3499,9 +3701,9 @@
       const timerEl = document.querySelector('.timer');
       if (timerEl) timerEl.textContent = formatTime(0);
 
-      if (question.type === 'text') {
+      if (isTextQuestion(question)) {
         revealTextAnswer(question, optionsContainer, false);
-        if (!noTimersMode) startWaitCountdown();
+        if (!question.selfGrade && !noTimersMode) startWaitCountdown();
         return;
       }
 
@@ -3546,25 +3748,92 @@
       var input = optionsContainer.querySelector('.text-answer-input');
       var submitBtn = optionsContainer.querySelector('.text-answer-submit');
       var feedback = optionsContainer.querySelector('.text-answer-feedback');
+      var review = optionsContainer.querySelector('.text-answer-review');
+      var gradeActions = optionsContainer.querySelector('.self-grade-actions');
+      var isSelfGrade = !!(question && question.selfGrade);
+      var typedAnswer = input ? input.value.trim() : '';
+
       if (input) {
         input.disabled = true;
         input.classList.remove('correct', 'wrong');
-        input.classList.add(wasCorrect ? 'correct' : 'wrong');
+        if (!isSelfGrade) input.classList.add(wasCorrect ? 'correct' : 'wrong');
       }
       if (submitBtn) submitBtn.disabled = true;
-      if (feedback) {
-        feedback.classList.remove('correct', 'wrong');
-        feedback.classList.add(wasCorrect ? 'correct' : 'wrong');
-        feedback.textContent = wasCorrect ? 'Correct!' : 'Correct answer: ' + getDisplayAnswer(question);
+
+      if (review) {
+        review.classList.add('visible');
+        review.innerHTML = '<strong>Your answer</strong>' + (typedAnswer ? escapeHtml(typedAnswer) : '<em>No answer typed.</em>');
       }
+
+      if (feedback) {
+        feedback.classList.remove('correct', 'wrong', 'shown');
+        if (isSelfGrade) {
+          feedback.classList.add('shown');
+          feedback.textContent = 'Correct answer: ' + getDisplayAnswer(question);
+        } else {
+          feedback.classList.add(wasCorrect ? 'correct' : 'wrong');
+          feedback.textContent = wasCorrect ? 'Correct!' : 'Correct answer: ' + getDisplayAnswer(question);
+        }
+      }
+
+      if (gradeActions && isSelfGrade && answerResults[currentQuestionIndex] === undefined) {
+        gradeActions.classList.add('visible');
+      }
+
       var showBtn = document.getElementById('btn-show-answer');
       if (showBtn) showBtn.disabled = true;
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function markSelfGradedAnswer(question, optionsContainer, wasCorrect) {
+      if (answerResults[currentQuestionIndex] !== undefined) return;
+      answerResults[currentQuestionIndex] = wasCorrect;
+      if (wasCorrect) score += 1;
+      else wrongCount += 1;
+      recordQuestionResult(question, wasCorrect);
+      updateProgressTracker();
+      saveSession();
+
+      var input = optionsContainer.querySelector('.text-answer-input');
+      if (input) {
+        input.classList.remove('correct', 'wrong');
+        input.classList.add(wasCorrect ? 'correct' : 'wrong');
+      }
+
+      var gradeButtons = optionsContainer.querySelectorAll('.self-grade-actions .btn');
+      gradeButtons.forEach(function (btn) { btn.disabled = true; });
+
+      var feedback = optionsContainer.querySelector('.text-answer-feedback');
+      if (feedback) {
+        feedback.classList.remove('shown', 'correct', 'wrong');
+        feedback.classList.add(wasCorrect ? 'correct' : 'wrong');
+        feedback.textContent = (wasCorrect ? 'Marked right. ' : 'Marked for review. ') + 'Correct answer: ' + getDisplayAnswer(question);
+      }
+
+      if (!noTimersMode) startWaitCountdown();
     }
 
     function handleTextAnswerSubmit(question, optionsContainer) {
       if (answerResults[currentQuestionIndex] !== undefined) return;
       var input = optionsContainer.querySelector('.text-answer-input');
       if (!input) return;
+      stopQuestionTimer();
+      clearPauseState();
+
+      if (question.selfGrade) {
+        revealTextAnswer(question, optionsContainer, null);
+        saveSession();
+        return;
+      }
+
       var wasCorrect = isTextAnswerCorrect(question, input.value);
       answerResults[currentQuestionIndex] = wasCorrect;
       if (wasCorrect) score += 1;
@@ -3572,7 +3841,6 @@
       recordQuestionResult(question, wasCorrect);
       updateProgressTracker();
       saveSession();
-      stopQuestionTimer();
       revealTextAnswer(question, optionsContainer, wasCorrect);
       if (!noTimersMode) startWaitCountdown();
     }
@@ -3591,19 +3859,59 @@
 
       var hint = document.createElement('p');
       hint.className = 'text-answer-hint';
-      hint.textContent = 'Capitalization, spaces, punctuation, special characters, and Romanian accents are ignored.';
+      hint.textContent = question.selfGrade
+        ? 'Write what you remember. After you reveal the answer, grade yourself: Right, Wrong, or Don\'t know.'
+        : 'Capitalization, spaces, punctuation, special characters, and Romanian accents are ignored.';
       form.appendChild(hint);
 
       var submitBtn = document.createElement('button');
       submitBtn.type = 'submit';
       submitBtn.className = 'btn btn-pause text-answer-submit';
-      submitBtn.textContent = 'Submit answer';
+      submitBtn.textContent = question.selfGrade ? 'Show correct answer' : 'Submit answer';
       form.appendChild(submitBtn);
+
+      var review = document.createElement('p');
+      review.className = 'text-answer-review';
+      form.appendChild(review);
 
       var feedback = document.createElement('p');
       feedback.className = 'text-answer-feedback';
       feedback.setAttribute('aria-live', 'polite');
       form.appendChild(feedback);
+
+      if (question.selfGrade) {
+        var gradeActions = document.createElement('div');
+        gradeActions.className = 'self-grade-actions';
+
+        var rightBtn = document.createElement('button');
+        rightBtn.type = 'button';
+        rightBtn.className = 'btn btn-grade-right';
+        rightBtn.textContent = 'Right';
+        rightBtn.addEventListener('click', function () {
+          markSelfGradedAnswer(question, optionsContainer, true);
+        });
+        gradeActions.appendChild(rightBtn);
+
+        var wrongBtn = document.createElement('button');
+        wrongBtn.type = 'button';
+        wrongBtn.className = 'btn btn-grade-wrong';
+        wrongBtn.textContent = 'Wrong';
+        wrongBtn.addEventListener('click', function () {
+          markSelfGradedAnswer(question, optionsContainer, false);
+        });
+        gradeActions.appendChild(wrongBtn);
+
+        var dontKnowBtn = document.createElement('button');
+        dontKnowBtn.type = 'button';
+        dontKnowBtn.className = 'btn btn-grade-unknown';
+        dontKnowBtn.textContent = 'Don\'t know';
+        dontKnowBtn.addEventListener('click', function () {
+          markSelfGradedAnswer(question, optionsContainer, false);
+        });
+        gradeActions.appendChild(dontKnowBtn);
+
+        form.appendChild(gradeActions);
+      }
 
       form.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -3630,7 +3938,7 @@
       questionEl.textContent = (currentQuizMode === 'wrong-practice' ? 'Practice: ' : '') + (question.number !== undefined ? question.number + ') ' : '') + question.question;
 
       optionsContainer.innerHTML = '';
-      if (question.type === 'text') {
+      if (isTextQuestion(question)) {
         renderTextAnswerQuestion(question, optionsContainer);
       } else {
         question.options.forEach((optionText, i) => {
@@ -3752,7 +4060,7 @@
       if (currentQuestionIndex < 0 || currentQuestionIndex >= activeQuestions.length) return;
       const optionsContainer = document.getElementById('options-container');
       const question = activeQuestions[currentQuestionIndex];
-      if (question.type === 'text') {
+      if (isTextQuestion(question)) {
         if (answerResults[currentQuestionIndex] !== undefined) return;
         handleTimeUp(question, optionsContainer);
         return;
@@ -3811,7 +4119,7 @@
         recordQuestionResult(question, false);
         updateProgressTracker();
         saveSession();
-        if (question.type === 'text') {
+        if (isTextQuestion(question)) {
           revealTextAnswer(question, optionsContainer, false);
         } else {
           var buttons = optionsContainer.querySelectorAll('.option-btn');
@@ -3855,6 +4163,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
