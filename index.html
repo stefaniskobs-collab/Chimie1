@@ -374,6 +374,21 @@
       color: #5f6775;
     }
 
+    .question-explanation {
+      margin-top: 1rem;
+      padding: 0.85rem;
+      border-radius: 10px;
+      background: #eef6ff;
+      border: 1px solid #b6d4fe;
+      color: #1a1a2e;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .question-explanation strong {
+      font-weight: 700;
+    }
+
     .results-panel {
       text-align: center;
       padding: 2rem;
@@ -5191,6 +5206,2620 @@
       }
 ];
 
+
+    const MATH_SPECIAL_SET_TITLE = 'Matematici Speciale';
+    const MATH_DERIVATIVE_CATEGORY_ID = 30;
+    const MATH_INTEGRAL_CATEGORY_ID = 31;
+    const MATH_EQUATIONS_CATEGORY_ID = 32;
+    const MATH_SPECIAL_CATEGORY_NAMES = {
+      "30": "Formule de derivare",
+      "31": "Formule de integrare",
+      "32": "Ecuatii - recunoastere tip",
+      "33": "Ecuatii - pasi de rezolvare"
+};
+    const MATH_SPECIAL_QUESTIONS = {
+      "30": [
+            {
+                  "question": "Care este derivata unei constante \\(c\\)?",
+                  "options": [
+                        "\\((c)'=0\\)",
+                        "\\((c)'=c\\)",
+                        "\\((c)'=1\\)",
+                        "\\((c)'=x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 1,
+                  "category": 30,
+                  "displayAnswer": "\\((c)'=0\\)",
+                  "explanation": "O constantă nu se schimbă când variabila se schimbă, deci rata de variație este zero."
+            },
+            {
+                  "question": "Care este derivata lui \\(x\\)?",
+                  "options": [
+                        "\\((x)'=1\\)",
+                        "\\((x)'=0\\)",
+                        "\\((x)'=x\\)",
+                        "\\((x)'=2x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 2,
+                  "category": 30,
+                  "displayAnswer": "\\((x)'=1\\)",
+                  "explanation": "Funcția identitate are pantă constantă egală cu 1."
+            },
+            {
+                  "question": "Care este derivata lui \\(x^n\\), pentru \\(n\\) constant?",
+                  "options": [
+                        "\\((x^n)'=n x^{n-1}\\)",
+                        "\\((x^n)'=x^{n-1}\\)",
+                        "\\((x^n)'=(n-1)x^n\\)",
+                        "\\((x^n)'=n x^{n+1}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 3,
+                  "category": 30,
+                  "displayAnswer": "\\((x^n)'=n x^{n-1}\\)",
+                  "explanation": "Se aplică regula puterii: exponentul coboară în față, apoi scade cu 1."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\sqrt{x}\\)?",
+                  "options": [
+                        "\\((\\sqrt{x})'=\\dfrac{1}{2\\sqrt{x}}\\)",
+                        "\\((\\sqrt{x})'=2\\sqrt{x}\\)",
+                        "\\((\\sqrt{x})'=\\dfrac{1}{\\sqrt{x}}\\)",
+                        "\\((\\sqrt{x})'=\\sqrt{x}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 4,
+                  "category": 30,
+                  "displayAnswer": "\\((\\sqrt{x})'=\\dfrac{1}{2\\sqrt{x}}\\)",
+                  "explanation": "Scrii \\(\\sqrt{x}=x^{1/2}\\) și aplici regula puterii."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\dfrac{1}{x}\\)?",
+                  "options": [
+                        "\\(\\left(\\dfrac{1}{x}\\right)'=-\\dfrac{1}{x^2}\\)",
+                        "\\(\\left(\\dfrac{1}{x}\\right)'=\\dfrac{1}{x^2}\\)",
+                        "\\(\\left(\\dfrac{1}{x}\\right)'=\\ln x\\)",
+                        "\\(\\left(\\dfrac{1}{x}\\right)'=-x^2\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 5,
+                  "category": 30,
+                  "displayAnswer": "\\(\\left(\\dfrac{1}{x}\\right)'=-\\dfrac{1}{x^2}\\)",
+                  "explanation": "Scrii \\(1/x=x^{-1}\\); derivata este \\(-x^{-2}\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(e^x\\)?",
+                  "options": [
+                        "\\((e^x)'=e^x\\)",
+                        "\\((e^x)'=xe^{x-1}\\)",
+                        "\\((e^x)'=\\ln x\\)",
+                        "\\((e^x)'=1/e^x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 6,
+                  "category": 30,
+                  "displayAnswer": "\\((e^x)'=e^x\\)",
+                  "explanation": "Funcția \\(e^x\\) este propria ei derivată."
+            },
+            {
+                  "question": "Care este derivata lui \\(a^x\\), \\(a>0, a\\neq1\\)?",
+                  "options": [
+                        "\\((a^x)'=a^x\\ln a\\)",
+                        "\\((a^x)'=x a^{x-1}\\)",
+                        "\\((a^x)'=a^x/a\\)",
+                        "\\((a^x)'=\\ln a\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 7,
+                  "category": 30,
+                  "displayAnswer": "\\((a^x)'=a^x\\ln a\\)",
+                  "explanation": "Pentru bază constantă \\(a\\), derivata lui \\(a^x\\) aduce factorul \\(\\ln a\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\ln x\\)?",
+                  "options": [
+                        "\\((\\ln x)'=\\dfrac{1}{x}\\)",
+                        "\\((\\ln x)'=x\\)",
+                        "\\((\\ln x)'=\\ln x\\)",
+                        "\\((\\ln x)'=e^x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 8,
+                  "category": 30,
+                  "displayAnswer": "\\((\\ln x)'=\\dfrac{1}{x}\\)",
+                  "explanation": "\\(\\ln x\\) este funcția a cărei derivată este \\(1/x\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\log_a x\\)?",
+                  "options": [
+                        "\\((\\log_a x)'=\\dfrac{1}{x\\ln a}\\)",
+                        "\\((\\log_a x)'=\\dfrac{\\ln a}{x}\\)",
+                        "\\((\\log_a x)'=\\dfrac{1}{a\\ln x}\\)",
+                        "\\((\\log_a x)'=a^x\\ln a\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 9,
+                  "category": 30,
+                  "displayAnswer": "\\((\\log_a x)'=\\dfrac{1}{x\\ln a}\\)",
+                  "explanation": "Folosești \\(\\log_a x=\\ln x/\\ln a\\), iar \\(\\ln a\\) este constantă."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\sin x\\)?",
+                  "options": [
+                        "\\((\\sin x)'=\\cos x\\)",
+                        "\\((\\sin x)'=-\\cos x\\)",
+                        "\\((\\sin x)'=\\tan x\\)",
+                        "\\((\\sin x)'=\\sin x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 10,
+                  "category": 30,
+                  "displayAnswer": "\\((\\sin x)'=\\cos x\\)",
+                  "explanation": "Derivata sinusului este cosinusul, fără schimbare de semn."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\cos x\\)?",
+                  "options": [
+                        "\\((\\cos x)'=-\\sin x\\)",
+                        "\\((\\cos x)'=\\sin x\\)",
+                        "\\((\\cos x)'=\\cos x\\)",
+                        "\\((\\cos x)'=-\\cos x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 11,
+                  "category": 30,
+                  "displayAnswer": "\\((\\cos x)'=-\\sin x\\)",
+                  "explanation": "Derivata cosinusului este minus sinusul; semnul minus este partea importantă."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\tan x\\)?",
+                  "options": [
+                        "\\((\\tan x)'=\\dfrac{1}{\\cos^2 x}\\)",
+                        "\\((\\tan x)'=-\\dfrac{1}{\\sin^2 x}\\)",
+                        "\\((\\tan x)'=\\cos^2 x\\)",
+                        "\\((\\tan x)'=\\dfrac{1}{\\sin^2 x}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 12,
+                  "category": 30,
+                  "displayAnswer": "\\((\\tan x)'=\\dfrac{1}{\\cos^2 x}\\)",
+                  "explanation": "\\(\\tan x=\\sin x/\\cos x\\), iar derivarea dă \\(\\sec^2x=1/\\cos^2x\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\cot x\\)?",
+                  "options": [
+                        "\\((\\cot x)'=-\\dfrac{1}{\\sin^2 x}\\)",
+                        "\\((\\cot x)'=\\dfrac{1}{\\cos^2 x}\\)",
+                        "\\((\\cot x)'=\\dfrac{1}{\\sin^2 x}\\)",
+                        "\\((\\cot x)'=-\\sin^2 x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 13,
+                  "category": 30,
+                  "displayAnswer": "\\((\\cot x)'=-\\dfrac{1}{\\sin^2 x}\\)",
+                  "explanation": "\\(\\cot x\\) are derivata \\(-\\csc^2x\\), deci apare semnul minus."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\arcsin x\\)?",
+                  "options": [
+                        "\\((\\arcsin x)'=\\dfrac{1}{\\sqrt{1-x^2}}\\)",
+                        "\\((\\arcsin x)'=-\\dfrac{1}{\\sqrt{1-x^2}}\\)",
+                        "\\((\\arcsin x)'=\\dfrac{1}{1+x^2}\\)",
+                        "\\((\\arcsin x)'=\\sqrt{1-x^2}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 14,
+                  "category": 30,
+                  "displayAnswer": "\\((\\arcsin x)'=\\dfrac{1}{\\sqrt{1-x^2}}\\)",
+                  "explanation": "Arcsinusul este inversa sinusului; formula inversei duce la \\(1/\\sqrt{1-x^2}\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\arccos x\\)?",
+                  "options": [
+                        "\\((\\arccos x)'=-\\dfrac{1}{\\sqrt{1-x^2}}\\)",
+                        "\\((\\arccos x)'=\\dfrac{1}{\\sqrt{1-x^2}}\\)",
+                        "\\((\\arccos x)'=-\\dfrac{1}{1+x^2}\\)",
+                        "\\((\\arccos x)'=\\sqrt{1-x^2}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 15,
+                  "category": 30,
+                  "displayAnswer": "\\((\\arccos x)'=-\\dfrac{1}{\\sqrt{1-x^2}}\\)",
+                  "explanation": "Arccosinusul are aceeași mărime ca arcsinusul, dar cu semn negativ."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\arctan x\\)?",
+                  "options": [
+                        "\\((\\arctan x)'=\\dfrac{1}{1+x^2}\\)",
+                        "\\((\\arctan x)'=-\\dfrac{1}{1+x^2}\\)",
+                        "\\((\\arctan x)'=\\dfrac{1}{\\sqrt{1-x^2}}\\)",
+                        "\\((\\arctan x)'=1+x^2\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 16,
+                  "category": 30,
+                  "displayAnswer": "\\((\\arctan x)'=\\dfrac{1}{1+x^2}\\)",
+                  "explanation": "Arctangenta este inversa tangentei, iar formula standard este \\(1/(1+x^2)\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\operatorname{arcctg} x\\)?",
+                  "options": [
+                        "\\((\\operatorname{arcctg} x)'=-\\dfrac{1}{1+x^2}\\)",
+                        "\\((\\operatorname{arcctg} x)'=\\dfrac{1}{1+x^2}\\)",
+                        "\\((\\operatorname{arcctg} x)'=-\\dfrac{1}{\\sqrt{1-x^2}}\\)",
+                        "\\((\\operatorname{arcctg} x)'=1-x^2\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 17,
+                  "category": 30,
+                  "displayAnswer": "\\((\\operatorname{arcctg} x)'=-\\dfrac{1}{1+x^2}\\)",
+                  "explanation": "Arcctg are derivata opusă arctangentei în convenția folosită aici."
+            },
+            {
+                  "question": "Care este regula pentru derivata sumei?",
+                  "options": [
+                        "\\((f+g)'=f'+g'\\)",
+                        "\\((f+g)'=f'g'\\)",
+                        "\\((f+g)'=f'g+fg'\\)",
+                        "\\((f+g)'=\\dfrac{f'}{g'}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 18,
+                  "category": 30,
+                  "displayAnswer": "\\((f+g)'=f'+g'\\)",
+                  "explanation": "Derivarea este liniară: derivata sumei este suma derivatelor."
+            },
+            {
+                  "question": "Care este regula pentru derivata diferenței?",
+                  "options": [
+                        "\\((f-g)'=f'-g'\\)",
+                        "\\((f-g)'=f'g'\\)",
+                        "\\((f-g)'=f'g-fg'\\)",
+                        "\\((f-g)'=f'+g'\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 19,
+                  "category": 30,
+                  "displayAnswer": "\\((f-g)'=f'-g'\\)",
+                  "explanation": "Derivezi fiecare termen și păstrezi semnul minus dintre ele."
+            },
+            {
+                  "question": "Care este regula pentru derivata unei constante înmulțite cu o funcție?",
+                  "options": [
+                        "\\((cf)'=cf'\\), \\(c\\) constant",
+                        "\\((cf)'=c'f\\)",
+                        "\\((cf)'=c+f'\\)",
+                        "\\((cf)'=cf\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 20,
+                  "category": 30,
+                  "displayAnswer": "\\((cf)'=cf'\\), \\(c\\) constant",
+                  "explanation": "Constanta nu depinde de \\(x\\), deci iese în fața derivatei."
+            },
+            {
+                  "question": "Care este regula produsului?",
+                  "options": [
+                        "\\((fg)'=f'g+fg'\\)",
+                        "\\((fg)'=f'g'\\)",
+                        "\\((fg)'=f'+g'\\)",
+                        "\\((fg)'=\\dfrac{f'g-fg'}{g^2}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 21,
+                  "category": 30,
+                  "displayAnswer": "\\((fg)'=f'g+fg'\\)",
+                  "explanation": "La produs: derivezi primul factor și lași al doilea, apoi invers."
+            },
+            {
+                  "question": "Care este regula câtului?",
+                  "options": [
+                        "\\(\\left(\\dfrac{f}{g}\\right)'=\\dfrac{f'g-fg'}{g^2}\\)",
+                        "\\(\\left(\\dfrac{f}{g}\\right)'=\\dfrac{f'+g'}{g^2}\\)",
+                        "\\(\\left(\\dfrac{f}{g}\\right)'=\\dfrac{fg'-f'g}{g^2}\\)",
+                        "\\(\\left(\\dfrac{f}{g}\\right)'=\\dfrac{f'}{g'}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 22,
+                  "category": 30,
+                  "displayAnswer": "\\(\\left(\\dfrac{f}{g}\\right)'=\\dfrac{f'g-fg'}{g^2}\\)",
+                  "explanation": "La cât: sus derivat ori jos minus sus ori jos derivat, totul peste \\(g^2\\)."
+            },
+            {
+                  "question": "Care este regula funcției compuse?",
+                  "options": [
+                        "\\((f\\circ g)'=(f'\\circ g)\\,g'\\)",
+                        "\\((f\\circ g)'=f'g'\\)",
+                        "\\((f\\circ g)'=f'\\circ g'\\)",
+                        "\\((f\\circ g)'=f\\circ g'\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 23,
+                  "category": 30,
+                  "displayAnswer": "\\((f\\circ g)'=(f'\\circ g)\\,g'\\)",
+                  "explanation": "Este regula lanțului: derivata funcției exterioare se înmulțește cu derivata interiorului."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\sinh x\\)?",
+                  "options": [
+                        "\\((\\sinh x)'=\\cosh x\\)",
+                        "\\((\\sinh x)'=-\\cosh x\\)",
+                        "\\((\\sinh x)'=\\sinh x\\)",
+                        "\\((\\sinh x)'=\\tanh x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 24,
+                  "category": 30,
+                  "displayAnswer": "\\((\\sinh x)'=\\cosh x\\)",
+                  "explanation": "Pentru funcțiile hiperbolice, \\((\\sinh x)'=\\cosh x\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\cosh x\\)?",
+                  "options": [
+                        "\\((\\cosh x)'=\\sinh x\\)",
+                        "\\((\\cosh x)'=-\\sinh x\\)",
+                        "\\((\\cosh x)'=\\cosh x\\)",
+                        "\\((\\cosh x)'=1/\\sinh x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 25,
+                  "category": 30,
+                  "displayAnswer": "\\((\\cosh x)'=\\sinh x\\)",
+                  "explanation": "La \\(\\cosh x\\) nu apare minus ca la \\(\\cos x\\); derivata este \\(\\sinh x\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(u(x)^n\\)?",
+                  "options": [
+                        "\\((u^n)'=n u^{n-1}u'\\)",
+                        "\\((u^n)'=n u^{n-1}\\)",
+                        "\\((u^n)'=u^n u'\\)",
+                        "\\((u^n)'=(n-1)u^n u'\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 26,
+                  "category": 30,
+                  "displayAnswer": "\\((u^n)'=n u^{n-1}u'\\)",
+                  "explanation": "Regula puterii se combină cu regula lanțului, de aceea apare factorul \\(u'\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(e^{u(x)}\\)?",
+                  "options": [
+                        "\\((e^u)'=e^u u'\\)",
+                        "\\((e^u)'=e^u\\)",
+                        "\\((e^u)'=u'e^{u-1}\\)",
+                        "\\((e^u)'=\\ln(u)u'\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 27,
+                  "category": 30,
+                  "displayAnswer": "\\((e^u)'=e^u u'\\)",
+                  "explanation": "\\(e^u\\) rămâne \\(e^u\\), apoi înmulțești cu derivata interiorului \\(u'\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\ln|u(x)|\\)?",
+                  "options": [
+                        "\\((\\ln|u|)'=\\dfrac{u'}{u}\\)",
+                        "\\((\\ln|u|)'=\\dfrac{u}{u'}\\)",
+                        "\\((\\ln|u|)'=\\dfrac{1}{u}\\)",
+                        "\\((\\ln|u|)'=u'\\ln|u|\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 28,
+                  "category": 30,
+                  "displayAnswer": "\\((\\ln|u|)'=\\dfrac{u'}{u}\\)",
+                  "explanation": "Derivata lui \\(\\ln|u|\\) este derivata interiorului împărțită la interior."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\sin u(x)\\)?",
+                  "options": [
+                        "\\((\\sin u)'=u'\\cos u\\)",
+                        "\\((\\sin u)'=\\cos u\\)",
+                        "\\((\\sin u)'=-u'\\cos u\\)",
+                        "\\((\\sin u)'=u'\\sin u\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 29,
+                  "category": 30,
+                  "displayAnswer": "\\((\\sin u)'=u'\\cos u\\)",
+                  "explanation": "Aplici regula lanțului: \\((\\sin u)'=u'\\cos u\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\cos u(x)\\)?",
+                  "options": [
+                        "\\((\\cos u)'=-u'\\sin u\\)",
+                        "\\((\\cos u)'=u'\\sin u\\)",
+                        "\\((\\cos u)'=-\\sin u\\)",
+                        "\\((\\cos u)'=u'\\cos u\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 30,
+                  "category": 30,
+                  "displayAnswer": "\\((\\cos u)'=-u'\\sin u\\)",
+                  "explanation": "Aplici regula lanțului și semnul de la cosinus: \\((\\cos u)'=-u'\\sin u\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\tan u(x)\\)?",
+                  "options": [
+                        "\\((\\tan u)'=\\dfrac{u'}{\\cos^2 u}\\)",
+                        "\\((\\tan u)'=\\dfrac{1}{\\cos^2 u}\\)",
+                        "\\((\\tan u)'=-\\dfrac{u'}{\\sin^2 u}\\)",
+                        "\\((\\tan u)'=u'\\cos^2u\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 31,
+                  "category": 30,
+                  "displayAnswer": "\\((\\tan u)'=\\dfrac{u'}{\\cos^2 u}\\)",
+                  "explanation": "Derivata tangentei compuse aduce \\(u'\\) la numărător."
+            },
+            {
+                  "question": "Care este derivata lui \\(x^x\\), pentru \\(x>0\\)?",
+                  "options": [
+                        "\\((x^x)'=x^x(\\ln x+1)\\)",
+                        "\\((x^x)'=x x^{x-1}\\)",
+                        "\\((x^x)'=x^x\\ln x\\)",
+                        "\\((x^x)'=x^{x-1}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 32,
+                  "category": 30,
+                  "displayAnswer": "\\((x^x)'=x^x(\\ln x+1)\\)",
+                  "explanation": "Folosești derivarea logaritmică: \\(x^x=e^{x\\ln x}\\)."
+            },
+            {
+                  "question": "Care este derivata lui \\(\\sqrt{u(x)}\\)?",
+                  "options": [
+                        "\\((\\sqrt{u})'=\\dfrac{u'}{2\\sqrt{u}}\\)",
+                        "\\((\\sqrt{u})'=\\dfrac{1}{2\\sqrt{u}}\\)",
+                        "\\((\\sqrt{u})'=2u'\\sqrt{u}\\)",
+                        "\\((\\sqrt{u})'=\\dfrac{2\\sqrt{u}}{u'}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 33,
+                  "category": 30,
+                  "displayAnswer": "\\((\\sqrt{u})'=\\dfrac{u'}{2\\sqrt{u}}\\)",
+                  "explanation": "Scrii \\(\\sqrt{u}=u^{1/2}\\), apoi aplici regula puterii și regula lanțului."
+            },
+            {
+                  "question": "Care este derivata unei funcții inverse \\(f^{-1}\\)?",
+                  "options": [
+                        "\\((f^{-1})'(x)=\\dfrac{1}{f'(f^{-1}(x))}\\)",
+                        "\\((f^{-1})'(x)=f'(f^{-1}(x))\\)",
+                        "\\((f^{-1})'(x)=\\dfrac{1}{f'(x)}\\)",
+                        "\\((f^{-1})'(x)=f^{-1}(f'(x))\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 34,
+                  "category": 30,
+                  "displayAnswer": "\\((f^{-1})'(x)=\\dfrac{1}{f'(f^{-1}(x))}\\)",
+                  "explanation": "Derivata inversei este reciproca derivatei funcției inițiale, evaluată în punctul corespunzător."
+            },
+            {
+                  "question": "Care este derivata implicită de bază pentru \\(F(x,y)=0\\)?",
+                  "options": [
+                        "\\(y'=-\\dfrac{F_x}{F_y}\\), dacă \\(F_y\\neq0\\)",
+                        "\\(y'=\\dfrac{F_y}{F_x}\\)",
+                        "\\(y'=F_x+F_y\\)",
+                        "\\(y'=\\dfrac{F_x}{F_y}\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 35,
+                  "category": 30,
+                  "displayAnswer": "\\(y'=-\\dfrac{F_x}{F_y}\\), dacă \\(F_y\\neq0\\)",
+                  "explanation": "Din \\(F(x,y)=0\\), derivarea implicită dă \\(F_x+F_y y'=0\\), deci izolezi \\(y'\\)."
+            }
+      ],
+      "31": [
+            {
+                  "question": "Care este integrala lui \\(c\\), unde \\(c\\) este constantă?",
+                  "options": [
+                        "\\(\\int c\\,dx=cx+C\\)",
+                        "\\(\\int c\\,dx=c+C\\)",
+                        "\\(\\int c\\,dx=\\dfrac{x^2}{2}+C\\)",
+                        "\\(\\int c\\,dx=0\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 1,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int c\\,dx=cx+C\\)",
+                  "explanation": "Cauți o funcție cu derivata \\(c\\); derivata lui \\(cx\\) este \\(c\\), iar \\(C\\) este constanta de integrare."
+            },
+            {
+                  "question": "Care este integrala lui \\(x^n\\), pentru \\(n\\neq -1\\)?",
+                  "options": [
+                        "\\(\\int x^n dx=\\dfrac{x^{n+1}}{n+1}+C\\)",
+                        "\\(\\int x^n dx=nx^{n-1}+C\\)",
+                        "\\(\\int x^n dx=\\dfrac{x^{n-1}}{n-1}+C\\)",
+                        "\\(\\int x^n dx=\\ln|x|+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 2,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int x^n dx=\\dfrac{x^{n+1}}{n+1}+C\\)",
+                  "explanation": "Este regula puterii inversată: crești exponentul cu 1 și împarți la noul exponent."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\dfrac{1}{x}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{1}{x}\\,dx=\\ln|x|+C\\)",
+                        "\\(\\int \\dfrac{1}{x}\\,dx=-\\dfrac{1}{x^2}+C\\)",
+                        "\\(\\int \\dfrac{1}{x}\\,dx=x\\ln x+C\\)",
+                        "\\(\\int \\dfrac{1}{x}\\,dx=e^x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 3,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{1}{x}\\,dx=\\ln|x|+C\\)",
+                  "explanation": "Cazul \\(n=-1\\) este special; primitiva lui \\(1/x\\) este \\(\\ln|x|\\)."
+            },
+            {
+                  "question": "Care este integrala lui \\(e^x\\)?",
+                  "options": [
+                        "\\(\\int e^x dx=e^x+C\\)",
+                        "\\(\\int e^x dx=xe^{x-1}+C\\)",
+                        "\\(\\int e^x dx=\\ln x+C\\)",
+                        "\\(\\int e^x dx=e^{x+1}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 4,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int e^x dx=e^x+C\\)",
+                  "explanation": "\\(e^x\\) este propria derivată, deci este și propria primitivă."
+            },
+            {
+                  "question": "Care este integrala lui \\(a^x\\), \\(a>0, a\\neq1\\)?",
+                  "options": [
+                        "\\(\\int a^x dx=\\dfrac{a^x}{\\ln a}+C\\)",
+                        "\\(\\int a^x dx=a^x\\ln a+C\\)",
+                        "\\(\\int a^x dx=\\dfrac{a^{x+1}}{x+1}+C\\)",
+                        "\\(\\int a^x dx=\\ln a+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 5,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int a^x dx=\\dfrac{a^x}{\\ln a}+C\\)",
+                  "explanation": "Deoarece \\((a^x)'=a^x\\ln a\\), împarți la \\(\\ln a\\)."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\sin x\\)?",
+                  "options": [
+                        "\\(\\int \\sin x\\,dx=-\\cos x+C\\)",
+                        "\\(\\int \\sin x\\,dx=\\cos x+C\\)",
+                        "\\(\\int \\sin x\\,dx=-\\sin x+C\\)",
+                        "\\(\\int \\sin x\\,dx=\\tan x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 6,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\sin x\\,dx=-\\cos x+C\\)",
+                  "explanation": "Cum \\((\\cos x)'=-\\sin x\\), primitiva lui \\(\\sin x\\) este \\(-\\cos x\\)."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\cos x\\)?",
+                  "options": [
+                        "\\(\\int \\cos x\\,dx=\\sin x+C\\)",
+                        "\\(\\int \\cos x\\,dx=-\\sin x+C\\)",
+                        "\\(\\int \\cos x\\,dx=\\cos x+C\\)",
+                        "\\(\\int \\cos x\\,dx=\\cot x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 7,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\cos x\\,dx=\\sin x+C\\)",
+                  "explanation": "Cum \\((\\sin x)'=\\cos x\\), primitiva lui \\(\\cos x\\) este \\(\\sin x\\)."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\sec^2 x\\)?",
+                  "options": [
+                        "\\(\\int \\sec^2 x\\,dx=\\tan x+C\\)",
+                        "\\(\\int \\sec^2 x\\,dx=-\\cot x+C\\)",
+                        "\\(\\int \\sec^2 x\\,dx=\\sec x+C\\)",
+                        "\\(\\int \\sec^2 x\\,dx=\\ln|\\cos x|+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 8,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\sec^2 x\\,dx=\\tan x+C\\)",
+                  "explanation": "Derivata lui \\(\\tan x\\) este \\(\\sec^2x\\), deci integrala revine la \\(\\tan x\\)."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\csc^2 x\\)?",
+                  "options": [
+                        "\\(\\int \\csc^2 x\\,dx=-\\cot x+C\\)",
+                        "\\(\\int \\csc^2 x\\,dx=\\cot x+C\\)",
+                        "\\(\\int \\csc^2 x\\,dx=\\tan x+C\\)",
+                        "\\(\\int \\csc^2 x\\,dx=\\ln|\\sin x|+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 9,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\csc^2 x\\,dx=-\\cot x+C\\)",
+                  "explanation": "Derivata lui \\(\\cot x\\) este \\(-\\csc^2x\\), deci apare \\(-\\cot x\\)."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\sec x\\tan x\\)?",
+                  "options": [
+                        "\\(\\int \\sec x\\tan x\\,dx=\\sec x+C\\)",
+                        "\\(\\int \\sec x\\tan x\\,dx=\\tan x+C\\)",
+                        "\\(\\int \\sec x\\tan x\\,dx=\\ln|\\cos x|+C\\)",
+                        "\\(\\int \\sec x\\tan x\\,dx=-\\csc x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 10,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\sec x\\tan x\\,dx=\\sec x+C\\)",
+                  "explanation": "Derivata lui \\(\\sec x\\) este \\(\\sec x\\tan x\\)."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\csc x\\cot x\\)?",
+                  "options": [
+                        "\\(\\int \\csc x\\cot x\\,dx=-\\csc x+C\\)",
+                        "\\(\\int \\csc x\\cot x\\,dx=\\csc x+C\\)",
+                        "\\(\\int \\csc x\\cot x\\,dx=\\cot x+C\\)",
+                        "\\(\\int \\csc x\\cot x\\,dx=\\sec x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 11,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\csc x\\cot x\\,dx=-\\csc x+C\\)",
+                  "explanation": "Derivata lui \\(\\csc x\\) este \\(-\\csc x\\cot x\\), deci apare semnul minus."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\dfrac{1}{1+x^2}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{dx}{1+x^2}=\\arctan x+C\\)",
+                        "\\(\\int \\dfrac{dx}{1+x^2}=\\arcsin x+C\\)",
+                        "\\(\\int \\dfrac{dx}{1+x^2}=\\ln|x|+C\\)",
+                        "\\(\\int \\dfrac{dx}{1+x^2}=\\sqrt{1+x^2}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 12,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{dx}{1+x^2}=\\arctan x+C\\)",
+                  "explanation": "Este formula standard a arctangentei: \\((\\arctan x)'=1/(1+x^2)\\)."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\dfrac{1}{\\sqrt{1-x^2}}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{dx}{\\sqrt{1-x^2}}=\\arcsin x+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{1-x^2}}=\\arctan x+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{1-x^2}}=-\\arccos x-C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{1-x^2}}=\\ln|x|+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 13,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{dx}{\\sqrt{1-x^2}}=\\arcsin x+C\\)",
+                  "explanation": "Este formula standard a arcsinusului: \\((\\arcsin x)'=1/\\sqrt{1-x^2}\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{dx}{a^2+x^2}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{dx}{a^2+x^2}=\\dfrac{1}{a}\\arctan\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{a^2+x^2}=a\\arctan\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{a^2+x^2}=\\dfrac{1}{2a}\\ln\\left|\\dfrac{a+x}{a-x}\\right|+C\\)",
+                        "\\(\\int \\dfrac{dx}{a^2+x^2}=\\arcsin\\dfrac{x}{a}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 14,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{dx}{a^2+x^2}=\\dfrac{1}{a}\\arctan\\dfrac{x}{a}+C\\)",
+                  "explanation": "Cu substituția \\(u=x/a\\), integrala se reduce la forma arctangentei."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{dx}{\\sqrt{a^2-x^2}}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{dx}{\\sqrt{a^2-x^2}}=\\arcsin\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{a^2-x^2}}=\\arctan\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{a^2-x^2}}=\\ln|x+\\sqrt{x^2+a^2}|+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{a^2-x^2}}=\\sqrt{a^2-x^2}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 15,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{dx}{\\sqrt{a^2-x^2}}=\\arcsin\\dfrac{x}{a}+C\\)",
+                  "explanation": "Cu \\(u=x/a\\), forma devine \\(\\int du/\\sqrt{1-u^2}\\), adică arcsinus."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{u'}{u}\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{u'}{u}\\,dx=\\ln|u|+C\\)",
+                        "\\(\\int \\dfrac{u'}{u}\\,dx=\\dfrac{1}{u}+C\\)",
+                        "\\(\\int \\dfrac{u'}{u}\\,dx=u\\ln|u|+C\\)",
+                        "\\(\\int \\dfrac{u'}{u}\\,dx=e^u+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 16,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{u'}{u}\\,dx=\\ln|u|+C\\)",
+                  "explanation": "Pui \\(w=u\\), \\(dw=u'dx\\), și obții \\(\\int dw/w\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int u'u^n dx\\), \\(n\\neq -1\\)?",
+                  "options": [
+                        "\\(\\int u'u^n dx=\\dfrac{u^{n+1}}{n+1}+C\\)",
+                        "\\(\\int u'u^n dx=nu^{n-1}+C\\)",
+                        "\\(\\int u'u^n dx=\\ln|u|+C\\)",
+                        "\\(\\int u'u^n dx=\\dfrac{u^n}{n}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 17,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int u'u^n dx=\\dfrac{u^{n+1}}{n+1}+C\\)",
+                  "explanation": "Pui \\(w=u\\); \\(u'dx\\) devine \\(dw\\), apoi aplici regula puterii."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int u'e^u dx\\)?",
+                  "options": [
+                        "\\(\\int u'e^u dx=e^u+C\\)",
+                        "\\(\\int u'e^u dx=u'e^u+C\\)",
+                        "\\(\\int u'e^u dx=\\ln|u|+C\\)",
+                        "\\(\\int u'e^u dx=e^{u+1}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 18,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int u'e^u dx=e^u+C\\)",
+                  "explanation": "Substituția \\(w=u\\) transformă integrala în \\(\\int e^w dw\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int u'\\sin u\\,dx\\)?",
+                  "options": [
+                        "\\(\\int u'\\sin u\\,dx=-\\cos u+C\\)",
+                        "\\(\\int u'\\sin u\\,dx=\\cos u+C\\)",
+                        "\\(\\int u'\\sin u\\,dx=\\sin u+C\\)",
+                        "\\(\\int u'\\sin u\\,dx=\\tan u+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 19,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int u'\\sin u\\,dx=-\\cos u+C\\)",
+                  "explanation": "Substituția \\(w=u\\) transformă integrala în \\(\\int \\sin w\\,dw\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int u'\\cos u\\,dx\\)?",
+                  "options": [
+                        "\\(\\int u'\\cos u\\,dx=\\sin u+C\\)",
+                        "\\(\\int u'\\cos u\\,dx=-\\sin u+C\\)",
+                        "\\(\\int u'\\cos u\\,dx=\\cos u+C\\)",
+                        "\\(\\int u'\\cos u\\,dx=\\cot u+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 20,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int u'\\cos u\\,dx=\\sin u+C\\)",
+                  "explanation": "Substituția \\(w=u\\) transformă integrala în \\(\\int \\cos w\\,dw\\)."
+            },
+            {
+                  "question": "Care este formula integrării prin părți?",
+                  "options": [
+                        "\\(\\int u\\,dv=uv-\\int v\\,du\\)",
+                        "\\(\\int u\\,dv=u'v+\\int v\\,du\\)",
+                        "\\(\\int u\\,dv=uv+\\int u\\,dv\\)",
+                        "\\(\\int u\\,dv=\\dfrac{u}{v}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 21,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int u\\,dv=uv-\\int v\\,du\\)",
+                  "explanation": "Integrarea prin părți vine din regula produsului: \\(d(uv)=u\\,dv+v\\,du\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\tan x\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\tan x\\,dx=-\\ln|\\cos x|+C\\)",
+                        "\\(\\int \\tan x\\,dx=\\ln|\\cos x|+C\\)",
+                        "\\(\\int \\tan x\\,dx=\\sec^2x+C\\)",
+                        "\\(\\int \\tan x\\,dx=\\ln|\\sin x|+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 22,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\tan x\\,dx=-\\ln|\\cos x|+C\\)",
+                  "explanation": "Scrii \\(\\tan x=\\sin x/\\cos x\\) și folosești substituția \\(u=\\cos x\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\cot x\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\cot x\\,dx=\\ln|\\sin x|+C\\)",
+                        "\\(\\int \\cot x\\,dx=-\\ln|\\sin x|+C\\)",
+                        "\\(\\int \\cot x\\,dx=-\\csc^2x+C\\)",
+                        "\\(\\int \\cot x\\,dx=\\ln|\\cos x|+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 23,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\cot x\\,dx=\\ln|\\sin x|+C\\)",
+                  "explanation": "Scrii \\(\\cot x=\\cos x/\\sin x\\) și folosești substituția \\(u=\\sin x\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\sec x\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\sec x\\,dx=\\ln|\\sec x+\\tan x|+C\\)",
+                        "\\(\\int \\sec x\\,dx=\\sec x\\tan x+C\\)",
+                        "\\(\\int \\sec x\\,dx=-\\ln|\\csc x+\\cot x|+C\\)",
+                        "\\(\\int \\sec x\\,dx=\\tan x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 24,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\sec x\\,dx=\\ln|\\sec x+\\tan x|+C\\)",
+                  "explanation": "Formula se verifică derivând \\(\\ln|\\sec x+\\tan x|\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\csc x\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\csc x\\,dx=\\ln|\\csc x-\\cot x|+C\\)",
+                        "\\(\\int \\csc x\\,dx=\\ln|\\sec x+\\tan x|+C\\)",
+                        "\\(\\int \\csc x\\,dx=-\\csc x\\cot x+C\\)",
+                        "\\(\\int \\csc x\\,dx=\\cot x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 25,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\csc x\\,dx=\\ln|\\csc x-\\cot x|+C\\)",
+                  "explanation": "Formula se verifică derivând \\(\\ln|\\csc x-\\cot x|\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\sin^2 x\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\sin^2x\\,dx=\\dfrac{x}{2}-\\dfrac{\\sin 2x}{4}+C\\)",
+                        "\\(\\int \\sin^2x\\,dx=\\dfrac{x}{2}+\\dfrac{\\sin 2x}{4}+C\\)",
+                        "\\(\\int \\sin^2x\\,dx=-\\dfrac{\\cos 2x}{2}+C\\)",
+                        "\\(\\int \\sin^2x\\,dx=\\sin x\\cos x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 26,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\sin^2x\\,dx=\\dfrac{x}{2}-\\dfrac{\\sin 2x}{4}+C\\)",
+                  "explanation": "Folosești identitatea \\(\\sin^2x=(1-\\cos2x)/2\\), apoi integrezi termen cu termen."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\cos^2 x\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\cos^2x\\,dx=\\dfrac{x}{2}+\\dfrac{\\sin 2x}{4}+C\\)",
+                        "\\(\\int \\cos^2x\\,dx=\\dfrac{x}{2}-\\dfrac{\\sin 2x}{4}+C\\)",
+                        "\\(\\int \\cos^2x\\,dx=\\dfrac{\\cos 2x}{2}+C\\)",
+                        "\\(\\int \\cos^2x\\,dx=-\\sin x\\cos x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 27,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\cos^2x\\,dx=\\dfrac{x}{2}+\\dfrac{\\sin 2x}{4}+C\\)",
+                  "explanation": "Folosești identitatea \\(\\cos^2x=(1+\\cos2x)/2\\), apoi integrezi termen cu termen."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{dx}{x^2-a^2}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{dx}{x^2-a^2}=\\dfrac{1}{2a}\\ln\\left|\\dfrac{x-a}{x+a}\\right|+C\\)",
+                        "\\(\\int \\dfrac{dx}{x^2-a^2}=\\dfrac{1}{a}\\arctan\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{x^2-a^2}=\\arcsin\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{x^2-a^2}=\\ln|x^2-a^2|+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 28,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{dx}{x^2-a^2}=\\dfrac{1}{2a}\\ln\\left|\\dfrac{x-a}{x+a}\\right|+C\\)",
+                  "explanation": "Descompunerea în fracții simple pentru \\((x-a)(x+a)\\) duce la logaritm."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{dx}{a^2-x^2}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{dx}{a^2-x^2}=\\dfrac{1}{2a}\\ln\\left|\\dfrac{a+x}{a-x}\\right|+C\\)",
+                        "\\(\\int \\dfrac{dx}{a^2-x^2}=\\dfrac{1}{a}\\arctan\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{a^2-x^2}=\\arcsin\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{a^2-x^2}=\\ln|a^2-x^2|+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 29,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{dx}{a^2-x^2}=\\dfrac{1}{2a}\\ln\\left|\\dfrac{a+x}{a-x}\\right|+C\\)",
+                  "explanation": "Descompunerea în fracții simple pentru \\((a-x)(a+x)\\) duce la logaritmul raportului."
+            },
+            {
+                  "question": "Care este integrala lui \\(\\ln x\\), pentru \\(x>0\\)?",
+                  "options": [
+                        "\\(\\int \\ln x\\,dx=x\\ln x-x+C\\)",
+                        "\\(\\int \\ln x\\,dx=\\dfrac{1}{x}+C\\)",
+                        "\\(\\int \\ln x\\,dx=x\\ln x+C\\)",
+                        "\\(\\int \\ln x\\,dx=\\ln^2x+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 30,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\ln x\\,dx=x\\ln x-x+C\\)",
+                  "explanation": "Aplici integrarea prin părți cu \\(u=\\ln x\\) și \\(dv=dx\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int x e^x dx\\)?",
+                  "options": [
+                        "\\(\\int x e^x dx=e^x(x-1)+C\\)",
+                        "\\(\\int x e^x dx=xe^x+C\\)",
+                        "\\(\\int x e^x dx=e^x(x+1)+C\\)",
+                        "\\(\\int x e^x dx=x^2e^x/2+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 31,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int x e^x dx=e^x(x-1)+C\\)",
+                  "explanation": "Aplici integrarea prin părți cu \\(u=x\\) și \\(dv=e^x dx\\)."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{dx}{\\sqrt{x^2+a^2}}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{dx}{\\sqrt{x^2+a^2}}=\\ln|x+\\sqrt{x^2+a^2}|+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{x^2+a^2}}=\\arcsin\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{x^2+a^2}}=\\dfrac{1}{a}\\arctan\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{x^2+a^2}}=\\sqrt{x^2+a^2}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 32,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{dx}{\\sqrt{x^2+a^2}}=\\ln|x+\\sqrt{x^2+a^2}|+C\\)",
+                  "explanation": "Formula se verifică derivând logaritmul din rezultat."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{dx}{\\sqrt{x^2-a^2}}\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{dx}{\\sqrt{x^2-a^2}}=\\ln|x+\\sqrt{x^2-a^2}|+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{x^2-a^2}}=\\arcsin\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{x^2-a^2}}=\\dfrac{1}{a}\\arctan\\dfrac{x}{a}+C\\)",
+                        "\\(\\int \\dfrac{dx}{\\sqrt{x^2-a^2}}=-\\sqrt{x^2-a^2}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 33,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{dx}{\\sqrt{x^2-a^2}}=\\ln|x+\\sqrt{x^2-a^2}|+C\\)",
+                  "explanation": "Formula are aceeași structură logaritmică; derivarea rezultatului reface integrandul."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{u'}{1+u^2}\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{u'}{1+u^2}\\,dx=\\arctan u+C\\)",
+                        "\\(\\int \\dfrac{u'}{1+u^2}\\,dx=\\arcsin u+C\\)",
+                        "\\(\\int \\dfrac{u'}{1+u^2}\\,dx=\\ln|u|+C\\)",
+                        "\\(\\int \\dfrac{u'}{1+u^2}\\,dx=1+u^2+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 34,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{u'}{1+u^2}\\,dx=\\arctan u+C\\)",
+                  "explanation": "Substituția \\(w=u\\), \\(dw=u'dx\\), reduce integrala la arctangentă."
+            },
+            {
+                  "question": "Care este formula pentru \\(\\int \\dfrac{u'}{\\sqrt{1-u^2}}\\,dx\\)?",
+                  "options": [
+                        "\\(\\int \\dfrac{u'}{\\sqrt{1-u^2}}\\,dx=\\arcsin u+C\\)",
+                        "\\(\\int \\dfrac{u'}{\\sqrt{1-u^2}}\\,dx=\\arctan u+C\\)",
+                        "\\(\\int \\dfrac{u'}{\\sqrt{1-u^2}}\\,dx=\\ln|u|+C\\)",
+                        "\\(\\int \\dfrac{u'}{\\sqrt{1-u^2}}\\,dx=\\sqrt{1-u^2}+C\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 35,
+                  "category": 31,
+                  "displayAnswer": "\\(\\int \\dfrac{u'}{\\sqrt{1-u^2}}\\,dx=\\arcsin u+C\\)",
+                  "explanation": "Substituția \\(w=u\\), \\(dw=u'dx\\), reduce integrala la arcsinus."
+            }
+      ],
+      "32": [
+            {
+                  "question": "Ce tip de ecuație este \\(y'=\\dfrac{x}{y}\\)?",
+                  "options": [
+                        "Ecuație cu variabile separabile",
+                        "Ecuație Riccati",
+                        "Ecuație Clairaut",
+                        "Sistem simetric"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 1,
+                  "category": 32,
+                  "displayAnswer": "Ecuație cu variabile separabile",
+                  "explanation": "Se poate scrie \\(y\\,dy=x\\,dx\\), deci variabilele \\(x\\) și \\(y\\) se separă pe părți diferite."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(\\sin y\\,y'=x^2\\)?",
+                  "options": [
+                        "Ecuație cu variabile separabile",
+                        "Ecuație Bernoulli",
+                        "Ecuație exactă",
+                        "Ecuație liniară de ordin superior"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 2,
+                  "category": 32,
+                  "displayAnswer": "Ecuație cu variabile separabile",
+                  "explanation": "Scriind \\(y'=dy/dx\\), obții \\(\\sin y\\,dy=x^2dx\\). Asta este separare directă de variabile."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=\\dfrac{y-x}{y+x}\\)?",
+                  "options": [
+                        "Ecuație omogenă Euler de ordinul I",
+                        "Ecuație cu factor integrant",
+                        "Ecuație integrală Fredholm",
+                        "Ecuație Riccati"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 3,
+                  "category": 32,
+                  "displayAnswer": "Ecuație omogenă Euler de ordinul I",
+                  "explanation": "Raportul devine \\(\\dfrac{y/x-1}{y/x+1}\\), adică funcție numai de \\(y/x\\). Se folosește substituția \\(y=ux\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=\\dfrac{x^2+y^2}{xy}\\)?",
+                  "options": [
+                        "Ecuație omogenă Euler de ordinul I",
+                        "Ecuație Bernoulli",
+                        "Ecuație exactă",
+                        "Problemă Cauchy"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 4,
+                  "category": 32,
+                  "displayAnswer": "Ecuație omogenă Euler de ordinul I",
+                  "explanation": "Membrul drept se rescrie \\(\\dfrac{1+(y/x)^2}{y/x}\\), deci depinde doar de \\(y/x\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=\\dfrac{x+y-3}{x-y+1}\\)?",
+                  "options": [
+                        "Ecuație reductibilă la omogenă Euler",
+                        "Ecuație Clairaut",
+                        "Ecuație integrală Volterra",
+                        "Ecuație liniară omogenă cu coeficienți constanți"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 5,
+                  "category": 32,
+                  "displayAnswer": "Ecuație reductibilă la omogenă Euler",
+                  "explanation": "Apare raportul a două expresii liniare în \\(x,y\\) cu termeni constanți. Prin translație în punctul de intersecție devine omogenă."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=\\dfrac{x+y-1}{2x+2y-3}\\)?",
+                  "options": [
+                        "Ecuație reductibilă la omogenă Euler, cazul determinant zero",
+                        "Ecuație exactă",
+                        "Ecuație Bernoulli",
+                        "Ecuație Riccati"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 6,
+                  "category": 32,
+                  "displayAnswer": "Ecuație reductibilă la omogenă Euler, cazul determinant zero",
+                  "explanation": "Numărătorul și numitorul au aceeași combinație \\(x+y\\). Se notează de obicei \\(p=x+y\\), apoi ecuația se reduce."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\((x\\sin y+y\\cos y)dx+(x\\cos y-y\\sin y)dy=0\\)?",
+                  "options": [
+                        "Ecuație cu diferențială totală exactă",
+                        "Ecuație Lagrange",
+                        "Ecuație logistică",
+                        "Sistem diferențial"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 7,
+                  "category": 32,
+                  "displayAnswer": "Ecuație cu diferențială totală exactă",
+                  "explanation": "Cu \\(P=x\\sin y+y\\cos y\\), \\(Q=x\\cos y-y\\sin y\\), avem \\(P_y=x\\cos y+\\cos y-y\\sin y=Q_x\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(\\dfrac{y}{x}dx+(y^3-\\ln x)dy=0\\)?",
+                  "options": [
+                        "Ecuație neexactă tratabilă cu factor integrant",
+                        "Ecuație Clairaut",
+                        "Ecuație Cauchy-Euler",
+                        "Ecuație Bernoulli"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 8,
+                  "category": 32,
+                  "displayAnswer": "Ecuație neexactă tratabilă cu factor integrant",
+                  "explanation": "În forma \\(Pdx+Qdy=0\\), se verifică mai întâi \\(P_y\\) și \\(Q_x\\). Aici nu sunt egale direct, deci se caută factor integrant."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'-y\\tan x+1=0\\)?",
+                  "options": [
+                        "Ecuație liniară de ordinul I",
+                        "Ecuație Riccati",
+                        "Ecuație exactă",
+                        "Ecuație integrală"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 9,
+                  "category": 32,
+                  "displayAnswer": "Ecuație liniară de ordinul I",
+                  "explanation": "Se poate scrie \\(y'+p(x)y=q(x)\\), cu \\(p(x)=-\\tan x\\) și \\(q(x)=-1\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'+\\dfrac{1}{x}y=\\ln x\\)?",
+                  "options": [
+                        "Ecuație liniară de ordinul I",
+                        "Ecuație Bernoulli",
+                        "Ecuație omogenă Euler",
+                        "Sistem simetric"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 10,
+                  "category": 32,
+                  "displayAnswer": "Ecuație liniară de ordinul I",
+                  "explanation": "Are exact forma \\(y'+p(x)y=q(x)\\). Necunoscuta \\(y\\) și derivata ei apar la puterea întâi."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'-\\dfrac{4}{x}y-x\\sqrt{y}=0\\)?",
+                  "options": [
+                        "Ecuație Bernoulli",
+                        "Ecuație Riccati",
+                        "Ecuație Clairaut",
+                        "Ecuație liniară de ordin superior"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 11,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Bernoulli",
+                  "explanation": "Se scrie \\(y'-\\frac{4}{x}y=xy^{1/2}\\), adică \\(y'+p(x)y=q(x)y^\\alpha\\), cu \\(\\alpha=\\frac12\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'+y=y^3\\)?",
+                  "options": [
+                        "Ecuație Bernoulli",
+                        "Ecuație exactă",
+                        "Ecuație Lagrange",
+                        "Ecuație integrală Fredholm"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 12,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Bernoulli",
+                  "explanation": "Este forma Bernoulli \\(y'+p(x)y=q(x)y^\\alpha\\), aici \\(p=1\\), \\(q=1\\), \\(\\alpha=3\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=y^2-2ye^x+e^{2x}+e^x\\)?",
+                  "options": [
+                        "Ecuație Riccati",
+                        "Ecuație liniară de ordinul I",
+                        "Ecuație omogenă Euler",
+                        "Ecuație exactă"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 13,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Riccati",
+                  "explanation": "Are forma \\(y'=a(x)y^2+b(x)y+c(x)\\), deci este Riccati; apare termenul pătratic \\(y^2\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=y^2-1\\), dacă se dă \\(y_p=1\\)?",
+                  "options": [
+                        "Ecuație Riccati",
+                        "Ecuație Bernoulli",
+                        "Ecuație Clairaut",
+                        "Ecuație Volterra"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 14,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Riccati",
+                  "explanation": "Este de gradul al doilea în \\(y\\): \\(a(x)y^2+b(x)y+c(x)\\). Soluția particulară dată este indiciul clasic pentru Riccati."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y=xy'-(y')^2\\)?",
+                  "options": [
+                        "Ecuație Clairaut",
+                        "Ecuație Bernoulli",
+                        "Ecuație liniară neomogenă",
+                        "Ecuație cu factor integrant"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 15,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Clairaut",
+                  "explanation": "Are forma \\(y=xy'+f(y')\\), unde \\(f(p)=-p^2\\). Aceasta este forma tipică Clairaut."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y=xy'+(y')^3\\)?",
+                  "options": [
+                        "Ecuație Clairaut",
+                        "Ecuație Riccati",
+                        "Ecuație exactă",
+                        "Sistem diferențial"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 16,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Clairaut",
+                  "explanation": "Este \\(y=xp+f(p)\\), cu \\(p=y'\\) și \\(f(p)=p^3\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y=(7+y')x+\\cos(7+y')\\)?",
+                  "options": [
+                        "Ecuație Lagrange",
+                        "Ecuație separabilă",
+                        "Ecuație Riccati",
+                        "Ecuație integrală"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 17,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Lagrange",
+                  "explanation": "Are forma \\(y=x\\varphi(p)+\\psi(p)\\), cu \\(p=y'\\), nu forma specială \\(y=xp+f(p)\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y=2xy'+2y'\\ln(y')\\)?",
+                  "options": [
+                        "Ecuație Lagrange",
+                        "Ecuație Clairaut pură",
+                        "Ecuație liniară ordinul I",
+                        "Ecuație Bernoulli"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 18,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Lagrange",
+                  "explanation": "Este \\(y=x\\varphi(p)+\\psi(p)\\) cu \\(\\varphi(p)=2p\\) și \\(\\psi(p)=2p\\ln p\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y''-5y'+6y=0\\)?",
+                  "options": [
+                        "Ecuație diferențială liniară omogenă de ordinul II cu coeficienți constanți",
+                        "Ecuație Bernoulli",
+                        "Ecuație integrală Volterra",
+                        "Ecuație exactă de ordinul I"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 19,
+                  "category": 32,
+                  "displayAnswer": "Ecuație diferențială liniară omogenă de ordinul II cu coeficienți constanți",
+                  "explanation": "Este liniară în \\(y,y',y''\\), are ordinul II, coeficienții sunt constanți, iar membrul drept este zero."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y''-7y'+6y=\\sin x\\)?",
+                  "options": [
+                        "Ecuație diferențială liniară neomogenă de ordinul II cu coeficienți constanți",
+                        "Ecuație Riccati",
+                        "Ecuație Clairaut",
+                        "Sistem simetric"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 20,
+                  "category": 32,
+                  "displayAnswer": "Ecuație diferențială liniară neomogenă de ordinul II cu coeficienți constanți",
+                  "explanation": "Este liniară cu coeficienți constanți, dar membrul drept \\(\\sin x\\) nu este zero, deci este neomogenă."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y^{(IV)}-y=0\\)?",
+                  "options": [
+                        "Ecuație diferențială liniară omogenă de ordinul IV",
+                        "Ecuație Bernoulli",
+                        "Ecuație Volterra",
+                        "Ecuație exactă"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 21,
+                  "category": 32,
+                  "displayAnswer": "Ecuație diferențială liniară omogenă de ordinul IV",
+                  "explanation": "Derivata cea mai înaltă este \\(y^{(IV)}\\), termenii sunt liniari, iar partea dreaptă este zero."
+            },
+            {
+                  "question": "Ce tip de problemă este \\(y'''-3y'-2y=9e^{2x},\\ y(0)=0,\\ y'(0)=-3,\\ y''(0)=3\\)?",
+                  "options": [
+                        "Problemă Cauchy pentru ecuație diferențială liniară",
+                        "Problemă la limită",
+                        "Ecuație Clairaut",
+                        "Sistem simetric"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 22,
+                  "category": 32,
+                  "displayAnswer": "Problemă Cauchy pentru ecuație diferențială liniară",
+                  "explanation": "Toate condițiile sunt impuse în același punct \\(x=0\\), deci este problemă cu valori inițiale, adică problemă Cauchy."
+            },
+            {
+                  "question": "Ce tip de problemă este \\(y^{(IV)}-y=0,\\ y(0)=7,\\ y'(0)=0,\\ y(\\pi)=e^\\pi,\\ y'(\\pi)=0\\)?",
+                  "options": [
+                        "Problemă la limită",
+                        "Problemă Cauchy simplă",
+                        "Ecuație Bernoulli",
+                        "Ecuație Riccati"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 23,
+                  "category": 32,
+                  "displayAnswer": "Problemă la limită",
+                  "explanation": "Condițiile sunt date în două puncte diferite, \\(0\\) și \\(\\pi\\), deci nu este Cauchy, ci problemă la limită."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(x^2y''+3xy'+y=0\\)?",
+                  "options": [
+                        "Ecuație Cauchy-Euler de ordinul II",
+                        "Ecuație Riccati",
+                        "Ecuație integrală Fredholm",
+                        "Ecuație Clairaut"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 24,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Cauchy-Euler de ordinul II",
+                  "explanation": "Coeficienții sunt puteri ale lui \\(x\\) potrivite ordinului: \\(x^2\\) la \\(y''\\), \\(x\\) la \\(y'\\), constant la \\(y\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=y(1-y)\\)?",
+                  "options": [
+                        "Ecuație autonomă de ordinul I",
+                        "Ecuație exactă",
+                        "Ecuație Lagrange",
+                        "Ecuație liniară de ordin superior"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 25,
+                  "category": 32,
+                  "displayAnswer": "Ecuație autonomă de ordinul I",
+                  "explanation": "Membrul drept depinde numai de \\(y\\), nu explicit de \\(x\\). Este autonomă; în plus, este și separabilă."
+            },
+            {
+                  "question": "Ce tip de model este \\(P'=rP\\left(1-\\dfrac{P}{K}\\right)\\)?",
+                  "options": [
+                        "Ecuație logistică",
+                        "Ecuație Clairaut",
+                        "Ecuație integrală Fredholm",
+                        "Sistem simetric"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 26,
+                  "category": 32,
+                  "displayAnswer": "Ecuație logistică",
+                  "explanation": "Are produsul dintre populație \\(P\\) și factorul de limitare \\(1-P/K\\). Aceasta este forma logistică."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=a(x)y^3+b(x)y^2+c(x)y+d(x)\\)?",
+                  "options": [
+                        "Ecuație Abel de ordinul I",
+                        "Ecuație Bernoulli",
+                        "Ecuație Clairaut",
+                        "Ecuație liniară omogenă"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 27,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Abel de ordinul I",
+                  "explanation": "Este cubică în necunoscuta \\(y\\), cu coeficienți care pot depinde de \\(x\\). Aceasta este forma Abel de primul tip."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(dy/dx=3y-2\\)?",
+                  "options": [
+                        "Ecuație liniară autonomă de ordinul I",
+                        "Ecuație Riccati",
+                        "Ecuație integrală Volterra",
+                        "Ecuație cu diferențială totală exactă"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 28,
+                  "category": 32,
+                  "displayAnswer": "Ecuație liniară autonomă de ordinul I",
+                  "explanation": "Este liniară în \\(y\\), iar membrul drept nu depinde explicit de \\(x\\), deci este și autonomă."
+            },
+            {
+                  "question": "Ce tip de obiect este sistemul \\(\\begin{cases}x'=-2x+y\\ y'=-4x+3y\\end{cases}\\)?",
+                  "options": [
+                        "Sistem liniar omogen de ecuații diferențiale",
+                        "Ecuație scalară Bernoulli",
+                        "Ecuație integrală Fredholm",
+                        "Ecuație Clairaut"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 29,
+                  "category": 32,
+                  "displayAnswer": "Sistem liniar omogen de ecuații diferențiale",
+                  "explanation": "Sunt două funcții necunoscute, apar liniar, iar nu există termen liber neomogen."
+            },
+            {
+                  "question": "Ce tip de obiect este sistemul \\(\\begin{cases}x'=-5x+2y+e^t\\ y'=x-6y+e^{-2t}\\end{cases}\\)?",
+                  "options": [
+                        "Sistem liniar neomogen de ecuații diferențiale",
+                        "Sistem simetric",
+                        "Ecuație Riccati",
+                        "Ecuație separabilă"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 30,
+                  "category": 32,
+                  "displayAnswer": "Sistem liniar neomogen de ecuații diferențiale",
+                  "explanation": "Necunoscutele apar liniar, dar termenii \\(e^t\\) și \\(e^{-2t}\\) fac sistemul neomogen."
+            },
+            {
+                  "question": "Ce tip de sistem este \\(\\dfrac{dx}{y^2}=\\dfrac{dy}{zx}=\\dfrac{dz}{xy}\\)?",
+                  "options": [
+                        "Sistem simetric",
+                        "Ecuație Bernoulli",
+                        "Ecuație Cauchy-Euler",
+                        "Ecuație integrală"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 31,
+                  "category": 32,
+                  "displayAnswer": "Sistem simetric",
+                  "explanation": "Apare în forma de rapoarte egale \\(dx/P=dy/Q=dz/R\\), care este forma specifică unui sistem simetric."
+            },
+            {
+                  "question": "Ce tip de sistem este \\(\\dfrac{dx}{y-x}=\\dfrac{dy}{x+y+z}=\\dfrac{dz}{x-y}=\\dfrac{d(x+y+z)}{x+y+z}\\)?",
+                  "options": [
+                        "Sistem simetric extins",
+                        "Ecuație Clairaut",
+                        "Ecuație Riccati",
+                        "Ecuație liniară de ordinul I"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 32,
+                  "category": 32,
+                  "displayAnswer": "Sistem simetric extins",
+                  "explanation": "Este tot lanț de rapoarte diferențiale egale, dar include și diferențiala combinației \\(x+y+z\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(xy\\dfrac{\\partial z}{\\partial x}-x^2\\dfrac{\\partial z}{\\partial y}=yz\\)?",
+                  "options": [
+                        "Ecuație cu derivate parțiale de ordinul I",
+                        "Ecuație diferențială ordinară",
+                        "Ecuație Bernoulli",
+                        "Ecuație integrală Volterra"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 33,
+                  "category": 32,
+                  "displayAnswer": "Ecuație cu derivate parțiale de ordinul I",
+                  "explanation": "Apar derivate parțiale \\(z_x\\) și \\(z_y\\), iar ordinul maxim al derivatelor este 1."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\((x^2+y^2)u_x+2xyu_y=u^2\\)?",
+                  "options": [
+                        "Ecuație cu derivate parțiale de ordinul I neliniară",
+                        "Ecuație liniară PDE",
+                        "Ecuație Riccati ODE",
+                        "Problemă la limită"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 34,
+                  "category": 32,
+                  "displayAnswer": "Ecuație cu derivate parțiale de ordinul I neliniară",
+                  "explanation": "Apar derivate parțiale de ordinul I, dar membrul drept conține \\(u^2\\), deci ecuația nu este liniară în \\(u\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(u_t+c u_x=0\\)?",
+                  "options": [
+                        "Ecuație de transport liniară",
+                        "Ecuație de căldură",
+                        "Ecuație Riccati",
+                        "Ecuație Fredholm"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 35,
+                  "category": 32,
+                  "displayAnswer": "Ecuație de transport liniară",
+                  "explanation": "Este PDE de ordinul I, liniară, cu termen de transport \\(c u_x\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(u_t=k u_{xx}\\)?",
+                  "options": [
+                        "Ecuație de căldură",
+                        "Ecuație de undă",
+                        "Ecuație Clairaut",
+                        "Ecuație Abel"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 36,
+                  "category": 32,
+                  "displayAnswer": "Ecuație de căldură",
+                  "explanation": "Are derivată de ordinul I în timp și derivată de ordinul II în spațiu, forma standard a difuziei/căldurii."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(z_{tt}=a^2z_{xx}\\), cu capete fixe și condiții inițiale?",
+                  "options": [
+                        "Ecuație de undă / problema coardei vibrante",
+                        "Ecuație de căldură",
+                        "Ecuație Bernoulli",
+                        "Ecuație exactă"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 37,
+                  "category": 32,
+                  "displayAnswer": "Ecuație de undă / problema coardei vibrante",
+                  "explanation": "Derivata a doua în timp este proporțională cu derivata a doua în spațiu; condițiile la capete fixe indică problema coardei vibrante."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(u_{xx}+u_{yy}=0\\)?",
+                  "options": [
+                        "Ecuație Laplace",
+                        "Ecuație de transport",
+                        "Ecuație logistică",
+                        "Ecuație Volterra"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 38,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Laplace",
+                  "explanation": "Suma derivatelor spațiale de ordinul II este zero, adică forma clasică Laplace."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(u(x)=1-3\\int_0^x u(t)dt\\)?",
+                  "options": [
+                        "Ecuație integrală Volterra de speța a doua",
+                        "Ecuație Fredholm",
+                        "Ecuație Riccati",
+                        "Ecuație Clairaut"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 39,
+                  "category": 32,
+                  "displayAnswer": "Ecuație integrală Volterra de speța a doua",
+                  "explanation": "Limita superioară a integralei este variabila \\(x\\), iar necunoscuta apare și în afara integralei."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y(x)=1+x+\\int_0^x (x+t)y(t)dt\\)?",
+                  "options": [
+                        "Ecuație integrală Volterra cu nucleu",
+                        "Ecuație Fredholm",
+                        "Ecuație Bernoulli",
+                        "Sistem simetric"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 40,
+                  "category": 32,
+                  "displayAnswer": "Ecuație integrală Volterra cu nucleu",
+                  "explanation": "Integrarea este de la o constantă până la \\(x\\), iar \\((x+t)\\) este nucleul integralei."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(u(x)=g(x)+\\lambda\\int_a^b K(x,t)u(t)dt\\)?",
+                  "options": [
+                        "Ecuație integrală Fredholm de speța a doua",
+                        "Ecuație Volterra",
+                        "Ecuație Clairaut",
+                        "Ecuație Cauchy-Euler"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 41,
+                  "category": 32,
+                  "displayAnswer": "Ecuație integrală Fredholm de speța a doua",
+                  "explanation": "Limitele integralei sunt fixe \\(a,b\\), nu depind de \\(x\\), iar \\(u\\) apare și în afara integralei."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(f(x)=\\int_a^b K(x,t)\\varphi(t)dt\\)?",
+                  "options": [
+                        "Ecuație integrală Fredholm de speța întâi",
+                        "Ecuație Volterra de speța a doua",
+                        "Ecuație Riccati",
+                        "Ecuație logistică"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 42,
+                  "category": 32,
+                  "displayAnswer": "Ecuație integrală Fredholm de speța întâi",
+                  "explanation": "Limitele sunt fixe și necunoscuta apare numai sub integrală, nu în afara ei."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(u''(x)=-\\sin x+x-\\int_0^{\\pi/2}xt\\,u(t)dt\\)?",
+                  "options": [
+                        "Ecuație integro-diferențială",
+                        "Ecuație Clairaut",
+                        "Sistem simetric",
+                        "Ecuație Bernoulli"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 43,
+                  "category": 32,
+                  "displayAnswer": "Ecuație integro-diferențială",
+                  "explanation": "Apar simultan derivate ale necunoscutei, precum \\(u''\\), și o integrală ce conține necunoscuta \\(u(t)\\)."
+            },
+            {
+                  "question": "Ce tip de problemă PDE este \\(xz_x+yz_y=z,\\ x^2+y^2=1,\\ z=2\\)?",
+                  "options": [
+                        "Problemă Cauchy pentru PDE de ordinul I",
+                        "Ecuație Fredholm",
+                        "Ecuație Bernoulli",
+                        "Problemă logistică"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 44,
+                  "category": 32,
+                  "displayAnswer": "Problemă Cauchy pentru PDE de ordinul I",
+                  "explanation": "PDE-ul este însoțit de date pe curba \\(x^2+y^2=1\\), deci este o problemă Cauchy pentru ecuație cu derivate parțiale."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(xy''-(2x+1)y'+(x+1)y=2x^2e^x\\)?",
+                  "options": [
+                        "Ecuație diferențială liniară de ordinul II cu coeficienți variabili",
+                        "Ecuație Riccati",
+                        "Ecuație Clairaut",
+                        "Ecuație exactă de ordinul I"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 45,
+                  "category": 32,
+                  "displayAnswer": "Ecuație diferențială liniară de ordinul II cu coeficienți variabili",
+                  "explanation": "Este liniară în \\(y,y',y''\\), dar coeficienții depind de \\(x\\), deci nu sunt constanți."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\((x^3+xy^2)dx+(x^2y+y^3)dy=0\\)?",
+                  "options": [
+                        "Ecuație cu diferențială totală exactă",
+                        "Ecuație Bernoulli",
+                        "Ecuație Lagrange",
+                        "Ecuație Fredholm"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 46,
+                  "category": 32,
+                  "displayAnswer": "Ecuație cu diferențială totală exactă",
+                  "explanation": "Pentru \\(P=x^3+xy^2\\) și \\(Q=x^2y+y^3\\), avem \\(P_y=2xy\\) și \\(Q_x=2xy\\), deci este exactă."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y\\,dx-x\\,dy=0\\)?",
+                  "options": [
+                        "Ecuație neexactă cu factor integrant simplu",
+                        "Ecuație Clairaut",
+                        "Ecuație de căldură",
+                        "Problemă la limită"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 47,
+                  "category": 32,
+                  "displayAnswer": "Ecuație neexactă cu factor integrant simplu",
+                  "explanation": "În forma inițială \\(P_y=1\\) și \\(Q_x=-1\\), deci nu este exactă. Raportul relevant poate da un factor integrant, de exemplu dependent de \\(x\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=3y\\)?",
+                  "options": [
+                        "Ecuație separabilă și liniară omogenă de ordinul I",
+                        "Ecuație Riccati",
+                        "Ecuație Lagrange",
+                        "Ecuație Fredholm"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 48,
+                  "category": 32,
+                  "displayAnswer": "Ecuație separabilă și liniară omogenă de ordinul I",
+                  "explanation": "Se poate scrie \\(dy/y=3dx\\), deci este separabilă; totodată are forma \\(y'+p(x)y=0\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=xy^2\\)?",
+                  "options": [
+                        "Ecuație cu variabile separabile",
+                        "Ecuație Clairaut",
+                        "Ecuație Cauchy-Euler",
+                        "Ecuație Laplace"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 49,
+                  "category": 32,
+                  "displayAnswer": "Ecuație cu variabile separabile",
+                  "explanation": "Se scrie \\(dy/y^2=x\\,dx\\). Atenție la soluția pierdută \\(y=0\\) când împarți la \\(y^2\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y''+y=\\sin x\\)?",
+                  "options": [
+                        "Ecuație liniară neomogenă cu rezonanță",
+                        "Ecuație Bernoulli",
+                        "Ecuație Volterra",
+                        "Ecuație Abel"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 50,
+                  "category": 32,
+                  "displayAnswer": "Ecuație liniară neomogenă cu rezonanță",
+                  "explanation": "Forțarea \\(\\sin x\\) este soluție a ecuației omogene asociate \\(y''+y=0\\), deci apare cazul de rezonanță."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'=y+xy^2\\)?",
+                  "options": [
+                        "Ecuație Bernoulli",
+                        "Ecuație exactă",
+                        "Ecuație Clairaut",
+                        "Ecuație Laplace"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 51,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Bernoulli",
+                  "explanation": "Se rearanjează \\(y'-y=xy^2\\), adică Bernoulli cu \\(\\alpha=2\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(u_t+u u_x=0\\)?",
+                  "options": [
+                        "Ecuație Burgers inviscidă / PDE neliniară de transport",
+                        "Ecuație de căldură liniară",
+                        "Ecuație Riccati ODE",
+                        "Ecuație integrală Fredholm"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 52,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Burgers inviscidă / PDE neliniară de transport",
+                  "explanation": "Este PDE de ordinul I, dar viteza de transport este chiar \\(u\\), deci termenul \\(u u_x\\) o face neliniară."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y'(t)=ay(t)+b y(t-\\tau)\\)?",
+                  "options": [
+                        "Ecuație diferențială cu întârziere",
+                        "Ecuație Clairaut",
+                        "Ecuație exactă",
+                        "Ecuație Fredholm"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 53,
+                  "category": 32,
+                  "displayAnswer": "Ecuație diferențială cu întârziere",
+                  "explanation": "Derivata la momentul \\(t\\) depinde de valoarea necunoscutei la momentul anterior \\(t-\\tau\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y''+p(x)y'+q(x)y=0\\)?",
+                  "options": [
+                        "Ecuație liniară omogenă de ordinul II cu coeficienți variabili",
+                        "Ecuație Bernoulli",
+                        "Ecuație integrală Volterra",
+                        "Ecuație Riccati"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 54,
+                  "category": 32,
+                  "displayAnswer": "Ecuație liniară omogenă de ordinul II cu coeficienți variabili",
+                  "explanation": "Termenii sunt liniari în \\(y,y',y''\\), membrul drept este zero, iar coeficienții pot depinde de \\(x\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(M(x,y)dx+N(x,y)dy=0\\), dacă \\(M_y=N_x\\)?",
+                  "options": [
+                        "Ecuație cu diferențială totală exactă",
+                        "Ecuație Riccati",
+                        "Ecuație Clairaut",
+                        "Ecuație de undă"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 55,
+                  "category": 32,
+                  "displayAnswer": "Ecuație cu diferențială totală exactă",
+                  "explanation": "Condiția \\(M_y=N_x\\) este testul de exactitate; atunci există \\(U(x,y)\\) cu \\(dU=Mdx+Ndy\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y''-2y'+y=\\dfrac{e^x}{x}\\)?",
+                  "options": [
+                        "Ecuație liniară neomogenă de ordinul II cu coeficienți constanți",
+                        "Ecuație Bernoulli",
+                        "Ecuație exactă",
+                        "Sistem simetric"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 56,
+                  "category": 32,
+                  "displayAnswer": "Ecuație liniară neomogenă de ordinul II cu coeficienți constanți",
+                  "explanation": "Operatorul din stânga este liniar cu coeficienți constanți; termenul \\(e^x/x\\) face ecuația neomogenă."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(3y'+y^2+\\dfrac{2}{x^2}=0\\)?",
+                  "options": [
+                        "Ecuație Riccati",
+                        "Ecuație liniară de ordinul I",
+                        "Ecuație Clairaut",
+                        "Ecuație Laplace"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 57,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Riccati",
+                  "explanation": "După izolarea lui \\(y'\\), apare termenul \\(y^2\\), deci are forma Riccati cu termen pătratic în \\(y\\)."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(y=xy'+y'\\ln(y')\\)?",
+                  "options": [
+                        "Ecuație Clairaut",
+                        "Ecuație Bernoulli",
+                        "Ecuație exactă",
+                        "Ecuație de căldură"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 58,
+                  "category": 32,
+                  "displayAnswer": "Ecuație Clairaut",
+                  "explanation": "Este \\(y=xp+f(p)\\), cu \\(p=y'\\) și \\(f(p)=p\\ln p\\), forma caracteristică Clairaut."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(\\begin{cases}y_1'=3y_1-y_2\\ y_2'=y_1+y_2\\end{cases}\\)?",
+                  "options": [
+                        "Sistem liniar omogen de ordinul I",
+                        "Ecuație scalară Riccati",
+                        "Ecuație integrală Volterra",
+                        "Ecuație exactă"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 59,
+                  "category": 32,
+                  "displayAnswer": "Sistem liniar omogen de ordinul I",
+                  "explanation": "Sunt două necunoscute dependente de aceeași variabilă, apar liniar și nu există termen liber."
+            },
+            {
+                  "question": "Ce tip de ecuație este \\(f(x)=\\int_a^x K(x,t)\\varphi(t)dt\\)?",
+                  "options": [
+                        "Ecuație integrală Volterra de speța întâi",
+                        "Ecuație Fredholm de speța a doua",
+                        "Ecuație Bernoulli",
+                        "Ecuație Lagrange"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "number": 60,
+                  "category": 32,
+                  "displayAnswer": "Ecuație integrală Volterra de speța întâi",
+                  "explanation": "Limita superioară este \\(x\\), iar necunoscuta apare numai în integrală; aceasta este speța întâi Volterra."
+            }
+      ],
+      "33": [
+            {
+                  "question": "Pentru o ecuație cu variabile separabile \\(y'=f(x)g(y)\\), care este ordinea corectă?",
+                  "options": [
+                        "Separi \\(\\frac{dy}{g(y)}=f(x)dx\\), integrezi, apoi verifici soluțiile pierdute.",
+                        "Scrii polinomul caracteristic și cauți rădăcini.",
+                        "Calculezi \\(P_y\\) și \\(Q_x\\), apoi cauți \\(U\\).",
+                        "Notezi \\(p=y'\\) și cauți o anvelopă."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Separare variabile → integrare → verificare soluții pierdute",
+                  "explanation": "Termenii cu \\(y\\) pot fi mutați lângă \\(dy\\), iar cei cu \\(x\\) lângă \\(dx\\).",
+                  "number": 1,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o ecuație omogenă Euler de ordinul I \\(y'=F(y/x)\\), ce substituție folosești?",
+                  "options": [
+                        "\\(u=y/x\\), deci \\(y=ux\\) și \\(y'=u+xu'\\).",
+                        "\\(u=y^2\\), deci \\(u'=2yy'\\).",
+                        "\\(u=e^xy\\), apoi factor integrant.",
+                        "\\(u=y'\\), apoi ecuație caracteristică."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(u=y/x\\), \\(y=ux\\), \\(y'=u+xu'\\)",
+                  "explanation": "Raportul \\(y/x\\) este semnul clar că trebuie introdusă variabila \\(u=y/x\\).",
+                  "number": 2,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o ecuație reductibilă la omogenă Euler cu \\(\\Delta\\neq0\\), care este primul pas?",
+                  "options": [
+                        "Rezolvi sistemul expresiilor liniare egale cu zero și faci translația în punctul de intersecție.",
+                        "Împarți la \\(y^\\alpha\\).",
+                        "Scrii direct ecuația caracteristică.",
+                        "Aplici integrarea prin părți."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Găsești \\((x_0,y_0)\\), apoi \\(X=x-x_0\\), \\(Y=y-y_0\\)",
+                  "explanation": "Translația elimină constantele și reduce ecuația la o formă omogenă.",
+                  "number": 3,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o ecuație reductibilă la omogenă Euler cu \\(\\Delta=0\\), ce faci?",
+                  "options": [
+                        "Introduci combinația comună \\(p=ax+by\\), derivezi \\(p'=a+by'\\), apoi reduci la separabilă.",
+                        "Cauți soluții \\(e^{rx}\\).",
+                        "Construiești \\(U_x=P\\), \\(U_y=Q\\).",
+                        "O tratezi automat ca Riccati."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Folosești combinația comună \\(p=ax+by\\)",
+                  "explanation": "Când determinantul este zero, expresiile liniare sunt dependente și au aceeași combinație de bază.",
+                  "number": 4,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru \\(P(x,y)dx+Q(x,y)dy=0\\), cum verifici exactitatea?",
+                  "options": [
+                        "Calculezi \\(P_y\\) și \\(Q_x\\); dacă sunt egale, ecuația este exactă.",
+                        "Calculezi \\(P_x\\) și \\(Q_y\\); dacă sunt egale, este Bernoulli.",
+                        "Verifici dacă apare \\(y^2\\).",
+                        "Cauți rădăcini ale ecuației caracteristice."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Testul \\(P_y=Q_x\\)",
+                  "explanation": "Exactitatea înseamnă că \\(Pdx+Qdy\\) este diferențiala unei funcții \\(U(x,y)\\).",
+                  "number": 5,
+                  "category": 33
+            },
+            {
+                  "question": "După ce \\(Pdx+Qdy=0\\) este exactă, care este pasul următor?",
+                  "options": [
+                        "Construiești funcția potențială \\(U(x,y)\\) și scrii soluția \\(U(x,y)=C\\).",
+                        "Pui \\(y=y_1+1/u\\).",
+                        "Scrii \\(y=xp+f(p)\\).",
+                        "Aplici seria Fourier."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Găsești \\(U\\), apoi soluția este \\(U=C\\)",
+                  "explanation": "O ecuație exactă este echivalentă cu \\(dU=0\\), deci \\(U\\) rămâne constant.",
+                  "number": 6,
+                  "category": 33
+            },
+            {
+                  "question": "Dacă \\(Pdx+Qdy=0\\) nu este exactă, care este ideea factorului integrant?",
+                  "options": [
+                        "Cauți \\(\\mu\\) astfel încât \\(\\mu Pdx+\\mu Qdy=0\\) să devină exactă.",
+                        "Cauți numai soluții \\(e^{rx}\\).",
+                        "Pui mereu \\(y=ux\\).",
+                        "Aplici regula câtului."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Înmulțești cu \\(\\mu\\) pentru a obține exactitate",
+                  "explanation": "Factorul integrant repară lipsa exactității, apoi aplici metoda ecuațiilor exacte.",
+                  "number": 7,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru ecuația liniară \\(y'+p(x)y=q(x)\\), care este metoda standard?",
+                  "options": [
+                        "Folosești \\(\\mu=e^{\\int p(x)dx}\\), apoi integrezi \\((\\mu y)'=\\mu q\\).",
+                        "Notezi \\(u=y/x\\).",
+                        "Calculezi doar \\(P_y=Q_x\\).",
+                        "Scrii \\(y=xp+f(p)\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Factor integrant \\(\\mu=e^{\\int p dx}\\)",
+                  "explanation": "Factorul integrant transformă partea stângă în derivata produsului \\(\\mu y\\).",
+                  "number": 8,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru Bernoulli \\(y'+p(x)y=q(x)y^\\alpha\\), \\(\\alpha\\neq0,1\\), ce substituție se folosește?",
+                  "options": [
+                        "Împarți la \\(y^\\alpha\\) și notezi \\(z=y^{1-\\alpha}\\).",
+                        "Notezi \\(u=y/x\\).",
+                        "Notezi \\(p=y'\\) și cauți anvelopa.",
+                        "Scrii ecuația caracteristică."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(z=y^{1-\\alpha}\\)",
+                  "explanation": "Substituția elimină puterea neliniară și duce la o ecuație liniară în \\(z\\).",
+                  "number": 9,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru Riccati, dacă știi o soluție particulară \\(y_1\\), care este transformarea?",
+                  "options": [
+                        "Pui \\(y=y_1+\\frac1u\\), apoi obții o ecuație liniară pentru \\(u\\).",
+                        "Pui \\(y=ux\\).",
+                        "Pui \\(y=x^m\\).",
+                        "Calculezi \\(P_y=Q_x\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(y=y_1+1/u\\)",
+                  "explanation": "Soluția particulară permite reducerea termenului pătratic din Riccati.",
+                  "number": 10,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o ecuație liniară omogenă de ordin superior cu coeficienți constanți, care este primul pas?",
+                  "options": [
+                        "Scrii ecuația caracteristică asociată operatorului diferențial.",
+                        "Cauți \\(\\mu(y)\\).",
+                        "Separi \\(dy\\) de \\(dx\\).",
+                        "Cauți limitele Fredholm."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Ecuația caracteristică",
+                  "explanation": "Coeficienții constanți permit soluții de tip exponențial, care duc la polinomul caracteristic.",
+                  "number": 11,
+                  "category": 33
+            },
+            {
+                  "question": "Dacă ecuația caracteristică are rădăcină reală dublă \\(r\\), ce termeni apar?",
+                  "options": [
+                        "\\(C_1e^{rx}+C_2xe^{rx}\\)",
+                        "\\(C_1\\cos rx+C_2\\sin rx\\)",
+                        "\\(C_1x^r+C_2x^{-r}\\)",
+                        "\\(C_1+C_2\\ln x\\), întotdeauna"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(e^{rx}\\) și \\(xe^{rx}\\)",
+                  "explanation": "Rădăcina multiplă cere înmulțire cu \\(x\\) pentru soluții independente.",
+                  "number": 12,
+                  "category": 33
+            },
+            {
+                  "question": "Dacă rădăcinile sunt complexe \\(\\alpha\\pm i\\beta\\), ce formă are soluția reală?",
+                  "options": [
+                        "\\(e^{\\alpha x}(C_1\\cos\\beta x+C_2\\sin\\beta x)\\)",
+                        "\\(C_1e^{\\beta x}+C_2e^{-\\beta x}\\)",
+                        "\\(C_1x^\\alpha+C_2x^\\beta\\)",
+                        "\\(C_1\\ln x+C_2\\arctan x\\)"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(e^{\\alpha x}(C_1\\cos\\beta x+C_2\\sin\\beta x)\\)",
+                  "explanation": "Partea reală dă exponențiala, iar partea imaginară dă sinus și cosinus.",
+                  "number": 13,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o ecuație liniară neomogenă cu coeficienți constanți, cum se construiește soluția generală?",
+                  "options": [
+                        "Rezolvi omogena \\(y_h\\), găsești o particulară \\(y_p\\), apoi \\(y=y_h+y_p\\).",
+                        "Scrii doar \\(y_p\\) și ignori omogena.",
+                        "Calculezi doar \\(P_y=Q_x\\).",
+                        "Aplici mereu \\(u=y/x\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(y=y_h+y_p\\)",
+                  "explanation": "Soluția generală a neomogenei este suma dintre soluția omogenei și o particulară.",
+                  "number": 14,
+                  "category": 33
+            },
+            {
+                  "question": "În coeficienți nedeterminați, ce faci dacă propunerea pentru \\(y_p\\) apare deja în \\(y_h\\)?",
+                  "options": [
+                        "Înmulțești forma propusă cu o putere suficientă de \\(x\\).",
+                        "Schimbi ecuația în Bernoulli.",
+                        "Anulezi termenul liber.",
+                        "Înlocuiești \\(x\\) cu \\(y\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Regula rezonanței: înmulțești cu \\(x^s\\)",
+                  "explanation": "Rezonanța cere o formă particulară independentă de soluția omogenă.",
+                  "number": 15,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o problemă Cauchy, când folosești condițiile inițiale?",
+                  "options": [
+                        "După soluția generală, ca să determini constantele.",
+                        "Înainte de identificarea tipului de ecuație.",
+                        "Doar pentru exactitate.",
+                        "Nu se folosesc în ecuații diferențiale."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "După soluția generală, pentru constante",
+                  "explanation": "Condițiile inițiale aleg o singură soluție din familia generală.",
+                  "number": 16,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru Clairaut \\(y=xy'+f(y')\\), care este schema?",
+                  "options": [
+                        "Notezi \\(p=y'\\), scrii \\(y=xp+f(p)\\), derivezi și separi cazul \\(p'=0\\) de cazul singular.",
+                        "Calculezi \\(P_y=Q_x\\).",
+                        "Pui \\(z=y^{1-\\alpha}\\).",
+                        "Cauți factorul integrant liniar."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(p=y'\\) → derivare → familie de drepte și eventual singulară",
+                  "explanation": "Clairaut produce de obicei o familie de drepte și o anvelopă singulară.",
+                  "number": 17,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru Lagrange \\(y=x\\varphi(p)+\\psi(p)\\), \\(p=y'\\), ce urmărești după derivare?",
+                  "options": [
+                        "O ecuație liniară pentru \\(x\\) ca funcție de \\(p\\), apoi revii parametric la \\(y\\).",
+                        "Un polinom caracteristic în \\(r\\).",
+                        "O integrală Volterra.",
+                        "O condiție Fourier la capete."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Rezolvi pentru \\(x(p)\\), apoi obții \\(y\\) parametric",
+                  "explanation": "Ecuația Lagrange se tratează parametric prin \\(p=y'\\).",
+                  "number": 18,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru sistemul simetric \\(dx/P=dy/Q=dz/R\\), care este ideea?",
+                  "options": [
+                        "Cauți integrale prime, prin rapoarte egale sau multiplicatori convenabili.",
+                        "Scrii \\(y=y_1+1/u\\).",
+                        "Aplici regula produsului.",
+                        "Folosești doar \\(\\int cdx\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Cauți integrale prime",
+                  "explanation": "Scopul este să găsești relații independente între variabile.",
+                  "number": 19,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru sistemul liniar \\(X'=AX\\) cu matrice constantă, care este metoda principală?",
+                  "options": [
+                        "Calculezi valorile proprii și vectorii proprii ai lui \\(A\\).",
+                        "Calculezi \\(P_y\\) și \\(Q_x\\).",
+                        "Împarți la \\(y^\\alpha\\).",
+                        "Cauți o anvelopă Clairaut."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Valori proprii și vectori proprii",
+                  "explanation": "Modurile proprii ale matricei construiesc soluția sistemului.",
+                  "number": 20,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o PDE de ordinul I \\(P u_x+Q u_y=R\\), care este schema clasică?",
+                  "options": [
+                        "Scrii sistemul caracteristic \\(dx/P=dy/Q=du/R\\) și cauți invarianți.",
+                        "Scrii ecuația caracteristică algebrică în \\(r\\).",
+                        "Aplici integrarea prin părți.",
+                        "Aplici regula câtului."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Metoda caracteristicilor",
+                  "explanation": "Caracteristicile transformă PDE-ul în ODE-uri pe curbe.",
+                  "number": 21,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru Volterra de speța a doua, ce trăsătură ajută la rezolvare?",
+                  "options": [
+                        "Limita superioară este \\(x\\), deci poți folosi diferențierea sau aproximații succesive.",
+                        "Are mereu rădăcini complexe.",
+                        "Este exactă dacă \\(P_y=Q_x\\).",
+                        "Se rezolvă doar cu \\(u=y/x\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Folosești limita variabilă \\(x\\)",
+                  "explanation": "La Volterra, integrala merge până la variabila curentă, ceea ce permite uneori diferențierea.",
+                  "number": 22,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru Fredholm cu limite fixe \\([a,b]\\), ce faci când nucleul este degenerat?",
+                  "options": [
+                        "Reduci problema la un sistem algebric pentru constante provenite din integrale.",
+                        "Aplici \\(y=ux\\).",
+                        "Derivezi \\(p=ax+by\\).",
+                        "Scrii \\(y=xp+f(p)\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Reducere la sistem algebric",
+                  "explanation": "Limitele fixe fac ca anumite integrale să devină constante necunoscute.",
+                  "number": 23,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru coarda vibrantă \\(z_{tt}=a^2z_{xx}\\) cu capete fixe, care este schema?",
+                  "options": [
+                        "Separi variabilele, aplici condițiile la capete și determini coeficienții Fourier din datele inițiale.",
+                        "Cauți factor integrant dependent de \\(y\\).",
+                        "Pui \\(z=y^{1-\\alpha}\\).",
+                        "Calculezi \\(P_y\\) și \\(Q_x\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Separare variabile + frontieră + Fourier",
+                  "explanation": "Condițiile la capete aleg modurile sinusoidale ale coardei.",
+                  "number": 24,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru Euler-Cauchy \\(x^2y''+axy'+by=0\\), ce presupunere faci?",
+                  "options": [
+                        "Presupui \\(y=x^m\\) și obții o ecuație algebrică în \\(m\\).",
+                        "Presupui mereu \\(y=\\sin(mx)\\).",
+                        "Presupui \\(y=y_1+1/u\\).",
+                        "Presupui \\(Pdx+Qdy=0\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(y=x^m\\)",
+                  "explanation": "Puterea lui \\(x\\) se potrivește cu coeficienții de tip Euler-Cauchy.",
+                  "number": 25,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o liniară neomogenă unde coeficienții nedeterminați nu se potrivesc, ce metodă generală poți folosi?",
+                  "options": [
+                        "Variația constantelor.",
+                        "Regula derivării sumei.",
+                        "Substituția \\(u=y/x\\), indiferent de formă.",
+                        "Testul \\(P_x=Q_y\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Variația constantelor",
+                  "explanation": "Metoda folosește soluțiile fundamentale ale ecuației omogene și este mai generală.",
+                  "number": 26,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o ecuație autonomă \\(y'=F(y)\\), ce observație simplifică rezolvarea?",
+                  "options": [
+                        "Este separabilă: \\(dy/F(y)=dx\\), plus verificarea echilibrelor \\(F(y)=0\\).",
+                        "Este întotdeauna Clairaut.",
+                        "Are mereu soluții Fourier.",
+                        "Se rezolvă cu polinom caracteristic."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Separabilă + soluții de echilibru",
+                  "explanation": "Împărțirea la \\(F(y)\\) poate pierde soluțiile constante, deci acestea se verifică separat.",
+                  "number": 27,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru logistică \\(y'=ay-by^2\\), ce metodă se aplică rapid?",
+                  "options": [
+                        "Separarea variabilelor, de obicei cu fracții simple.",
+                        "Ecuația caracteristică cu rădăcini complexe.",
+                        "Metoda exactă cu \\(P_y=Q_x\\).",
+                        "Anvelopa Clairaut."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Separare variabile + fracții simple",
+                  "explanation": "Ecuația logistică este autonomă și separabilă.",
+                  "number": 28,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o ecuație de forma \\(y''=F(x,y')\\), ce reducere de ordin este naturală?",
+                  "options": [
+                        "Notezi \\(p=y'\\), deci \\(y''=p'\\), și rezolvi o ecuație de ordinul I pentru \\(p\\).",
+                        "Notezi \\(p=y/x\\).",
+                        "Calculezi \\(\\int u\\,dv\\).",
+                        "Cauți limite Fredholm."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(p=y'\\), reducere de ordin",
+                  "explanation": "Dacă \\(y\\) nu apare explicit, \\(y'\\) poate deveni noua necunoscută.",
+                  "number": 29,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru \\(y''=F(y,y')\\), fără \\(x\\) explicit, ce substituție este utilă?",
+                  "options": [
+                        "Notezi \\(p(y)=y'\\), iar \\(y''=p\\,dp/dy\\).",
+                        "Notezi \\(u=x/y\\), obligatoriu.",
+                        "Scrii \\(P_y=Q_x\\).",
+                        "Aplici direct \\(\\int cdx\\)."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "\\(p(y)=y'\\), \\(y''=p\\,dp/dy\\)",
+                  "explanation": "Când \\(x\\) lipsește explicit, poți privi viteza \\(y'\\) ca funcție de \\(y\\).",
+                  "number": 30,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru o liniară de ordinul II cu coeficienți variabili, ce verifici înainte de coeficienți nedeterminați?",
+                  "options": [
+                        "Dacă coeficienții sunt constanți; dacă nu, metoda nu se aplică direct.",
+                        "Dacă apare \\(\\arctan\\).",
+                        "Dacă se poate scrie \\(\\int cdx\\).",
+                        "Dacă este mereu Fredholm."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Coeficienții nedeterminați cer coeficienți constanți și forțări potrivite",
+                  "explanation": "Metoda are condiții stricte; pentru coeficienți variabili trebuie altă tehnică.",
+                  "number": 31,
+                  "category": 33
+            },
+            {
+                  "question": "Pentru identificarea rapidă a unei ecuații, ce ordine de verificare este practică?",
+                  "options": [
+                        "Ordinul și liniaritatea → formă specială → metodă de rezolvare → condiții inițiale/frontieră.",
+                        "Culoarea hârtiei → numărul de termeni → metoda Fourier.",
+                        "Aplici întâi Riccati la toate ecuațiile.",
+                        "Aplici întâi integrarea prin părți la toate ecuațiile."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Ordin/liniaritate → formă specială → metodă → condiții",
+                  "explanation": "Identificarea corectă vine înaintea calculului; altfel alegi o metodă nepotrivită.",
+                  "number": 32,
+                  "category": 33
+            }
+      ]
+};
+
     const STORAGE_KEY = 'quiz-personal-v1';
     const SESSION_KEY = 'quiz-session-v2';
     const STATS_KEY = 'quiz-lifetime-stats-v1';
@@ -5686,6 +8315,11 @@
       var out = { question: question.question, options: newOptions, answer: newAnswer };
       if (question.number !== undefined) out.number = question.number;
       if (question.category !== undefined) out.category = question.category;
+      if (question.displayAnswer !== undefined) out.displayAnswer = question.displayAnswer;
+      if (question.explanation !== undefined) out.explanation = question.explanation;
+      if (question.type !== undefined) out.type = question.type;
+      if (question.selfGrade !== undefined) out.selfGrade = question.selfGrade;
+      if (Array.isArray(question.acceptedAnswers)) out.acceptedAnswers = question.acceptedAnswers.slice();
       return out;
     }
 
@@ -5827,6 +8461,13 @@
       activeQuestionSetTitle = PHYSICS_SET_TITLE;
     }
 
+
+    function useMathSpecialQuestionSet() {
+      questions = MATH_SPECIAL_QUESTIONS || {};
+      categoryNames = MATH_SPECIAL_CATEGORY_NAMES || {};
+      activeQuestionSetTitle = MATH_SPECIAL_SET_TITLE;
+    }
+
     function normalizeTextAnswer(value) {
       return String(value || '')
         .normalize('NFD')
@@ -5888,6 +8529,41 @@
         return question.answer.map(function (idx) { return question.options[idx]; }).filter(Boolean).join('; ');
       }
       return question.answer !== undefined ? String(question.answer) : '';
+    }
+
+
+    function showQuestionExplanation(question, optionsContainer) {
+      if (!question || question.explanation === undefined || !optionsContainer) return;
+      var explanation = String(question.explanation || '').trim();
+      if (!explanation) return;
+      var box = optionsContainer.querySelector('.question-explanation');
+      if (!box) {
+        box = document.createElement('div');
+        box.className = 'question-explanation';
+        optionsContainer.appendChild(box);
+      }
+      box.innerHTML = '';
+
+      var answerLine = document.createElement('div');
+      var answerStrong = document.createElement('strong');
+      answerStrong.textContent = 'Răspuns corect: ';
+      var answerText = document.createElement('span');
+      answerText.textContent = getDisplayAnswer(question);
+      answerLine.appendChild(answerStrong);
+      answerLine.appendChild(answerText);
+      box.appendChild(answerLine);
+
+      var explanationLine = document.createElement('div');
+      explanationLine.style.marginTop = '0.35rem';
+      var explanationStrong = document.createElement('strong');
+      explanationStrong.textContent = 'Explicație: ';
+      var explanationText = document.createElement('span');
+      explanationText.textContent = explanation;
+      explanationLine.appendChild(explanationStrong);
+      explanationLine.appendChild(explanationText);
+      box.appendChild(explanationLine);
+
+      renderMathIn(box);
     }
 
     function isTextQuestion(question) {
@@ -5969,6 +8645,17 @@
         showCategoryScreen();
       });
       wrap.appendChild(mechanicsBtn);
+
+      var mathBtn = document.createElement('button');
+      mathBtn.type = 'button';
+      mathBtn.className = 'main-menu-btn';
+      mathBtn.textContent = MATH_SPECIAL_SET_TITLE;
+      mathBtn.addEventListener('click', function () {
+        useMathSpecialQuestionSet();
+        questionEl.closest('section').classList.remove('main-menu-screen');
+        showCategoryScreen();
+      });
+      wrap.appendChild(mathBtn);
 
       optionsContainer.appendChild(wrap);
       appendProgressActions(optionsContainer, true);
@@ -6357,6 +9044,7 @@
       });
       var showBtn = document.getElementById('btn-show-answer');
       if (showBtn) showBtn.disabled = true;
+      showQuestionExplanation(question, optionsContainer);
       if (!noTimersMode) startWaitCountdown();
     }
 
@@ -6637,6 +9325,7 @@
           saveSession();
           stopQuestionTimer();
           buttons.forEach((btn) => { btn.disabled = true; });
+          showQuestionExplanation(question, optionsContainer);
           if (!noTimersMode) startWaitCountdown();
         }
       } else {
@@ -6650,6 +9339,7 @@
           if (buttons[idx]) buttons[idx].classList.add('correct');
         });
         buttons.forEach((btn) => { btn.disabled = true; });
+        showQuestionExplanation(question, optionsContainer);
         if (!noTimersMode) startWaitCountdown();
       }
     }
