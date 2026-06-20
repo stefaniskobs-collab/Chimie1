@@ -808,6 +808,10 @@
         <label for="setting-no-timers">No timers</label>
         <input type="checkbox" id="setting-no-timers" aria-label="Disable all timers; use Next question button to advance">
       </div>
+      <div class="setting-row">
+        <label for="setting-hide-multiple-count">Hide multiple-answer count</label>
+        <input type="checkbox" id="setting-hide-multiple-count" aria-label="Hide the number of correct choices in multiple-answer questions">
+      </div>
     </div>
 
     <div class="progress-tracker hidden" id="progress-tracker">
@@ -842,6 +846,7 @@
     let questionTimeSec = 20;
     let waitBetweenSec = 10;
     let noTimersMode = false;
+    let hideMultipleChoiceCount = false;
 
     let isPaused = false;
     let pauseRemaining = 0;
@@ -7966,7 +7971,8 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           questionTimeSec: questionTimeSec,
           waitBetweenSec: waitBetweenSec,
-          noTimersMode: noTimersMode
+          noTimersMode: noTimersMode,
+          hideMultipleChoiceCount: hideMultipleChoiceCount
         }));
       } catch (e) { /* ignore */ }
     }
@@ -7979,6 +7985,7 @@
         if (typeof saved.questionTimeSec === 'number') questionTimeSec = saved.questionTimeSec;
         if (typeof saved.waitBetweenSec === 'number') waitBetweenSec = saved.waitBetweenSec;
         if (typeof saved.noTimersMode === 'boolean') noTimersMode = saved.noTimersMode;
+        if (typeof saved.hideMultipleChoiceCount === 'boolean') hideMultipleChoiceCount = saved.hideMultipleChoiceCount;
       } catch (e) { /* ignore */ }
     }
 
@@ -8181,6 +8188,7 @@
           questionTimeSec: questionTimeSec,
           waitBetweenSec: waitBetweenSec,
           noTimersMode: noTimersMode,
+          hideMultipleChoiceCount: hideMultipleChoiceCount,
           savedAt: Date.now()
         }));
       } catch (e) { /* ignore */ }
@@ -8219,6 +8227,7 @@
       if (typeof saved.questionTimeSec === 'number') questionTimeSec = saved.questionTimeSec;
       if (typeof saved.waitBetweenSec === 'number') waitBetweenSec = saved.waitBetweenSec;
       if (typeof saved.noTimersMode === 'boolean') noTimersMode = saved.noTimersMode;
+      if (typeof saved.hideMultipleChoiceCount === 'boolean') hideMultipleChoiceCount = saved.hideMultipleChoiceCount;
       applyPreferencesToUI();
 
       document.querySelector('.question-container').classList.remove('category-screen', 'main-menu-screen');
@@ -8416,9 +8425,11 @@
       var qInput = document.getElementById('setting-question-time');
       var wInput = document.getElementById('setting-wait-between');
       var noTimersInput = document.getElementById('setting-no-timers');
+      var hideMultipleChoiceCountInput = document.getElementById('setting-hide-multiple-count');
       if (qInput) qInput.value = String(questionTimeSec);
       if (wInput) wInput.value = String(waitBetweenSec);
       if (noTimersInput) noTimersInput.checked = noTimersMode;
+      if (hideMultipleChoiceCountInput) hideMultipleChoiceCountInput.checked = hideMultipleChoiceCount;
       var qVal = document.getElementById('question-time-value');
       var wVal = document.getElementById('wait-between-value');
       if (qVal) qVal.textContent = questionTimeSec;
@@ -8794,7 +8805,9 @@
         }
       } else if (correctCount > 1) {
         badge.classList.add('multiple');
-        badge.textContent = 'MULTIPLE ANSWERS — select all ' + correctCount + ' correct options';
+        badge.textContent = hideMultipleChoiceCount
+          ? 'MULTIPLE ANSWERS — select all correct options'
+          : 'MULTIPLE ANSWERS — select all ' + correctCount + ' correct options';
       } else {
         badge.classList.add('single');
         badge.textContent = 'SINGLE ANSWER — choose exactly one option';
@@ -8829,7 +8842,9 @@
         setAnswerStatus(
           optionsContainer,
           'multiple',
-          '<strong>Multiple-answer question.</strong> There are <strong>' + correctCount + '</strong> correct choices. Select all of them; the question is only complete when all correct choices are selected.'
+          hideMultipleChoiceCount
+            ? '<strong>Multiple-answer question.</strong> Select all correct choices; the question is only complete when all correct choices are selected.'
+            : '<strong>Multiple-answer question.</strong> There are <strong>' + correctCount + '</strong> correct choices. Select all of them; the question is only complete when all correct choices are selected.'
         );
       } else {
         setAnswerStatus(
@@ -8848,7 +8863,9 @@
         setAnswerStatus(
           optionsContainer,
           'partial',
-          '<strong>Correct choice selected.</strong> You have found <strong>' + selectedCorrect + ' / ' + correctCount + '</strong> correct answers. Keep selecting until you reach ' + correctCount + ' / ' + correctCount + '.'
+          hideMultipleChoiceCount
+            ? '<strong>Correct choice selected.</strong> Keep selecting until all correct choices are selected.'
+            : '<strong>Correct choice selected.</strong> You have found <strong>' + selectedCorrect + ' / ' + correctCount + '</strong> correct answers. Keep selecting until you reach ' + correctCount + ' / ' + correctCount + '.'
         );
       } else if (state === 'correct') {
         var label = correctCount > 1 ? 'All correct answers selected.' : 'Correct answer selected.';
@@ -8869,6 +8886,28 @@
           'revealed',
           '<strong>Answer shown.</strong> The correct answer' + (correctCount > 1 ? 's are' : ' is') + ' highlighted in green. This question was counted wrong if you had not completed it.'
         );
+      }
+    }
+
+    function refreshCurrentQuestionTypeDisplay() {
+      if (!Array.isArray(activeQuestions) || activeQuestions.length === 0 || currentQuestionIndex < 0 || currentQuestionIndex >= activeQuestions.length) return;
+      var question = activeQuestions[currentQuestionIndex];
+      var questionEl = document.querySelector('.question-text');
+      var optionsContainer = document.getElementById('options-container');
+      renderQuestionTypeBanner(question, questionEl);
+      if (!question || isTextQuestion(question) || !optionsContainer) return;
+      var statusBox = optionsContainer.querySelector('.answer-status');
+      if (!statusBox) return;
+      if (statusBox.classList.contains('partial')) {
+        updateMultipleChoiceStatus(question, optionsContainer, 'partial');
+      } else if (statusBox.classList.contains('correct')) {
+        updateMultipleChoiceStatus(question, optionsContainer, 'correct');
+      } else if (statusBox.classList.contains('wrong')) {
+        updateMultipleChoiceStatus(question, optionsContainer, 'wrong');
+      } else if (statusBox.classList.contains('revealed')) {
+        updateMultipleChoiceStatus(question, optionsContainer, 'revealed');
+      } else {
+        renderInitialAnswerStatus(question, optionsContainer);
       }
     }
 
@@ -9759,6 +9798,9 @@
       var qInput = document.getElementById('setting-question-time');
       var wInput = document.getElementById('setting-wait-between');
       var noTimersInput = document.getElementById('setting-no-timers');
+      var hideMultipleChoiceCountInput = document.getElementById('setting-hide-multiple-count');
+      var hideMultipleChoiceCountChanged = false;
+
       if (qInput) {
         questionTimeSec = parseInt(qInput.value, 10);
         var qVal = document.getElementById('question-time-value');
@@ -9768,6 +9810,11 @@
         waitBetweenSec = parseInt(wInput.value, 10);
         var wVal = document.getElementById('wait-between-value');
         if (wVal) wVal.textContent = waitBetweenSec;
+      }
+      if (hideMultipleChoiceCountInput) {
+        var nextHideMultipleChoiceCount = hideMultipleChoiceCountInput.checked;
+        hideMultipleChoiceCountChanged = hideMultipleChoiceCount !== nextHideMultipleChoiceCount;
+        hideMultipleChoiceCount = nextHideMultipleChoiceCount;
       }
       if (noTimersInput) {
         noTimersMode = noTimersInput.checked;
@@ -9785,6 +9832,9 @@
             startQuestionTimer(activeQuestions[currentQuestionIndex], document.getElementById('options-container'));
           }
         }
+      }
+      if (hideMultipleChoiceCountChanged) {
+        refreshCurrentQuestionTypeDisplay();
       }
       savePreferences();
       saveSession();
@@ -9831,6 +9881,7 @@
     document.getElementById('setting-wait-between').addEventListener('input', updateSettingsFromUI);
     document.getElementById('setting-wait-between').addEventListener('change', updateSettingsFromUI);
     document.getElementById('setting-no-timers').addEventListener('change', updateSettingsFromUI);
+    document.getElementById('setting-hide-multiple-count').addEventListener('change', updateSettingsFromUI);
 
     window.addEventListener('beforeunload', function () {
       savePreferences();
