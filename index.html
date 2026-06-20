@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>University Quiz</title>
+  <title>University Quiz - Clear Answer Types</title>
   <style>
     * {
       box-sizing: border-box;
@@ -192,6 +192,106 @@
       line-height: 1.5;
       color: #1a1a2e;
       margin: 0;
+    }
+
+    .question-meta {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .question-type-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      padding: 0.5rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #c0c4cc;
+      background: #f5f6f8;
+      color: #1a1a2e;
+      font-size: 0.88rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .question-type-badge.single {
+      background: #e7f5ff;
+      border-color: #17a2b8;
+      color: #0c5460;
+    }
+
+    .question-type-badge.multiple {
+      background: #fff3cd;
+      border-color: #ffc107;
+      color: #664d03;
+    }
+
+    .question-type-badge.text,
+    .question-type-badge.self-grade {
+      background: #eef6ff;
+      border-color: #b6d4fe;
+      color: #084298;
+    }
+
+    .answer-status {
+      margin: 0 0 0.75rem 0;
+      padding: 0.75rem 0.85rem;
+      border-radius: 10px;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      color: #1a1a2e;
+      font-size: 0.94rem;
+      line-height: 1.4;
+    }
+
+    .answer-status strong {
+      font-weight: 800;
+    }
+
+    .answer-status.single {
+      background: #e7f5ff;
+      border-color: #17a2b8;
+      color: #0c5460;
+    }
+
+    .answer-status.multiple,
+    .answer-status.partial {
+      background: #fff3cd;
+      border-color: #ffc107;
+      color: #664d03;
+    }
+
+    .answer-status.correct {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+
+    .answer-status.wrong {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+
+    .answer-status.revealed {
+      background: #eef6ff;
+      border-color: #b6d4fe;
+      color: #084298;
+    }
+
+    .option-btn.multi-answer-option::before {
+      content: "☐ ";
+      font-weight: 800;
+    }
+
+    .option-btn.multi-answer-option.correct::before {
+      content: "☑ ";
+    }
+
+    .option-btn.multi-answer-option.wrong::before {
+      content: "☒ ";
     }
 
     .options {
@@ -8653,6 +8753,125 @@
       return !!question && (question.type === 'text' || question.type === 'self-grade-text');
     }
 
+
+    function getCorrectIndices(question) {
+      if (!question) return [];
+      if (Array.isArray(question.answer)) {
+        return question.answer
+          .map(function (idx) { return parseInt(idx, 10); })
+          .filter(function (idx) { return !Number.isNaN(idx); });
+      }
+      if (question.answer !== undefined && question.options) {
+        var singleIdx = parseInt(question.answer, 10);
+        return Number.isNaN(singleIdx) ? [] : [singleIdx];
+      }
+      return [];
+    }
+
+    function clearQuestionTypeBanner() {
+      var section = document.querySelector('.question-container');
+      if (!section) return;
+      var oldMeta = section.querySelector('.question-meta');
+      if (oldMeta) oldMeta.remove();
+    }
+
+    function renderQuestionTypeBanner(question, questionEl) {
+      clearQuestionTypeBanner();
+      if (!questionEl || !questionEl.parentNode || !question) return;
+      var correctCount = getCorrectIndices(question).length;
+      var meta = document.createElement('div');
+      meta.className = 'question-meta';
+      var badge = document.createElement('div');
+      badge.className = 'question-type-badge';
+
+      if (isTextQuestion(question)) {
+        if (question.selfGrade) {
+          badge.classList.add('self-grade');
+          badge.textContent = 'TEXT / SELF-GRADE — write your answer, reveal, then mark yourself';
+        } else {
+          badge.classList.add('text');
+          badge.textContent = 'TEXT ANSWER — type and submit one answer';
+        }
+      } else if (correctCount > 1) {
+        badge.classList.add('multiple');
+        badge.textContent = 'MULTIPLE ANSWERS — select all ' + correctCount + ' correct options';
+      } else {
+        badge.classList.add('single');
+        badge.textContent = 'SINGLE ANSWER — choose exactly one option';
+      }
+
+      meta.appendChild(badge);
+      questionEl.insertAdjacentElement('afterend', meta);
+    }
+
+    function getSelectedCorrectCount(optionsContainer) {
+      return optionsContainer ? optionsContainer.querySelectorAll('.option-btn.correct').length : 0;
+    }
+
+    function setAnswerStatus(optionsContainer, className, htmlText) {
+      if (!optionsContainer) return;
+      var box = optionsContainer.querySelector('.answer-status');
+      if (!box) {
+        box = document.createElement('div');
+        box.className = 'answer-status';
+        box.setAttribute('aria-live', 'polite');
+        optionsContainer.insertBefore(box, optionsContainer.firstChild);
+      }
+      box.className = 'answer-status ' + (className || '');
+      box.innerHTML = htmlText;
+      renderMathIn(box);
+    }
+
+    function renderInitialAnswerStatus(question, optionsContainer) {
+      if (!question || isTextQuestion(question)) return;
+      var correctCount = getCorrectIndices(question).length;
+      if (correctCount > 1) {
+        setAnswerStatus(
+          optionsContainer,
+          'multiple',
+          '<strong>Multiple-answer question.</strong> There are <strong>' + correctCount + '</strong> correct choices. Select all of them; the question is only complete when all correct choices are selected.'
+        );
+      } else {
+        setAnswerStatus(
+          optionsContainer,
+          'single',
+          '<strong>Single-answer question.</strong> There is exactly <strong>1</strong> correct choice.'
+        );
+      }
+    }
+
+    function updateMultipleChoiceStatus(question, optionsContainer, state) {
+      if (!question || !optionsContainer || isTextQuestion(question)) return;
+      var correctCount = getCorrectIndices(question).length;
+      var selectedCorrect = getSelectedCorrectCount(optionsContainer);
+      if (state === 'partial') {
+        setAnswerStatus(
+          optionsContainer,
+          'partial',
+          '<strong>Correct choice selected.</strong> You have found <strong>' + selectedCorrect + ' / ' + correctCount + '</strong> correct answers. Keep selecting until you reach ' + correctCount + ' / ' + correctCount + '.'
+        );
+      } else if (state === 'correct') {
+        var label = correctCount > 1 ? 'All correct answers selected.' : 'Correct answer selected.';
+        setAnswerStatus(
+          optionsContainer,
+          'correct',
+          '<strong>Correct.</strong> ' + label + ' Score added.'
+        );
+      } else if (state === 'wrong') {
+        setAnswerStatus(
+          optionsContainer,
+          'wrong',
+          '<strong>Wrong.</strong> The correct answer' + (correctCount > 1 ? 's are' : ' is') + ' now highlighted in green.'
+        );
+      } else if (state === 'revealed') {
+        setAnswerStatus(
+          optionsContainer,
+          'revealed',
+          '<strong>Answer shown.</strong> The correct answer' + (correctCount > 1 ? 's are' : ' is') + ' highlighted in green. This question was counted wrong if you had not completed it.'
+        );
+      }
+    }
+
     function makeSelfGradeTextQuestion(question) {
       var answerTexts = [];
       if (Array.isArray(question.answer) && Array.isArray(question.options)) {
@@ -8690,6 +8909,7 @@
       currentQuizMode = 'normal';
       currentQuizFormat = 'multiple-choice';
       questionEl.textContent = 'Main menu';
+      clearQuestionTypeBanner();
       questionEl.closest('section').classList.remove('category-screen');
       questionEl.closest('section').classList.add('main-menu-screen');
       optionsContainer.innerHTML = '';
@@ -8764,6 +8984,7 @@
       currentCategory = ARCHITECTURAL_CATEGORY_ID;
       currentQuizFormat = 'multiple-choice';
       questionEl.textContent = 'Select quiz type - ' + ARCHITECTURAL_CATEGORY_NAME;
+      clearQuestionTypeBanner();
       questionEl.closest('section').classList.remove('main-menu-screen');
       questionEl.closest('section').classList.add('category-screen');
       optionsContainer.innerHTML = '';
@@ -8830,6 +9051,7 @@
       clearPauseState();
       if (!questions || Object.keys(questions).length === 0) return;
       questionEl.textContent = 'Select a category' + (activeQuestionSetTitle ? ' - ' + activeQuestionSetTitle : '');
+      clearQuestionTypeBanner();
       questionEl.closest('section').classList.remove('main-menu-screen');
       questionEl.closest('section').classList.add('category-screen');
       optionsContainer.innerHTML = '';
@@ -9075,6 +9297,7 @@
       var completeLabel = currentQuizMode === 'wrong-practice' ? 'Wrong-question practice complete!' : 'Quiz complete!';
       if (currentQuizFormat === 'text-box') completeLabel += ' (Text Box)';
       questionEl.textContent = completeLabel;
+      clearQuestionTypeBanner();
       optionsContainer.innerHTML = '<div class="results-panel">' +
         '<h2>Your results</h2>' +
         '<p class="results-score">' + score + ' / ' + total + '</p>' +
@@ -9142,9 +9365,10 @@
 
       const buttons = optionsContainer.querySelectorAll('.option-btn');
       buttons.forEach((btn) => { btn.disabled = true; });
-      question.answer.forEach((idx) => {
+      getCorrectIndices(question).forEach((idx) => {
         if (buttons[idx]) buttons[idx].classList.add('correct');
       });
+      updateMultipleChoiceStatus(question, optionsContainer, 'revealed');
       var showBtn = document.getElementById('btn-show-answer');
       if (showBtn) showBtn.disabled = true;
       showQuestionExplanation(question, optionsContainer);
@@ -9287,6 +9511,13 @@
       form.className = 'text-answer-form';
       form.autocomplete = 'off';
 
+      var modeNote = document.createElement('div');
+      modeNote.className = 'answer-status revealed';
+      modeNote.innerHTML = question.selfGrade
+        ? '<strong>Text / self-grade question.</strong> Type what you remember, reveal the official answer, then mark yourself Right, Wrong, or Don\'t know.'
+        : '<strong>Text-answer question.</strong> Type one answer and submit it.';
+      form.appendChild(modeNote);
+
       var input = document.createElement('input');
       input.type = 'text';
       input.className = 'text-answer-input';
@@ -9373,15 +9604,19 @@
 
       const question = activeQuestions[index];
       questionEl.textContent = (currentQuizMode === 'wrong-practice' ? 'Practice: ' : '') + (question.number !== undefined ? question.number + ') ' : '') + question.question;
+      renderQuestionTypeBanner(question, questionEl);
 
       optionsContainer.innerHTML = '';
       if (isTextQuestion(question)) {
         renderTextAnswerQuestion(question, optionsContainer);
       } else {
+        renderInitialAnswerStatus(question, optionsContainer);
+        const correctCount = getCorrectIndices(question).length;
         question.options.forEach((optionText, i) => {
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'btn option-btn';
+          if (correctCount > 1) btn.classList.add('multi-answer-option');
           btn.dataset.index = String(i);
           btn.textContent = optionText;
           btn.addEventListener('click', () => handleOptionClick(btn, question, optionsContainer));
@@ -9413,7 +9648,7 @@
       if (clickedBtn.classList.contains('correct') || clickedBtn.classList.contains('wrong')) return;
 
       const clickedIndex = parseInt(clickedBtn.dataset.index, 10);
-      const correctIndices = question.answer;
+      const correctIndices = getCorrectIndices(question);
       const isCorrect = correctIndices.includes(clickedIndex);
 
       clickedBtn.classList.add(isCorrect ? 'correct' : 'wrong');
@@ -9428,8 +9663,11 @@
           saveSession();
           stopQuestionTimer();
           buttons.forEach((btn) => { btn.disabled = true; });
+          updateMultipleChoiceStatus(question, optionsContainer, 'correct');
           showQuestionExplanation(question, optionsContainer);
           if (!noTimersMode) startWaitCountdown();
+        } else {
+          updateMultipleChoiceStatus(question, optionsContainer, 'partial');
         }
       } else {
         answerResults[currentQuestionIndex] = false;
@@ -9442,6 +9680,7 @@
           if (buttons[idx]) buttons[idx].classList.add('correct');
         });
         buttons.forEach((btn) => { btn.disabled = true; });
+        updateMultipleChoiceStatus(question, optionsContainer, 'wrong');
         showQuestionExplanation(question, optionsContainer);
         if (!noTimersMode) startWaitCountdown();
       }
