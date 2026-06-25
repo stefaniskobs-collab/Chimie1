@@ -877,6 +877,1349 @@
     const PHYSICS_MOCK_CATEGORY_ID = 22;
     const PHYSICS_MOCK_CATEGORY_NAME = 'Fizică - mock exams MC';
 
+
+    const ECONOMICS_SET_TITLE = 'Economics';
+    const ECONOMICS_CATEGORY_NAMES = {
+      40: 'Contract economic',
+      41: 'Dezvoltarea unei firme',
+      42: 'Achiziții și închiriere',
+      43: 'Muncă legală vs muncă la negru',
+      44: 'Recapitulare economie'
+    };
+    const ECONOMICS_QUESTIONS = {
+      "40": [
+            {
+                  "type": "self-grade-text",
+                  "selfGrade": true,
+                  "question": "Definește contractul economic și rolul lui.",
+                  "answer": "Contractul economic este o înțelegere scrisă între două sau mai multe persoane sau firme. Rolul lui este să stabilească exact condițiile colaborării: cine face, ce face, unde, cât costă, în cât timp și ce se întâmplă dacă cineva nu respectă contractul.",
+                  "displayAnswer": "Contractul economic este o înțelegere scrisă între două sau mai multe persoane sau firme. Rolul lui este să stabilească exact condițiile colaborării: cine face, ce face, unde, cât costă, în cât timp și ce se întâmplă dacă cineva nu respectă contractul.",
+                  "explanation": "Ideea centrală este colaborarea clară și verificabilă între părți.",
+                  "number": 1,
+                  "category": 40
+            },
+            {
+                  "question": "Ce variantă descrie corect folosirea contractului-tip?",
+                  "options": [
+                        "Se folosește mai ales la firme mici/mijlocii, ca model standard.",
+                        "Se folosește doar la firme mari cu departamente juridice.",
+                        "Este un contract verbal fără clauze.",
+                        "Este obligatoriu să fie făcut numai de instanță."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Se folosește mai ales la firme mici/mijlocii, ca model standard.",
+                  "explanation": "Pentru firme mici sau mijlocii, contractul-tip e o bază practică. Firmele mari au de obicei clauze speciale.",
+                  "number": 2,
+                  "category": 40
+            },
+            {
+                  "question": "Când este recomandat ca o firmă mică să apeleze la un avocat specializat?",
+                  "options": [
+                        "Când are o lucrare mai mare, mai riscantă sau de anvergură.",
+                        "Doar când nu are email.",
+                        "Doar când nu plătește TVA.",
+                        "Doar după faliment."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Când are o lucrare mai mare, mai riscantă sau de anvergură.",
+                  "explanation": "Pentru lucrări importante, clauzele trebuie formulate corect, ca să se evite pierderi sau litigii.",
+                  "number": 3,
+                  "category": 40
+            },
+            {
+                  "type": "order",
+                  "question": "Selectează în ordine logică principalele categorii ale unui contract economic, așa cum apar în notițe.",
+                  "options": [
+                        "Antetul firmei",
+                        "CUI/CIF și ORC",
+                        "Capitalul social",
+                        "Date de contact, bancă și cont",
+                        "Părțile contractului",
+                        "Obiectul contractului",
+                        "Prețul contractului",
+                        "Penalizări și termene"
+                  ],
+                  "orderAnswer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
+                  ],
+                  "displayAnswer": "Antetul firmei → CUI/CIF și ORC → Capitalul social → Date de contact, bancă și cont → Părțile contractului → Obiectul contractului → Prețul contractului → Penalizări și termene",
+                  "explanation": "Nu e suficient să știi elementele; la examen poate conta ordinea în care construiești contractul.",
+                  "number": 4,
+                  "category": 40
+            },
+            {
+                  "question": "Ce informații intră în antetul contractului?",
+                  "options": [
+                        "Numele firmei",
+                        "Sigla firmei, dacă există",
+                        "Datele de identificare ale firmei",
+                        "Lista concediilor plătite ale angajaților",
+                        "Numărul de ordine al întrebării de examen"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "displayAnswer": "Numele firmei; sigla; datele de identificare ale firmei.",
+                  "explanation": "Antetul identifică firma care apare în contract.",
+                  "number": 5,
+                  "category": 40
+            },
+            {
+                  "question": "Ce înseamnă CUI/CIF într-un contract?",
+                  "options": [
+                        "Codul prin care firma este identificată în fața statului.",
+                        "Numele băncii firmei.",
+                        "Valoarea penalizărilor.",
+                        "Adresa unde se face lucrarea."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Codul prin care firma este identificată în fața statului.",
+                  "explanation": "CUI = Cod Unic de Înregistrare; CIF = Cod de Înregistrare Fiscală.",
+                  "number": 6,
+                  "category": 40
+            },
+            {
+                  "question": "În exemplul «RO 322173», ce indică prefixul «RO»?",
+                  "options": [
+                        "Firma este plătitoare de TVA.",
+                        "Firma este în faliment.",
+                        "Firma este listată la bursă.",
+                        "Firma are capital social zero."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Firma este plătitoare de TVA.",
+                  "explanation": "TVA înseamnă taxa pe valoarea adăugată.",
+                  "number": 7,
+                  "category": 40
+            },
+            {
+                  "question": "Ce trebuie precizat despre TVA în contract?",
+                  "options": [
+                        "Dacă firma plătește sau nu TVA.",
+                        "Dacă administratorul are permis auto.",
+                        "Dacă pachetul de control este 50% + 1 acțiune.",
+                        "Dacă lucrarea este second-hand."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Dacă firma plătește sau nu TVA.",
+                  "explanation": "Prețul trebuie să fie clar: cu TVA inclus sau fără TVA.",
+                  "number": 8,
+                  "category": 40
+            },
+            {
+                  "question": "Ce informații poți verifica pe site-ul Ministerului de Finanțe folosind CUI/CIF?",
+                  "options": [
+                        "Cifra de afaceri",
+                        "Profitul",
+                        "Pierderile",
+                        "Datoriile",
+                        "Culoarea siglei firmei"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3
+                  ],
+                  "displayAnswer": "Cifra de afaceri, profitul, pierderile și datoriile.",
+                  "explanation": "Aceste date ajută la verificarea situației economice a firmei.",
+                  "number": 9,
+                  "category": 40
+            },
+            {
+                  "question": "Ce înseamnă ORC?",
+                  "options": [
+                        "Oficiul Registrului Comerțului",
+                        "Organizația Română de Credit",
+                        "Ordinul de Recepție Contractuală",
+                        "Oficiul Român al Consumatorului"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Oficiul Registrului Comerțului.",
+                  "explanation": "Prin ORC se verifică date de bază despre firmă și asociați.",
+                  "number": 10,
+                  "category": 40
+            },
+            {
+                  "type": "order",
+                  "question": "În exemplul ORC «J12/244/1999», selectează sensul componentelor în ordine.",
+                  "options": [
+                        "Indicativul județului",
+                        "Numărul firmei",
+                        "Anul înființării"
+                  ],
+                  "orderAnswer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "displayAnswer": "J12 = indicativul județului → 244 = numărul firmei → 1999 = anul înființării",
+                  "explanation": "Structura codului ORC te ajută să citești rapid datele de înregistrare.",
+                  "number": 11,
+                  "category": 40
+            },
+            {
+                  "question": "Care este capitalul social minim menționat în notițe pentru înființarea firmei?",
+                  "options": [
+                        "200 lei",
+                        "2.000 lei",
+                        "25.000 lei",
+                        "50% + 1 acțiune"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "200 lei.",
+                  "explanation": "Notițele spun că se depune minimum 200 lei la înființare, iar ulterior capitalul poate fi majorat.",
+                  "number": 12,
+                  "category": 40
+            },
+            {
+                  "question": "De ce este important capitalul social?",
+                  "options": [
+                        "Arată cât de solidă pare firma și ce garanții există în caz de eșec.",
+                        "Înlocuiește obiectul contractului.",
+                        "Elimină orice obligație fiscală.",
+                        "Dovedește automat profitul firmei."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Arată soliditatea firmei și nivelul de garanție.",
+                  "explanation": "Un capital social mai mare poate crește încrederea partenerilor.",
+                  "number": 13,
+                  "category": 40
+            },
+            {
+                  "question": "În cazul unui SRL, cum răspunde administratorul conform notițelor?",
+                  "options": [
+                        "În limita capitalului social și a bunurilor firmei.",
+                        "Întotdeauna cu toată averea personală, fără limită.",
+                        "Doar cu telefonul și emailul firmei.",
+                        "Nu răspunde niciodată."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "În limita capitalului social și a bunurilor firmei.",
+                  "explanation": "Ideea de bază pentru SRL este răspunderea limitată la firmă.",
+                  "number": 14,
+                  "category": 40
+            },
+            {
+                  "question": "Ce idee trebuie reținută despre SA din notițe?",
+                  "options": [
+                        "Este o formă de firmă mai mare, cu capital social mai mare, în notițe fiind menționată suma de 25.000.",
+                        "Nu are capital social.",
+                        "Nu poate avea acționari.",
+                        "Nu poate ajunge la bursă."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "SA = firmă mai mare, capital social mai mare; în notițe apare 25.000.",
+                  "explanation": "SA este asociată cu dimensiune mai mare și garanții mai mari.",
+                  "number": 15,
+                  "category": 40
+            },
+            {
+                  "question": "Cum se poate majora capitalul social?",
+                  "options": [
+                        "Prin aport de bani",
+                        "Prin aport în natură",
+                        "Prin ascunderea datoriilor",
+                        "Prin muncă la negru"
+                  ],
+                  "answer": [
+                        0,
+                        1
+                  ],
+                  "displayAnswer": "Prin bani sau aport în natură.",
+                  "explanation": "Aportul în natură înseamnă bunuri aduse în firmă.",
+                  "number": 16,
+                  "category": 40
+            },
+            {
+                  "question": "Ce date de contact și plată trebuie trecute în contract?",
+                  "options": [
+                        "Adresa firmei",
+                        "Banca",
+                        "Numărul de cont bancar",
+                        "Telefonul și emailul",
+                        "Zodia administratorului"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3
+                  ],
+                  "displayAnswer": "Adresa, banca, numărul de cont, telefonul și emailul.",
+                  "explanation": "Aceste date sunt necesare pentru comunicare și plăți.",
+                  "number": 17,
+                  "category": 40
+            },
+            {
+                  "question": "Ce se trece la «părțile contractului»?",
+                  "options": [
+                        "Persoanele sau firmele care încheie contractul",
+                        "Datele firmei din antet",
+                        "Reprezentantul legal, dacă este societate comercială",
+                        "Numai penalizările"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "displayAnswer": "Părțile implicate, datele lor și reprezentantul legal, unde este cazul.",
+                  "explanation": "Trebuie să fie clar cine are drepturi și obligații în contract.",
+                  "number": 18,
+                  "category": 40
+            },
+            {
+                  "question": "De ce este recomandat să faci copii după documente și cartea de identitate?",
+                  "options": [
+                        "Pentru verificarea identității celor implicați.",
+                        "Pentru a înlocui prețul contractului.",
+                        "Pentru a evita complet TVA-ul.",
+                        "Pentru a transforma automat firma în SA."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Pentru verificarea identității celor implicați.",
+                  "explanation": "Verificarea documentelor reduce riscul de contracte făcute cu persoane neidentificate corect.",
+                  "number": 19,
+                  "category": 40
+            },
+            {
+                  "question": "Ce răspunde obiectul contractului?",
+                  "options": [
+                        "Ce trebuie făcut concret",
+                        "Unde se face lucrarea",
+                        "După ce proiect și deviz se lucrează",
+                        "Cine sunt asociații firmei",
+                        "Câtă pensie primește angajatul"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "displayAnswer": "Ce se execută, unde se execută și conform cărui proiect/deviz.",
+                  "explanation": "Obiectul contractului trebuie să descrie lucrarea clar, nu vag.",
+                  "number": 20,
+                  "category": 40
+            },
+            {
+                  "question": "Ce trebuie menționat la prețul contractului?",
+                  "options": [
+                        "Prețul în moneda oficială a țării",
+                        "Dacă include sau nu TVA",
+                        "Culoarea facturii",
+                        "Numărul de ordine al administratorului judiciar"
+                  ],
+                  "answer": [
+                        0,
+                        1
+                  ],
+                  "displayAnswer": "Prețul în moneda oficială și mențiunea dacă include TVA sau nu.",
+                  "explanation": "Prețul neclar este sursă directă de conflict.",
+                  "number": 21,
+                  "category": 40
+            },
+            {
+                  "question": "Ce înseamnă formula de penalizare «0,1%/zi din VC»?",
+                  "options": [
+                        "0,1% pe zi din valoarea contractului",
+                        "0,1 lei pe lună",
+                        "10% din salariul minim",
+                        "0,1% din capitalul social o singură dată"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "0,1% pe zi din valoarea contractului.",
+                  "explanation": "VC = valoarea contractului, iar penalizarea se aplică pentru întârziere.",
+                  "number": 22,
+                  "category": 40
+            },
+            {
+                  "question": "Cum este corect să fie gândite penalizările pentru întârziere, conform notițelor?",
+                  "options": [
+                        "Pe zile lucrătoare",
+                        "Raportate corect la lucrarea rămasă/neexecutată",
+                        "Fără legătură cu termenul de execuție",
+                        "Aplicate aleatoriu"
+                  ],
+                  "answer": [
+                        0,
+                        1
+                  ],
+                  "displayAnswer": "Pe zile lucrătoare și, corect, raportate la lucrarea rămasă/neexecutată.",
+                  "explanation": "Termenul de execuție se exprimă în zile lucrătoare, iar penalizarea trebuie să fie proporțională.",
+                  "number": 23,
+                  "category": 40
+            },
+            {
+                  "type": "self-grade-text",
+                  "selfGrade": true,
+                  "question": "Scrie un mini-răspuns de examen despre ce trebuie să conțină un contract economic.",
+                  "answer": "Un contract economic trebuie să conțină antetul firmei, CUI/CIF, ORC, capitalul social, datele de contact și bancare, părțile contractului și reprezentantul legal, obiectul contractului, prețul cu mențiunea TVA, termenul de execuție și penalizările.",
+                  "displayAnswer": "Un contract economic trebuie să conțină antetul firmei, CUI/CIF, ORC, capitalul social, datele de contact și bancare, părțile contractului și reprezentantul legal, obiectul contractului, prețul cu mențiunea TVA, termenul de execuție și penalizările.",
+                  "explanation": "Acesta este un răspuns compact, bun pentru examen.",
+                  "number": 24,
+                  "category": 40
+            }
+      ],
+      "41": [
+            {
+                  "type": "order",
+                  "question": "Selectează în ordine etapele de viață ale firmei din schema din notițe.",
+                  "options": [
+                        "T0–T1: început și creștere",
+                        "T1–T2: maturitate",
+                        "T2–T3: decădere",
+                        "T3: măsuri extreme",
+                        "T3–T4: faliment"
+                  ],
+                  "orderAnswer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Început/creștere → maturitate → decădere → măsuri extreme → faliment",
+                  "explanation": "Schema arată evoluția în timp: firma crește, se stabilizează, apoi poate decădea dacă ieșirile depășesc intrările.",
+                  "number": 1,
+                  "category": 41
+            },
+            {
+                  "question": "Ce caracterizează etapa T0–T1?",
+                  "options": [
+                        "Începutul și creșterea firmei",
+                        "Falimentul definitiv",
+                        "Lipsa oricărei activități",
+                        "Doar verificări și controale"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Începutul și creșterea firmei.",
+                  "explanation": "În această etapă, firma are nevoie de experiență și organizare ca să crească sănătos.",
+                  "number": 2,
+                  "category": 41
+            },
+            {
+                  "question": "La T0–T1, la ce fel de persoane e bine să apeleze firma?",
+                  "options": [
+                        "Persoane cu experiență",
+                        "Persoane cu potențial",
+                        "Persoane care pot organiza dezvoltarea",
+                        "Persoane care reduc orice activitate profitabilă"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "displayAnswer": "Persoane cu experiență, potențial și capacitate de organizare.",
+                  "explanation": "Creșterea sănătoasă nu se face haotic.",
+                  "number": 3,
+                  "category": 41
+            },
+            {
+                  "question": "Ce caracterizează etapa T1–T2?",
+                  "options": [
+                        "Maturizarea firmei",
+                        "Închiderea obligatorie",
+                        "Lipsa clienților",
+                        "Doar munca la negru"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Maturizarea firmei.",
+                  "explanation": "Firma are organizare mai clară, clienți și poate deveni profitabilă.",
+                  "number": 4,
+                  "category": 41
+            },
+            {
+                  "question": "Ce înseamnă etapa T2–T3?",
+                  "options": [
+                        "Decădere: intrările de capital sunt mai mici decât ieșirile",
+                        "Creștere sănătoasă",
+                        "Listare automată la bursă",
+                        "Majorarea capitalului social cu 60%"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Decădere: firma cheltuiește mai mult decât încasează.",
+                  "explanation": "Aici apar datorii, pierderi și probleme cu plata furnizorilor sau salariilor.",
+                  "number": 5,
+                  "category": 41
+            },
+            {
+                  "question": "Ce măsuri apar în momentul T3?",
+                  "options": [
+                        "Se reduce sau se oprește publicitatea",
+                        "Se reduc activitățile mai puțin profitabile",
+                        "Se reorganizează cheltuielile",
+                        "Se mărește haotic orice cost"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "displayAnswer": "Reducerea publicității, reducerea activităților mai puțin profitabile și reorganizarea cheltuielilor.",
+                  "explanation": "T3 este momentul în care se încearcă salvarea firmei.",
+                  "number": 6,
+                  "category": 41
+            },
+            {
+                  "question": "Ce înseamnă T3–T4 în schema firmei?",
+                  "options": [
+                        "Falimentul",
+                        "Începutul firmei",
+                        "Contractul-tip",
+                        "CUI/CIF"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Falimentul.",
+                  "explanation": "Dacă firma nu se redresează, își poate închide activitatea.",
+                  "number": 7,
+                  "category": 41
+            },
+            {
+                  "question": "Care este diferența corectă dintre insolvență și faliment?",
+                  "options": [
+                        "Insolvența poate permite redresarea; falimentul înseamnă închiderea firmei.",
+                        "Insolvența și falimentul sunt exact același lucru.",
+                        "Falimentul este mereu o etapă de creștere.",
+                        "Insolvența apare doar când firma are profit mare."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Insolvența poate permite redresarea; falimentul duce la închiderea activității.",
+                  "explanation": "Insolvența = probleme de plată, dar posibilitate de salvare. Faliment = finalul activității.",
+                  "number": 8,
+                  "category": 41
+            },
+            {
+                  "question": "Ce se întâmplă la declararea insolvenței?",
+                  "options": [
+                        "Este numit un administrator judiciar",
+                        "Vechiul administrator își pierde o parte din drepturi",
+                        "Se propune un plan de redresare",
+                        "Firma devine automat fără datorii"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "displayAnswer": "Administrator judiciar, limitarea vechiului administrator, plan de redresare.",
+                  "explanation": "Planul trebuie acceptat de creditori pentru ca firma să poată reveni.",
+                  "number": 9,
+                  "category": 41
+            },
+            {
+                  "question": "Ce rol au creditorii în insolvență?",
+                  "options": [
+                        "Pot accepta sau respinge planul de redresare",
+                        "Stabilesc sigla firmei",
+                        "Aleg culoarea facturii",
+                        "Anulează automat toate contractele"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Pot accepta sau respinge planul de redresare.",
+                  "explanation": "Dacă planul este acceptat, firma poate reveni.",
+                  "number": 10,
+                  "category": 41
+            },
+            {
+                  "question": "Ce este pachetul de control al acțiunilor?",
+                  "options": [
+                        "50% + 1 acțiune",
+                        "Exact 25.000 lei",
+                        "0,1% pe zi",
+                        "J12/244/1999"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "50% + 1 acțiune.",
+                  "explanation": "Cine are 50% + 1 acțiune controlează deciziile firmei.",
+                  "number": 11,
+                  "category": 41
+            },
+            {
+                  "question": "Care sunt surse posibile de finanțare la începutul/dezvoltarea firmei?",
+                  "options": [
+                        "Economii proprii",
+                        "Prieteni sau familie",
+                        "Investitori",
+                        "Investitori strategici",
+                        "Penalizări de întârziere primite aleatoriu"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3
+                  ],
+                  "displayAnswer": "Economii proprii, prieteni/familie, investitori, investitori strategici.",
+                  "explanation": "Firma poate porni mic și apoi atrage capital mai mare.",
+                  "number": 12,
+                  "category": 41
+            },
+            {
+                  "question": "Ce pot cere investitorii când firma se dezvoltă mult?",
+                  "options": [
+                        "Transformarea în SA și, posibil, listarea la bursă",
+                        "Ștergerea CUI-ului",
+                        "Interzicerea reprezentantului legal",
+                        "Muncă fără contract pentru toți"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Transformarea în SA și listarea la bursă.",
+                  "explanation": "Investitorii mari pot cere forme mai transparente și scalabile.",
+                  "number": 13,
+                  "category": 41
+            },
+            {
+                  "question": "În notițe, durata de viață a unei firme este menționată ca fiind aproximativ:",
+                  "options": [
+                        "3–5 ani, cu factor de multiplicare 10–15",
+                        "30–50 ani fără risc",
+                        "o zi lucrătoare",
+                        "0,1%/zi"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "3–5 ani, cu factor de multiplicare 10–15.",
+                  "explanation": "Reține formularea din notițe ca reper de examen, nu ca regulă universală.",
+                  "number": 14,
+                  "category": 41
+            },
+            {
+                  "type": "self-grade-text",
+                  "selfGrade": true,
+                  "question": "Explică pe scurt evoluția unei firme de la creștere la faliment și rolul insolvenței.",
+                  "answer": "Firma pornește și crește, apoi se maturizează. Dacă intrările de capital devin mai mici decât ieșirile, apare decăderea. La T3 se iau măsuri extreme, iar dacă firma nu se redresează poate ajunge la faliment. Insolvența este o stare în care firma nu își mai poate plăti datoriile, dar poate fi salvată prin administrator judiciar și plan de redresare acceptat de creditori.",
+                  "displayAnswer": "Firma pornește și crește, apoi se maturizează. Dacă intrările de capital devin mai mici decât ieșirile, apare decăderea. La T3 se iau măsuri extreme, iar dacă firma nu se redresează poate ajunge la faliment. Insolvența este o stare în care firma nu își mai poate plăti datoriile, dar poate fi salvată prin administrator judiciar și plan de redresare acceptat de creditori.",
+                  "explanation": "Răspunsul bun leagă etapele firmei de noțiunile insolvență/faliment.",
+                  "number": 15,
+                  "category": 41
+            }
+      ],
+      "42": [
+            {
+                  "question": "Ce înseamnă achiziția?",
+                  "options": [
+                        "Cumpărarea bunului",
+                        "Folosirea temporară contra unei taxe",
+                        "Munca fără contract",
+                        "Falimentul firmei"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Cumpărarea bunului.",
+                  "explanation": "Achiziția te face proprietar, dar vine și cu responsabilități.",
+                  "number": 1,
+                  "category": 42
+            },
+            {
+                  "question": "Care sunt avantaje ale achiziției?",
+                  "options": [
+                        "Poți da bunul în chirie",
+                        "Îl poți vinde second-hand",
+                        "Se poate cumpăra în rate",
+                        "Îl folosești când vrei",
+                        "Nu devii niciodată proprietar"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3
+                  ],
+                  "displayAnswer": "Îl poți închiria, revinde, cumpăra în rate și folosi când vrei.",
+                  "explanation": "Achiziția este mai potrivită când ai nevoie de bun des și pe termen lung.",
+                  "number": 2,
+                  "category": 42
+            },
+            {
+                  "question": "Care sunt dezavantaje ale achiziției?",
+                  "options": [
+                        "Costuri mari de întreținere",
+                        "Imobilizare de capital",
+                        "Obligații fiscale",
+                        "Spațiu de depozitare",
+                        "Risc de avariere",
+                        "Lipsa totală a proprietății"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Întreținere, capital blocat, taxe, depozitare și risc de avariere.",
+                  "explanation": "Când cumperi, avantajul proprietății vine cu costuri și riscuri.",
+                  "number": 3,
+                  "category": 42
+            },
+            {
+                  "question": "Ce înseamnă închirierea?",
+                  "options": [
+                        "Folosirea temporară a unui bun contra unei taxe",
+                        "Cumpărarea definitivă a bunului",
+                        "Majorarea capitalului social",
+                        "CUI/CIF"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Folosirea temporară a unui bun contra unei taxe.",
+                  "explanation": "Închirierea îți dă acces, nu proprietate.",
+                  "number": 4,
+                  "category": 42
+            },
+            {
+                  "question": "Care sunt avantaje ale închirierii?",
+                  "options": [
+                        "Flexibilitate",
+                        "Întreținere posibil inclusă",
+                        "Poți folosi echipamente moderne",
+                        "Reducerea riscului de depreciere",
+                        "Economie de spațiu",
+                        "Devii automat proprietar"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Flexibilitate, întreținere posibil inclusă, echipamente moderne, risc mai mic de depreciere și economie de spațiu.",
+                  "explanation": "Închirierea e bună când vrei acces rapid și responsabilități mai mici.",
+                  "number": 5,
+                  "category": 42
+            },
+            {
+                  "question": "Care sunt dezavantaje ale închirierii?",
+                  "options": [
+                        "Depinzi de furnizor",
+                        "Nu devii proprietar",
+                        "Termeni și condiții restrictive",
+                        "Penalități pentru depășirea contractului",
+                        "Fluctuații de preț",
+                        "Poți revinde bunul ca proprietar"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Dependență de furnizor, lipsa proprietății, condiții restrictive, penalități și fluctuații de preț.",
+                  "explanation": "Închirierea reduce investiția inițială, dar te lasă dependent de contract și furnizor.",
+                  "number": 6,
+                  "category": 42
+            },
+            {
+                  "question": "Când este mai logic să cumperi un bun?",
+                  "options": [
+                        "Când îl folosești des și pe termen lung",
+                        "Când ai nevoie de el doar o zi",
+                        "Când nu ai spațiu deloc",
+                        "Când vrei să nu ai nicio responsabilitate"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Când îl folosești des și pe termen lung.",
+                  "explanation": "Achiziția are sens dacă avantajul utilizării repetate depășește costurile.",
+                  "number": 7,
+                  "category": 42
+            },
+            {
+                  "question": "Când este mai logic să închiriezi?",
+                  "options": [
+                        "Când ai nevoie temporar sau vrei flexibilitate",
+                        "Când vrei obligatoriu proprietate",
+                        "Când vrei să blochezi capital",
+                        "Când vrei să plătești toate reparațiile"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Când ai nevoie temporar sau vrei flexibilitate.",
+                  "explanation": "Închirierea evită o investiție mare pentru nevoi scurte.",
+                  "number": 8,
+                  "category": 42
+            },
+            {
+                  "question": "Cine suportă riscul de depreciere în mod normal la achiziție?",
+                  "options": [
+                        "Proprietarul bunului",
+                        "Furnizorul de închiriere mereu",
+                        "ORC",
+                        "Administratorul judiciar"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Proprietarul bunului.",
+                  "explanation": "Dacă bunul cumpărat își pierde valoarea, pierderea este a firmei care îl deține.",
+                  "number": 9,
+                  "category": 42
+            },
+            {
+                  "question": "Ce înseamnă imobilizarea capitalului?",
+                  "options": [
+                        "Banii sunt blocați în bun și nu mai pot fi folosiți imediat pentru altceva",
+                        "Banii devin TVA",
+                        "Firma scapă de toate taxele",
+                        "Bunul este închiriat gratis"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Capital blocat în bun.",
+                  "explanation": "Aceasta este una dintre problemele principale ale achiziției.",
+                  "number": 10,
+                  "category": 42
+            },
+            {
+                  "question": "Care variantă este avantaj clar al achiziției, nu al închirierii?",
+                  "options": [
+                        "Poți vinde bunul second-hand",
+                        "Nu devii proprietar",
+                        "Depinzi de disponibilitatea furnizorului",
+                        "Plătești doar taxa de închiriere"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Poți vinde bunul second-hand.",
+                  "explanation": "Poți revinde doar un bun pe care îl deții.",
+                  "number": 11,
+                  "category": 42
+            },
+            {
+                  "question": "Care variantă este dezavantaj clar al închirierii?",
+                  "options": [
+                        "Depinzi de disponibilitatea furnizorului",
+                        "Poți folosi bunul când vrei fără contract",
+                        "Poți revinde bunul",
+                        "Capitalul social crește automat"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Depinzi de disponibilitatea furnizorului.",
+                  "explanation": "Dacă furnizorul nu are bunul disponibil, firma nu îl poate folosi.",
+                  "number": 12,
+                  "category": 42
+            },
+            {
+                  "type": "order",
+                  "question": "Selectează în ordine logica de decizie achiziție vs. închiriere.",
+                  "options": [
+                        "Profit",
+                        "Analiza pro și contra",
+                        "Prioritizare"
+                  ],
+                  "orderAnswer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2
+                  ],
+                  "displayAnswer": "Profit → Analiza pro și contra → Prioritizare",
+                  "explanation": "Întâi te uiți la efectul economic, apoi compari argumentele și alegi ce contează mai mult.",
+                  "number": 13,
+                  "category": 42
+            },
+            {
+                  "question": "O firmă are nevoie zilnic de un utilaj timp de mai mulți ani. Ce variantă este, în principiu, mai potrivită?",
+                  "options": [
+                        "Achiziția",
+                        "Închirierea pe o zi repetată la nesfârșit",
+                        "Munca la negru",
+                        "Insolvența"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Achiziția.",
+                  "explanation": "Utilizarea frecventă și pe termen lung justifică mai ușor cumpărarea.",
+                  "number": 14,
+                  "category": 42
+            },
+            {
+                  "question": "O firmă are nevoie de un echipament modern doar pentru o lucrare scurtă. Ce variantă este, în principiu, mai potrivită?",
+                  "options": [
+                        "Închirierea",
+                        "Achiziția obligatorie",
+                        "Falimentul",
+                        "Pachetul de control"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Închirierea.",
+                  "explanation": "Nevoia temporară favorizează flexibilitatea.",
+                  "number": 15,
+                  "category": 42
+            },
+            {
+                  "type": "self-grade-text",
+                  "selfGrade": true,
+                  "question": "Compară pe scurt achiziția și închirierea ca răspuns de examen.",
+                  "answer": "Achiziția înseamnă cumpărarea bunului: oferă proprietate, posibilitatea de revânzare sau închiriere și utilizare oricând, dar implică întreținere, capital blocat, taxe, depozitare și risc de avariere. Închirierea înseamnă folosire temporară contra unei taxe: oferă flexibilitate, acces la echipamente moderne și responsabilități mai mici, dar nu devii proprietar, depinzi de furnizor și poți avea condiții restrictive sau penalități.",
+                  "displayAnswer": "Achiziția înseamnă cumpărarea bunului: oferă proprietate, posibilitatea de revânzare sau închiriere și utilizare oricând, dar implică întreținere, capital blocat, taxe, depozitare și risc de avariere. Închirierea înseamnă folosire temporară contra unei taxe: oferă flexibilitate, acces la echipamente moderne și responsabilități mai mici, dar nu devii proprietar, depinzi de furnizor și poți avea condiții restrictive sau penalități.",
+                  "explanation": "Un răspuns bun trebuie să compare ambele variante, nu doar să enumere una.",
+                  "number": 16,
+                  "category": 42
+            }
+      ],
+      "43": [
+            {
+                  "question": "Ce este munca legală?",
+                  "options": [
+                        "Munca făcută cu contract, respectând legea",
+                        "Munca fără contract",
+                        "Munca plătită doar în numerar fără acte",
+                        "Falimentul unei firme"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Munca făcută cu contract, respectând legea.",
+                  "explanation": "Contractul oferă drepturi și obligații clare.",
+                  "number": 1,
+                  "category": 43
+            },
+            {
+                  "question": "Care sunt avantaje ale muncii legale?",
+                  "options": [
+                        "Protecție legală",
+                        "Asigurări sociale",
+                        "Concedii plătite",
+                        "Salariu minim garantat",
+                        "Contribuții la pensie",
+                        "Fără drepturi legale"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Protecție legală, asigurări, concedii, salariu minim și contribuții la pensie.",
+                  "explanation": "Munca legală oferă siguranță și drepturi recunoscute.",
+                  "number": 2,
+                  "category": 43
+            },
+            {
+                  "question": "De ce munca legală ajută la accesul la credite?",
+                  "options": [
+                        "Venitul este oficial și poate fi dovedit",
+                        "Nu există taxe",
+                        "Nu există contract",
+                        "Angajatorul nu plătește contribuții"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Venitul este oficial și poate fi dovedit.",
+                  "explanation": "Banca are nevoie de venituri verificabile.",
+                  "number": 3,
+                  "category": 43
+            },
+            {
+                  "question": "Care sunt dezavantaje ale muncii legale pentru firmă/angajator?",
+                  "options": [
+                        "Taxe și impozite",
+                        "Reglementări stricte",
+                        "Program fix",
+                        "Formalități birocratice",
+                        "Verificări și controale",
+                        "Lipsa totală a contractului"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Taxe, reguli stricte, program fix, birocrație și controale.",
+                  "explanation": "Munca legală este mai sigură, dar implică reguli și costuri.",
+                  "number": 4,
+                  "category": 43
+            },
+            {
+                  "question": "Care drept apare explicit în notițe ca avantaj al muncii legale?",
+                  "options": [
+                        "Dreptul la sindicat",
+                        "Dreptul la muncă fără contract",
+                        "Dreptul de a nu plăti niciodată taxe",
+                        "Dreptul de a evita controalele"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Dreptul la sindicat.",
+                  "explanation": "Sindicatul poate ajuta la apărarea drepturilor angajaților.",
+                  "number": 5,
+                  "category": 43
+            },
+            {
+                  "question": "Ce este munca la negru?",
+                  "options": [
+                        "Munca fără contract legal",
+                        "Munca cu concediu plătit",
+                        "Munca cu contribuții la pensie",
+                        "Munca declarată integral"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Munca fără contract legal.",
+                  "explanation": "Poate părea convenabilă pe termen scurt, dar este riscantă.",
+                  "number": 6,
+                  "category": 43
+            },
+            {
+                  "question": "Care sunt avantaje pe termen scurt ale muncii la negru menționate în notițe?",
+                  "options": [
+                        "Fără taxe și contribuții",
+                        "Costuri reduse pentru angajator",
+                        "Plată imediată",
+                        "Flexibilitate",
+                        "Acces rapid la muncă",
+                        "Pensie garantată"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Fără taxe, costuri reduse, plată imediată, flexibilitate și acces rapid.",
+                  "explanation": "Aceste avantaje sunt mai ales pe termen scurt și vin cu riscuri mari.",
+                  "number": 7,
+                  "category": 43
+            },
+            {
+                  "question": "Care sunt dezavantaje ale muncii la negru?",
+                  "options": [
+                        "Poți să nu-ți primești banii",
+                        "Lipsa protecției sociale",
+                        "Fără drepturi legale",
+                        "Fără concedii plătite",
+                        "Fără pensie",
+                        "Experiență oficial recunoscută"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Risc de neplată, lipsă de protecție, fără drepturi, concedii sau pensie.",
+                  "explanation": "Problema reală este lipsa dovezilor și a protecției legale.",
+                  "number": 8,
+                  "category": 43
+            },
+            {
+                  "question": "De ce poți rămâne neplătit la munca la negru?",
+                  "options": [
+                        "Pentru că nu ai contract și e greu să dovedești obligația de plată",
+                        "Pentru că ai prea multe concedii plătite",
+                        "Pentru că banca garantează plata",
+                        "Pentru că există pachet de control"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Fără contract, dovada este dificilă.",
+                  "explanation": "Asta este una dintre cele mai importante riscuri pentru muncitor.",
+                  "number": 9,
+                  "category": 43
+            },
+            {
+                  "question": "Ce pierzi la munca la negru în legătură cu pensia?",
+                  "options": [
+                        "Nu se acumulează vechime/contribuții oficiale pentru pensie",
+                        "Primești pensie dublă",
+                        "Primești automat credit",
+                        "Nu ai nevoie de asigurări"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Nu se acumulează vechime/contribuții oficiale pentru pensie.",
+                  "explanation": "Fără contribuții declarate, nu se construiește pensie pe baza acelui venit.",
+                  "number": 10,
+                  "category": 43
+            },
+            {
+                  "question": "Care afirmație compară corect munca legală și munca la negru?",
+                  "options": [
+                        "Munca legală oferă protecție și drepturi; munca la negru pare rapidă, dar este instabilă și riscantă.",
+                        "Munca la negru oferă mai multe drepturi legale decât munca cu contract.",
+                        "Munca legală nu permite acces la credite.",
+                        "Munca la negru garantează pensie."
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Legal = protecție; la negru = aparent rapid, dar riscant.",
+                  "explanation": "Aceasta este concluzia principală pentru examen.",
+                  "number": 11,
+                  "category": 43
+            },
+            {
+                  "question": "Care sunt riscuri legale sau administrative ale muncii legale pentru angajator?",
+                  "options": [
+                        "Riscul de conflicte legale",
+                        "Dificultăți în concediere",
+                        "Verificări și controale",
+                        "Formalități birocratice",
+                        "Lipsa protecției sociale"
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3
+                  ],
+                  "displayAnswer": "Conflicte legale, concediere mai dificilă, controale și birocrație.",
+                  "explanation": "Acestea sunt dezavantaje de organizare și cost, nu lipsă de drepturi pentru angajat.",
+                  "number": 12,
+                  "category": 43
+            },
+            {
+                  "question": "Un muncitor vrea să poată dovedi venitul la bancă și să aibă pensie. Ce variantă îl ajută?",
+                  "options": [
+                        "Munca legală",
+                        "Munca la negru",
+                        "Contractul fără părți",
+                        "Insolvența"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Munca legală.",
+                  "explanation": "Venitul oficial și contribuțiile sunt necesare pentru credit și pensie.",
+                  "number": 13,
+                  "category": 43
+            },
+            {
+                  "question": "Pentru angajator, de ce poate părea atractivă munca la negru?",
+                  "options": [
+                        "Costuri reduse și evitarea taxelor/contribuțiilor",
+                        "Mai multe verificări oficiale",
+                        "Concedii plătite mai mari",
+                        "Capital social automat majorat"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Costuri reduse și evitarea taxelor/contribuțiilor.",
+                  "explanation": "Atractivitatea este financiară pe termen scurt, dar ilegală și riscantă.",
+                  "number": 14,
+                  "category": 43
+            },
+            {
+                  "type": "order",
+                  "question": "Selectează ordinea logică a comparației muncă legală vs muncă la negru într-un răspuns de examen.",
+                  "options": [
+                        "Definești munca legală și munca la negru",
+                        "Prezinți avantajele muncii legale",
+                        "Prezinți dezavantajele muncii legale",
+                        "Prezinți avantajele muncii la negru",
+                        "Prezinți dezavantajele și riscurile muncii la negru",
+                        "Concluzionezi: legal = protecție, la negru = risc"
+                  ],
+                  "orderAnswer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                  ],
+                  "displayAnswer": "Definiții → avantaje muncă legală → dezavantaje muncă legală → avantaje muncă la negru → dezavantaje/riscuri muncă la negru → concluzie",
+                  "explanation": "Ordinea asta produce un răspuns complet, nu o listă amestecată.",
+                  "number": 15,
+                  "category": 43
+            },
+            {
+                  "type": "self-grade-text",
+                  "selfGrade": true,
+                  "question": "Scrie un mini-răspuns de examen despre munca legală vs munca la negru.",
+                  "answer": "Munca legală este munca făcută cu contract și respectarea legii. Oferă protecție legală, asigurări sociale, concedii plătite, salariu minim garantat, acces la credite, contribuții la pensie, experiență recunoscută și drept la sindicat, dar implică taxe, reguli stricte, program fix, controale și birocrație. Munca la negru este munca fără contract. Poate părea avantajoasă prin lipsa taxelor, costuri reduse și plată rapidă, dar are riscuri mari: neplată, instabilitate, lipsă de protecție socială, fără drepturi, fără concedii, condiții nesigure, riscuri legale, acces dificil la credite și fără pensie.",
+                  "displayAnswer": "Munca legală este munca făcută cu contract și respectarea legii. Oferă protecție legală, asigurări sociale, concedii plătite, salariu minim garantat, acces la credite, contribuții la pensie, experiență recunoscută și drept la sindicat, dar implică taxe, reguli stricte, program fix, controale și birocrație. Munca la negru este munca fără contract. Poate părea avantajoasă prin lipsa taxelor, costuri reduse și plată rapidă, dar are riscuri mari: neplată, instabilitate, lipsă de protecție socială, fără drepturi, fără concedii, condiții nesigure, riscuri legale, acces dificil la credite și fără pensie.",
+                  "explanation": "Acesta acoperă ambele părți și concluzia esențială.",
+                  "number": 16,
+                  "category": 43
+            }
+      ],
+      "44": [
+            {
+                  "question": "Care este ideea comună dintre contract, achiziție/închiriere și muncă legală?",
+                  "options": [
+                        "Reducerea riscurilor prin reguli clare și documente",
+                        "Eliminarea completă a costurilor",
+                        "Ascunderea activității",
+                        "Evitarea oricărei responsabilități"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Reducerea riscurilor prin reguli clare și documente.",
+                  "explanation": "Tema centrală la economie este decizia rațională și documentarea corectă.",
+                  "number": 1,
+                  "category": 44
+            },
+            {
+                  "question": "Ce variantă este cea mai sigură juridic pentru o firmă?",
+                  "options": [
+                        "Contract clar + muncă legală + verificarea partenerului",
+                        "Muncă la negru + contract verbal vag",
+                        "Fără CUI/CIF și fără ORC",
+                        "Preț fără TVA menționat"
+                  ],
+                  "answer": [
+                        0
+                  ],
+                  "displayAnswer": "Contract clar + muncă legală + verificarea partenerului.",
+                  "explanation": "Asta reduce riscurile de neplată, litigii și sancțiuni.",
+                  "number": 2,
+                  "category": 44
+            },
+            {
+                  "type": "order",
+                  "question": "Selectează în ordine pașii unei decizii economice sănătoase pentru firmă.",
+                  "options": [
+                        "Verifici datele și riscurile",
+                        "Calculezi costurile și profitul",
+                        "Compari variantele pro/contra",
+                        "Alegi varianta care reduce riscul și crește profitul",
+                        "Scrii clar condițiile în contract"
+                  ],
+                  "orderAnswer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "answer": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                  ],
+                  "displayAnswer": "Verifici datele/riscurile → calculezi costuri/profit → compari pro/contra → alegi varianta bună → scrii condițiile în contract",
+                  "explanation": "Este o sinteză practică din toate subiectele.",
+                  "number": 3,
+                  "category": 44
+            },
+            {
+                  "type": "self-grade-text",
+                  "selfGrade": true,
+                  "question": "Fă o sinteză scurtă a celor patru teme: contract economic, dezvoltarea firmei, achiziție/închiriere, muncă legală/muncă la negru.",
+                  "answer": "Contractul economic stabilește condițiile colaborării și trebuie să conțină datele firmei, părțile, obiectul, prețul, TVA-ul, termenul și penalizările. Firma trece prin etape de creștere, maturitate, decădere, măsuri de redresare și posibil faliment; insolvența poate permite salvarea prin plan de redresare. Achiziția oferă proprietate și utilizare pe termen lung, dar blochează capital și implică întreținere; închirierea oferă flexibilitate și cost inițial mai mic, dar nu oferă proprietate și creează dependență de furnizor. Munca legală oferă drepturi, pensie și protecție, în timp ce munca la negru este nesigură, fără drepturi și cu riscuri legale.",
+                  "displayAnswer": "Contractul economic stabilește condițiile colaborării și trebuie să conțină datele firmei, părțile, obiectul, prețul, TVA-ul, termenul și penalizările. Firma trece prin etape de creștere, maturitate, decădere, măsuri de redresare și posibil faliment; insolvența poate permite salvarea prin plan de redresare. Achiziția oferă proprietate și utilizare pe termen lung, dar blochează capital și implică întreținere; închirierea oferă flexibilitate și cost inițial mai mic, dar nu oferă proprietate și creează dependență de furnizor. Munca legală oferă drepturi, pensie și protecție, în timp ce munca la negru este nesigură, fără drepturi și cu riscuri legale.",
+                  "explanation": "Acesta este un răspuns de recapitulare pentru final.",
+                  "number": 4,
+                  "category": 44
+            }
+      ]
+};
+
     const MECHANICS_QUESTIONS = [
       {
             "type": "self-grade-text",
@@ -8452,6 +9795,27 @@
         if (Array.isArray(question.acceptedAnswers)) textOut.acceptedAnswers = question.acceptedAnswers.slice();
         return textOut;
       }
+      if (isOrderQuestion(question)) {
+        const orderPairs = question.options.map((text, i) => ({ text, originalIndex: i }));
+        const shuffledOrderPairs = shuffleArray(orderPairs);
+        const newOrderOptions = shuffledOrderPairs.map(p => p.text);
+        const originalOrder = getOrderSequence(question);
+        const newOrderAnswer = originalOrder.map(function (origIdx) {
+          return shuffledOrderPairs.findIndex(function (p) { return p.originalIndex === origIdx; });
+        }).filter(function (idx) { return idx >= 0; });
+        var orderOut = {
+          question: question.question,
+          options: newOrderOptions,
+          orderAnswer: newOrderAnswer,
+          answer: newOrderAnswer.slice(),
+          type: 'order'
+        };
+        if (question.number !== undefined) orderOut.number = question.number;
+        if (question.category !== undefined) orderOut.category = question.category;
+        if (question.displayAnswer !== undefined) orderOut.displayAnswer = question.displayAnswer;
+        if (question.explanation !== undefined) orderOut.explanation = question.explanation;
+        return orderOut;
+      }
       const pairs = question.options.map((text, i) => ({ text, originalIndex: i }));
       const shuffled = shuffleArray(pairs);
       const newOptions = shuffled.map(p => p.text);
@@ -8656,6 +10020,13 @@
     }
 
 
+    function useEconomicsQuestionSet() {
+      questions = ECONOMICS_QUESTIONS || {};
+      categoryNames = ECONOMICS_CATEGORY_NAMES || {};
+      activeQuestionSetTitle = ECONOMICS_SET_TITLE;
+    }
+
+
     function useMathSpecialQuestionSet() {
       questions = MATH_SPECIAL_QUESTIONS || {};
       categoryNames = MATH_SPECIAL_CATEGORY_NAMES || {};
@@ -8719,6 +10090,7 @@
     function getDisplayAnswer(question) {
       if (!question) return '';
       if (question.displayAnswer !== undefined) return String(question.displayAnswer);
+      if (isOrderQuestion(question)) return formatOrderSequence(question);
       if (Array.isArray(question.answer) && Array.isArray(question.options)) {
         return question.answer.map(function (idx) { return question.options[idx]; }).filter(Boolean).join('; ');
       }
@@ -8764,6 +10136,30 @@
       return !!question && (question.type === 'text' || question.type === 'self-grade-text');
     }
 
+    function isOrderQuestion(question) {
+      return !!question && question.type === 'order';
+    }
+
+    function getOrderSequence(question) {
+      var source = [];
+      if (question && Array.isArray(question.orderAnswer)) source = question.orderAnswer;
+      else if (question && Array.isArray(question.answer)) source = question.answer;
+      return source.map(function (idx) { return parseInt(idx, 10); }).filter(function (idx) { return !Number.isNaN(idx); });
+    }
+
+    function formatOrderSequence(question) {
+      if (!question || !Array.isArray(question.options)) return '';
+      return getOrderSequence(question).map(function (idx) {
+        return question.options[idx] || '';
+      }).filter(Boolean).join(' → ');
+    }
+
+    function arraysEqual(a, b) {
+      if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+      for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+      return true;
+    }
+
 
     function getCorrectIndices(question) {
       if (!question) return [];
@@ -8795,7 +10191,10 @@
       var badge = document.createElement('div');
       badge.className = 'question-type-badge';
 
-      if (isTextQuestion(question)) {
+      if (isOrderQuestion(question)) {
+        badge.classList.add('multiple');
+        badge.textContent = 'ORDER QUESTION — click the options in the correct sequence';
+      } else if (isTextQuestion(question)) {
         if (question.selfGrade) {
           badge.classList.add('self-grade');
           badge.textContent = 'TEXT / SELF-GRADE — write your answer, reveal, then mark yourself';
@@ -8895,7 +10294,7 @@
       var questionEl = document.querySelector('.question-text');
       var optionsContainer = document.getElementById('options-container');
       renderQuestionTypeBanner(question, questionEl);
-      if (!question || isTextQuestion(question) || !optionsContainer) return;
+      if (!question || isTextQuestion(question) || isOrderQuestion(question) || !optionsContainer) return;
       var statusBox = optionsContainer.querySelector('.answer-status');
       if (!statusBox) return;
       if (statusBox.classList.contains('partial')) {
@@ -8987,6 +10386,17 @@
         showCategoryScreen();
       });
       wrap.appendChild(mechanicsBtn);
+
+      var economicsBtn = document.createElement('button');
+      economicsBtn.type = 'button';
+      economicsBtn.className = 'main-menu-btn';
+      economicsBtn.textContent = ECONOMICS_SET_TITLE;
+      economicsBtn.addEventListener('click', function () {
+        useEconomicsQuestionSet();
+        questionEl.closest('section').classList.remove('main-menu-screen');
+        showCategoryScreen();
+      });
+      wrap.appendChild(economicsBtn);
 
       var mathBtn = document.createElement('button');
       mathBtn.type = 'button';
@@ -9402,6 +10812,12 @@
         return;
       }
 
+      if (isOrderQuestion(question)) {
+        revealOrderAnswer(question, optionsContainer, 'revealed');
+        if (!noTimersMode) startWaitCountdown();
+        return;
+      }
+
       const buttons = optionsContainer.querySelectorAll('.option-btn');
       buttons.forEach((btn) => { btn.disabled = true; });
       getCorrectIndices(question).forEach((idx) => {
@@ -9629,8 +11045,127 @@
       setTimeout(function () { input.focus(); }, 0);
     }
 
-    function displayQuestion(index) {
-      const questionEl = document.querySelector('.question-text');
+
+    function revealOrderAnswer(question, optionsContainer, state) {
+      if (!question || !optionsContainer) return;
+      var buttons = optionsContainer.querySelectorAll('.option-btn');
+      var correctOrder = getOrderSequence(question);
+      buttons.forEach(function (btn) {
+        var idx = parseInt(btn.dataset.index, 10);
+        var label = btn.dataset.label || btn.textContent;
+        var correctPos = correctOrder.indexOf(idx);
+        btn.disabled = true;
+        if (correctPos >= 0) {
+          btn.classList.add('correct');
+          btn.textContent = (correctPos + 1) + '. ' + label.replace(/^\d+\.\s*/, '');
+        }
+      });
+      setAnswerStatus(
+        optionsContainer,
+        state === 'correct' ? 'correct' : (state === 'wrong' ? 'wrong' : 'revealed'),
+        '<strong>' + (state === 'correct' ? 'Correct.' : (state === 'wrong' ? 'Wrong.' : 'Answer shown.')) + '</strong> Correct order: ' + escapeHtml(getDisplayAnswer(question))
+      );
+      showQuestionExplanation(question, optionsContainer);
+      var showBtn = document.getElementById('btn-show-answer');
+      if (showBtn) showBtn.disabled = true;
+    }
+
+    function evaluateOrderQuestion(question, optionsContainer, selectedOrder) {
+      if (answerResults[currentQuestionIndex] !== undefined) return;
+      stopQuestionTimer();
+      clearPauseState();
+      var correctOrder = getOrderSequence(question);
+      var wasCorrect = arraysEqual(selectedOrder, correctOrder);
+      answerResults[currentQuestionIndex] = wasCorrect;
+      if (wasCorrect) score += 1;
+      else wrongCount += 1;
+      recordQuestionResult(question, wasCorrect);
+      updateProgressTracker();
+      saveSession();
+
+      var buttons = optionsContainer.querySelectorAll('.option-btn');
+      buttons.forEach(function (btn) {
+        var idx = parseInt(btn.dataset.index, 10);
+        var label = btn.dataset.label || btn.textContent;
+        var selectedPos = selectedOrder.indexOf(idx);
+        var correctPos = correctOrder.indexOf(idx);
+        btn.disabled = true;
+        btn.textContent = (correctPos + 1) + '. ' + label.replace(/^\d+\.\s*/, '');
+        if (selectedPos === correctPos) btn.classList.add('correct');
+        else btn.classList.add('wrong');
+      });
+
+      setAnswerStatus(
+        optionsContainer,
+        wasCorrect ? 'correct' : 'wrong',
+        '<strong>' + (wasCorrect ? 'Correct.' : 'Wrong.') + '</strong> Correct order: ' + escapeHtml(getDisplayAnswer(question))
+      );
+      showQuestionExplanation(question, optionsContainer);
+      var showBtn = document.getElementById('btn-show-answer');
+      if (showBtn) showBtn.disabled = true;
+      if (!noTimersMode) startWaitCountdown();
+    }
+
+    function renderOrderQuestion(question, optionsContainer) {
+      var correctOrder = getOrderSequence(question);
+      var selectedOrder = [];
+      optionsContainer._orderSelection = selectedOrder;
+      setAnswerStatus(optionsContainer, 'multiple', '<strong>Order question.</strong> Click the options in the correct sequence. Use Reset before the last pick if you want to restart.');
+
+      var pickedBox = document.createElement('p');
+      pickedBox.className = 'text-answer-review visible';
+      optionsContainer.appendChild(pickedBox);
+
+      function refreshPickedBox() {
+        if (selectedOrder.length === 0) {
+          pickedBox.innerHTML = '<strong>Your sequence</strong><em>No items selected yet.</em>';
+        } else {
+          pickedBox.innerHTML = '<strong>Your sequence</strong>' + selectedOrder.map(function (idx, pos) {
+            return (pos + 1) + '. ' + escapeHtml(question.options[idx] || '');
+          }).join('<br>');
+        }
+      }
+      refreshPickedBox();
+
+      var resetRow = document.createElement('div');
+      resetRow.className = 'practice-actions';
+      var resetBtn = createActionButton('Reset order', '#e8eaf0', '#1a1a2e', function () {
+        if (answerResults[currentQuestionIndex] !== undefined) return;
+        selectedOrder.length = 0;
+        var buttons = optionsContainer.querySelectorAll('.option-btn');
+        buttons.forEach(function (btn) {
+          btn.disabled = false;
+          btn.classList.remove('correct', 'wrong');
+          btn.textContent = btn.dataset.label || btn.textContent.replace(/^\d+\.\s*/, '');
+        });
+        refreshPickedBox();
+        setAnswerStatus(optionsContainer, 'multiple', '<strong>Order question.</strong> Click the options in the correct sequence.');
+      }, false);
+      resetRow.appendChild(resetBtn);
+      optionsContainer.appendChild(resetRow);
+
+      question.options.forEach(function (optionText, i) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn option-btn';
+        btn.dataset.index = String(i);
+        btn.dataset.label = optionText;
+        btn.textContent = optionText;
+        btn.addEventListener('click', function () {
+          if (answerResults[currentQuestionIndex] !== undefined || btn.disabled) return;
+          selectedOrder.push(i);
+          btn.disabled = true;
+          btn.textContent = selectedOrder.length + '. ' + optionText;
+          refreshPickedBox();
+          if (selectedOrder.length === correctOrder.length) {
+            evaluateOrderQuestion(question, optionsContainer, selectedOrder.slice());
+          }
+        });
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function displayQuestion(index) {      const questionEl = document.querySelector('.question-text');
       const optionsContainer = document.getElementById('options-container');
       stopQuestionTimer();
       stopWaitTimer();
@@ -9646,7 +11181,9 @@
       renderQuestionTypeBanner(question, questionEl);
 
       optionsContainer.innerHTML = '';
-      if (isTextQuestion(question)) {
+      if (isOrderQuestion(question)) {
+        renderOrderQuestion(question, optionsContainer);
+      } else if (isTextQuestion(question)) {
         renderTextAnswerQuestion(question, optionsContainer);
       } else {
         renderInitialAnswerStatus(question, optionsContainer);
@@ -9852,6 +11389,8 @@
         saveSession();
         if (isTextQuestion(question)) {
           revealTextAnswer(question, optionsContainer, false);
+        } else if (isOrderQuestion(question)) {
+          revealOrderAnswer(question, optionsContainer, 'revealed');
         } else {
           var buttons = optionsContainer.querySelectorAll('.option-btn');
           buttons.forEach(function (btn) { btn.disabled = true; });
