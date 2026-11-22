@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="quiz-build" content="chemistry-sem1-latex-ro-v5-2026-08-30">
+  <meta name="quiz-build" content="multi-subject-v6-fire-safety-2026-11-22">
   <!-- Chemistry Sem 1 database replaced from the corrected Romanian/LaTeX Markdown source. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz University — Chemistry Sem 1 LaTeX/RO v5</title>
+  <title>Quiz University</title>
   <style>
     * {
       box-sizing: border-box;
@@ -760,6 +760,25 @@
         justify-content: center;
       }
     }
+    .main-menu-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .main-menu-buttons .main-menu-btn {
+      width: 100%;
+      padding: 0.9rem 0.75rem;
+      font-size: 1rem;
+    }
+
+    .shortcut-hint {
+      margin: 0.75rem 0 0;
+      font-size: 0.82rem;
+      color: #5f6775;
+      line-height: 1.5;
+    }
   </style>
 
   <script>
@@ -814,6 +833,7 @@
         <label for="setting-hide-multiple-count">Hide multiple-answer count</label>
         <input type="checkbox" id="setting-hide-multiple-count" aria-label="Hide the number of correct choices in multiple-answer questions">
       </div>
+      <p class="shortcut-hint">Keyboard: <b>1-9</b> pick an option &middot; <b>N</b> or <b>&rarr;</b> next &middot; <b>S</b> show answer &middot; <b>P</b> pause / resume &middot; <b>B</b> or <b>Esc</b> back</p>
     </div>
 
     <div class="progress-tracker hidden" id="progress-tracker">
@@ -10914,6 +10934,202 @@
       ]
 };
 
+    // ---- Fire Safety of Buildings (CE II, Sem 2): written from the lecture notes L01-L06 -------------
+    const FIRE_SAFETY_SET_TITLE = 'Fire Safety';
+    const FIRE_SAFETY_CATEGORY_NAMES = {"50":"Stages of a compartment fire (the fire curve)","51":"Heat transfer, fire plume & fire severity","52":"Flashover, heat release rate & design fire","53":"Fire models & the parametric curve","54":"Reaction to fire (Euroclasses & tests)","55":"Fire resistance, tests & protection of steel","56":"Reliability, risk & fire safety measures"};
+    const FIRE_SAFETY_QUESTIONS = {
+      "50": [
+        {"type":"self-grade-text","selfGrade":true,"question":"Name and explain the five stages of a natural compartment fire (the temperature–time curve).","answer":"1) Ignition: a source with enough energy lights the first item. 2) Fire growth: burning limited by the initial fuel, room below about 400–500 °C, hot gases collect under the ceiling, plume and buoyancy drive it. 3) Flashover: rapid transition to total surface involvement, exponential rise of temperature. 4) Fully developed fire: the whole compartment burns, about 1000–1200 °C, radiation dominates, steady burning limited by fuel surface or by openings. 5) Decay (regression): fuel is consumed and the temperature falls.","displayAnswer":"1) Ignition: a source with enough energy lights the first item. 2) Fire growth: burning limited by the initial fuel, room below about 400–500 °C, hot gases collect under the ceiling, plume and buoyancy drive it. 3) Flashover: rapid transition to total surface involvement, exponential rise of temperature. 4) Fully developed fire: the whole compartment burns, about 1000–1200 °C, radiation dominates, steady burning limited by fuel surface or by openings. 5) Decay (regression): fuel is consumed and the temperature falls.","explanation":"This is the central figure of lectures 2 and 3 (L02 fig. 1.4, L03 slide 3). Know each stage by what limits the fire and what temperature it reaches.","category":50,"number":1},
+        {"type":"order","question":"Put the stages of a compartment fire in order.","options":["Ignition","Fire growth","Flashover","Fully developed fire","Decay (regression)"],"orderAnswer":[0,1,2,3,4],"answer":[0,1,2,3,4],"displayAnswer":"Ignition → Fire growth → Flashover → Fully developed fire → Decay (regression)","explanation":"Ignition → growth → flashover → fully developed → decay. Flashover is the transition between growth and the fully developed fire.","category":50,"number":2},
+        {"question":"In which stage does the room temperature rise slowly, staying below about 400–500 °C?","options":["Fire growth","Fully developed fire","Decay","Flashover"],"answer":[0],"displayAnswer":"Fire growth","explanation":"In growth, burning is limited by the initial fuel, so the room only heats slowly while hot gases collect under the ceiling (L02).","category":50,"number":3},
+        {"question":"What is flashover, according to the ISO definition used in the lecture?","options":["The rapid transition to a state of total surface involvement of the combustible materials in an enclosure","The moment a fire is first ignited by a small flame","The point where the fire has used up all the oxygen and goes out","The explosion that happens when air enters an oxygen-starved room"],"answer":[0],"displayAnswer":"The rapid transition to a state of total surface involvement of the combustible materials in an enclosure","explanation":"Flashover (ISO 13943) is the transition from growth to the fully developed stage. The last option describes a backdraft.","category":50,"number":4},
+        {"question":"Which of these are used as flashover criteria in the lecture? (select all)","options":["Smoke layer reaches 600 °C (Häglund)","Radiation from the smoke layer onto the floor reaches 20 kW/m² (Waterman)","Flames emerge from the compartment openings (Häglund)","The ceiling collapses","The room temperature reaches 100 °C"],"answer":[0,1,2],"displayAnswer":"Smoke layer reaches 600 °C (Häglund); Radiation from the smoke layer onto the floor reaches 20 kW/m² (Waterman); Flames emerge from the compartment openings (Häglund)","explanation":"Any one of the three criteria is enough. The Eurocode (Annex D) recommends 500 °C for the upper layer at the onset of flashover (L03).","category":50,"number":5},
+        {"question":"Which upper-gas-layer temperature does EN 1991-1-2, Annex D recommend for the onset of flashover?","options":["500 °C","300 °C","600 °C","1000 °C"],"answer":[0],"displayAnswer":"500 °C","explanation":"The Eurocode recommends 500 °C; Häglund uses 600 °C. Any justified assumption is accepted in practice (L03).","category":50,"number":6},
+        {"question":"Which heat-transfer mechanism dominates in the fully developed stage?","options":["Radiation","Conduction","Free convection only","Evaporation"],"answer":[0],"displayAnswer":"Radiation","explanation":"In the fully developed stage the fire and the hot upper layer radiate and ignite remote items (L02).","category":50,"number":7},
+        {"question":"A fully developed fire can be controlled by two things. Which?","options":["The surface of combustible material, or the size of the openings (air supply)","The outside temperature or the wind speed","The thickness of the floor or the age of the building","The number of occupants or the sprinkler type"],"answer":[0],"displayAnswer":"The surface of combustible material, or the size of the openings (air supply)","explanation":"With excess air the burning rate depends on the burning surface (fuel-controlled); with limited air it depends on the openings (ventilation-controlled) (L02).","category":50,"number":8},
+        {"question":"In which stage are the bearing structures most affected, according to the lecture?","options":["Decay (regression)","Ignition","Fire growth","Pre-flashover"],"answer":[0],"displayAnswer":"Decay (regression)","explanation":"The note for stage 5 says the temperature falls gradually and the bearing structures are most affected in this stage (L02). Life safety matters mostly up to flashover.","category":50,"number":9},
+        {"question":"What is a backdraft?","options":["In limited ventilation, unburnt gas collects; when air enters and an ignition source ignites it, the burning gas is pushed out of the opening as a fireball","The rapid transition to total surface involvement of an enclosure","The self-extinguishing of a fire in an under-ventilated room","The slow cooling of a room after the fuel has burnt out"],"answer":[0],"displayAnswer":"In limited ventilation, unburnt gas collects; when air enters and an ignition source ignites it, the burning gas is pushed out of the opening as a fireball","explanation":"Backdraft is similar to flashover but happens in limited ventilation (L02).","category":50,"number":10},
+        {"question":"What is regression in the sense of the fully developed fire stage (not decay)?","options":["Spontaneous self-extinguishing in an under-ventilated enclosure or with limited fuel","A fire that grows exponentially","A flame that reaches the ceiling","A fire that spreads to the next building"],"answer":[0],"displayAnswer":"Spontaneous self-extinguishing in an under-ventilated enclosure or with limited fuel","explanation":"A fully developed fire can evolve three ways: flashover, regression (self-extinguishing) or backdraft (L02).","category":50,"number":11},
+        {"question":"In a compartment fire, how do hot gas and fresh air move through an opening?","options":["Hot gas and smoke leave through the upper part; fresh air enters through the lower part","Hot gas leaves through the lower part; fresh air enters through the upper part","Both move through the upper part","Both move through the lower part"],"answer":[0],"displayAnswer":"Hot gas and smoke leave through the upper part; fresh air enters through the lower part","explanation":"This follows from the density difference between hot and cold gas (L02).","category":50,"number":12},
+        {"question":"During fire growth, where do the hot gases from thermal decomposition collect?","options":["Under the ceiling, in a fairly uniform layer","On the floor","Inside the walls","Outside the building"],"answer":[0],"displayAnswer":"Under the ceiling, in a fairly uniform layer","explanation":"They collect in the upper layer, which later radiates onto the fuel below (L02).","category":50,"number":13},
+        {"question":"Which temperature range is typical of a fully developed (post-flashover) fire?","options":["About 1000–1200 °C","About 100–200 °C","About 300–400 °C","Above 3000 °C"],"answer":[0],"displayAnswer":"About 1000–1200 °C","explanation":"See the pre-flashover / flashover / post-flashover chart on L03 slide 21.","category":50,"number":14},
+        {"question":"What are the characteristics of the ignition stage?","options":["The ignition temperature and the ignition energy of the source","The heat release rate in MW","The flashover time","The fire resistance class"],"answer":[0],"displayAnswer":"The ignition temperature and the ignition energy of the source","explanation":"Ignition is described by temperature and energy (L02).","category":50,"number":15},
+        {"question":"On the limited-oxygen temperature curve (L02, fig. 1.6), what can happen when air enters at point C?","options":["The fire resumes, with a backdraft or smoke explosion","The fire is extinguished for good","The temperature stays constant","The flashover criteria are no longer valid"],"answer":[0],"displayAnswer":"The fire resumes, with a backdraft or smoke explosion","explanation":"After point A the fire is starved of oxygen and may go out; fresh air at C can restart it violently.","category":50,"number":16},
+        {"question":"Which parameters govern the development of a fire, according to the lecture?","options":["Ignition source, fuel, enclosure geometry, openings and bounding surfaces","Only the ignition source","Only the quantity of fuel","Only the fire-brigade response time"],"answer":[0],"displayAnswer":"Ignition source, fuel, enclosure geometry, openings and bounding surfaces","explanation":"L02 slide 14 lists the factors that shape fire development.","category":50,"number":17},
+        {"question":"Life safety (evacuation) matters mostly up to which point of the fire?","options":["Flashover","Decay","Ignition only","The end of the fully developed stage"],"answer":[0],"displayAnswer":"Flashover","explanation":"After flashover conditions are not survivable; structural damage and collapse risk (structural fire engineering) matter then (L02 slide 29).","category":50,"number":18},
+        {"question":"Which statement compares the natural fire with the standard (ISO 834) fire?","options":["The natural fire has heating and cooling phases; the standard fire keeps rising","Both have a cooling phase","The standard fire has a decay phase, the natural fire does not","They are identical after flashover"],"answer":[0],"displayAnswer":"The natural fire has heating and cooling phases; the standard fire keeps rising","explanation":"The standard curve rises indefinitely and ignores the pre-flashover and decay phases (L02, L04).","category":50,"number":19},
+        {"question":"According to ISO 13943, what is a \"fire\" as a hazard (Romanian: \"incendiu\")?","options":["Self-sustained, disordered burning with damaging effects and unlimited spread until someone intervenes","Controlled combustion with limited spread","A small flame from a candle","A test fire in a furnace"],"answer":[0],"displayAnswer":"Self-sustained, disordered burning with damaging effects and unlimited spread until someone intervenes","explanation":"A \"foc\" (fire as a phenomenon) is controlled combustion with useful effects; \"incendiu\" is the hazard (L02 slide 13).","category":50,"number":20},
+        {"type":"self-grade-text","selfGrade":true,"question":"Describe the difference between flashover, backdraft and regression.","answer":"Flashover: rapid transition from growth to total surface involvement, with an exponential temperature rise. Backdraft: in limited ventilation, unburnt gas collects and, when air enters and finds an ignition source, burns as a fireball out of the opening. Regression: in an under-ventilated room or with limited fuel the fire self-extinguishes.","displayAnswer":"Flashover: rapid transition from growth to total surface involvement, with an exponential temperature rise. Backdraft: in limited ventilation, unburnt gas collects and, when air enters and finds an ignition source, burns as a fireball out of the opening. Regression: in an under-ventilated room or with limited fuel the fire self-extinguishes.","explanation":"The three ways a fully developed fire can evolve (L02).","category":50,"number":21},
+        {"type":"self-grade-text","selfGrade":true,"question":"Explain what happens in a compartment fire when the oxygen is limited (L02, fig. 1.6).","answer":"After the fire reaches point A it is starved of oxygen: temperature falls and the fire may go out. If air then enters (point C) the accumulated unburnt gases can ignite violently (backdraft or smoke explosion) and the temperature rises again.","displayAnswer":"After the fire reaches point A it is starved of oxygen: temperature falls and the fire may go out. If air then enters (point C) the accumulated unburnt gases can ignite violently (backdraft or smoke explosion) and the temperature rises again.","explanation":"Know this as the second curve of the lecture.","category":50,"number":22}
+      ],
+      "51": [
+        {"question":"Which law describes heat transfer by conduction?","options":["Fourier: q″ = −k · dT/dx","Newton: q″ = h · ΔT","Stefan–Boltzmann: E = ε σ T⁴","Archimedes"],"answer":[0],"displayAnswer":"Fourier: q″ = −k · dT/dx","explanation":"Conduction = Fourier, convection = Newton, radiation = Stefan–Boltzmann (L02).","category":51,"number":1},
+        {"question":"Which law describes heat transfer by convection?","options":["Newton: q″ = h · ΔT","Fourier: q″ = −k · dT/dx","Stefan–Boltzmann: E = ε σ T⁴","Fick"],"answer":[0],"displayAnswer":"Newton: q″ = h · ΔT","explanation":"h is the convective heat-transfer coefficient; it is not a material constant (L02).","category":51,"number":2},
+        {"question":"Which law gives the emitted radiation?","options":["Stefan–Boltzmann: E = ε σ T⁴","Fourier","Newton","Bernoulli"],"answer":[0],"displayAnswer":"Stefan–Boltzmann: E = ε σ T⁴","explanation":"σ = 5.67·10⁻⁸ W/m²K⁴ and ε is the emissivity (black body ε = 1) (L02).","category":51,"number":3},
+        {"question":"What is special about radiation compared with conduction and convection?","options":["It needs no medium between the source and the receiver","It only occurs in solids","It only occurs in liquids","It is only important before ignition"],"answer":[0],"displayAnswer":"It needs no medium between the source and the receiver","explanation":"Radiation travels by electromagnetic waves and can be absorbed, transmitted or reflected (L02).","category":51,"number":4},
+        {"question":"What does the configuration factor φ do in q″ = φ ε σ T⁴?","options":["It accounts for the geometry between the emitter and a remote surface","It is the fuel density","It is the heat of combustion","It is the air-to-fuel ratio"],"answer":[0],"displayAnswer":"It accounts for the geometry between the emitter and a remote surface","explanation":"It is used for the radiant flux on a surface remote from the emitter (L02; Annex G of EN 1991-1-2).","category":51,"number":5},
+        {"question":"What is a buoyant fire plume?","options":["The convective column of hot gas that rises above a heat source because of density differences","A stream of water from a sprinkler","The horizontal gas flow along the floor","The smoke that escapes through a window only"],"answer":[0],"displayAnswer":"The convective column of hot gas that rises above a heat source because of density differences","explanation":"In natural fires buoyancy is the dominant driving mechanism (L02).","category":51,"number":6},
+        {"type":"order","question":"Order the zones of the fire plume above a burner, from the fuel upwards (McCaffrey).","options":["Flame zone (persistent flame)","Intermittent flame zone","Buoyant plume"],"orderAnswer":[0,1,2],"answer":[0,1,2],"displayAnswer":"Flame zone (persistent flame) → Intermittent flame zone → Buoyant plume","explanation":"In the buoyant plume the velocity and temperature fall with height (L02).","category":51,"number":7},
+        {"question":"Which formula gives the mean flame height (Q in kW, D = fire diameter)?","options":["L = 0.23 · Q^(2/5) − 1.02 · D","L = 0.23 · Q² − 1.02 · D","L = 750 · A_v · √h_eq","L = 20 + 345 · log(8t + 1)"],"answer":[0],"displayAnswer":"L = 0.23 · Q^(2/5) − 1.02 · D","explanation":"Heskestad. Flame height depends on the rate of energy release and the fuel bed diameter; fuel type has a negligible effect (L02).","category":51,"number":8},
+        {"question":"A fire with Q = 1000 kW burns on a base of D = 1 m. Mean flame height L = 0.23 · Q^(2/5) − 1.02 · D?","options":["About 2.6 m","About 0.4 m","About 8 m","About 23 m"],"answer":[0],"displayAnswer":"About 2.6 m","explanation":"1000^(2/5) ≈ 15.85, so 0.23 · 15.85 = 3.65, minus 1.02 gives about 2.6 m.","category":51,"number":9},
+        {"question":"Why do plume properties matter in practice?","options":["They allow estimating detector and sprinkler activation, smoke filling rates, venting and heating of structures","They give the fire resistance class","They give the Euroclass of a product","They give the reliability index"],"answer":[0],"displayAnswer":"They allow estimating detector and sprinkler activation, smoke filling rates, venting and heating of structures","explanation":"L02 slide 9.","category":51,"number":10},
+        {"question":"What is fire severity (destructive potential) best measured by?","options":["The area under the temperature–time curve","Only the maximum temperature","Only the duration","The number of rooms"],"answer":[0],"displayAnswer":"The area under the temperature–time curve","explanation":"Two fires with equal areas are equally aggressive even if their peak temperatures differ (L02 fig. 2.5).","category":51,"number":11},
+        {"question":"Two fires have different peak temperatures (T₁ > T₂) but equal areas under their temperature–time curves. What follows?","options":["They have the same destructive potential","Fire 1 is always more destructive","Fire 2 is always more destructive","Neither is destructive"],"answer":[0],"displayAnswer":"They have the same destructive potential","explanation":"The average gas temperature alone cannot describe the destructive potential (L02).","category":51,"number":12},
+        {"question":"What is the thermal load density?","options":["The total calorific power of all combustibles in a room divided by the floor area","The maximum temperature divided by the time","The heat release rate per volume of smoke","The mass of the structure divided by the span"],"answer":[0],"displayAnswer":"The total calorific power of all combustibles in a room divided by the floor area","explanation":"It includes linings, furniture and stored substances. A higher density gives a longer fire (L02).","category":51,"number":13},
+        {"question":"A tightly closed room compared with a room with broken windows: which is correct?","options":["The closed room has lower temperature but a longer fire; broken windows give a faster temperature rise but a shorter fire","The closed room burns hotter and shorter","Ventilation has no effect on a fire","Both have identical temperature curves"],"answer":[0],"displayAnswer":"The closed room has lower temperature but a longer fire; broken windows give a faster temperature rise but a shorter fire","explanation":"Ventilation sets the burning rate and the compartment temperature (L02).","category":51,"number":14},
+        {"question":"Which factors influence the destructive potential of a fire? (select all)","options":["Thermal load (fuel quantity)","Ventilation of the compartment","Thermal inertia of the bounding surfaces","How the fuel is laid out","The colour of the walls","The time of day"],"answer":[0,1,2,3],"displayAnswer":"Thermal load (fuel quantity); Ventilation of the compartment; Thermal inertia of the bounding surfaces; How the fuel is laid out","explanation":"L02 section 4 (a to d). Concentrated fuel gives a higher severity than the same fuel spread evenly.","category":51,"number":15},
+        {"question":"Is fire severity higher for a concentrated or an evenly spread thermal load (same total)?","options":["Higher for a concentrated load","Higher for an evenly spread load","Always identical","It depends only on the colour of the fuel"],"answer":[0],"displayAnswer":"Higher for a concentrated load","explanation":"Experiments show this; a concentration of fuel near a column or beam also raises the collapse risk (L02).","category":51,"number":16},
+        {"question":"What is the normalised thermal load?","options":["The thermal load absorbed by the bounding surfaces divided by their thermal inertia","The thermal load divided by the floor area only","The fuel mass divided by the air mass","The peak HRR divided by the time"],"answer":[0],"displayAnswer":"The thermal load absorbed by the bounding surfaces divided by their thermal inertia","explanation":"So a high thermal load in a room with high thermal inertia can be as severe as a small load in a room with low inertia (L02).","category":51,"number":17},
+        {"question":"Why is wood shavings burning faster than the same volume of a solid piece of wood?","options":["The specific surface (surface per unit volume) is much larger","Shavings have a higher calorific value","Solid wood contains more oxygen","Shavings are heavier"],"answer":[0],"displayAnswer":"The specific surface (surface per unit volume) is much larger","explanation":"Sawdust can even cause an explosion fire because of its huge specific surface (L02).","category":51,"number":18},
+        {"question":"Typical convective heat transfer coefficients: which range is given for free convection?","options":["5–25 W/m²K","500–5000 W/m²K","0.01–0.1 W/m²K","5·10⁻⁸ W/m²K"],"answer":[0],"displayAnswer":"5–25 W/m²K","explanation":"Forced convection is 10–500 W/m²K (L02).","category":51,"number":19},
+        {"type":"self-grade-text","selfGrade":true,"question":"Explain why the average gas temperature alone cannot describe how destructive a fire is.","answer":"The destructive potential depends on the whole temperature–time history, that is, on the area under the curve (heat delivered over time). A hotter but shorter fire can be as destructive as a cooler but longer one. It also depends on ventilation, thermal load, thermal inertia of the boundaries and fuel layout.","displayAnswer":"The destructive potential depends on the whole temperature–time history, that is, on the area under the curve (heat delivered over time). A hotter but shorter fire can be as destructive as a cooler but longer one. It also depends on ventilation, thermal load, thermal inertia of the boundaries and fuel layout.","explanation":"L02 section 4, fig. 2.5.","category":51,"number":20}
+      ],
+      "52": [
+        {"question":"Which of Hüggett's observations is the basis of oxygen consumption calorimetry (OCC)?","options":["Most combustibles release about the same heat per kg of oxygen consumed (about 13.1 MJ/kg O₂)","All fuels have the same calorific value per kg","All fuels ignite at the same temperature","All fuels produce the same quantity of smoke"],"answer":[0],"displayAnswer":"Most combustibles release about the same heat per kg of oxygen consumed (about 13.1 MJ/kg O₂)","explanation":"The heat released is found by measuring the oxygen consumed (L03).","category":52,"number":1},
+        {"question":"Below which oxygen fraction does combustion stop, according to the lecture?","options":["About 11 %","About 21 %","About 50 %","About 0.1 %"],"answer":[0],"displayAnswer":"About 11 %","explanation":"Air has 21 % oxygen; the lecture uses the limit of 11 % (L03).","category":52,"number":2},
+        {"question":"What is the ventilation factor introduced by Kawagoe?","options":["A_v · √h_eq","A_t / A_f","A_v / h_eq²","O / b"],"answer":[0],"displayAnswer":"A_v · √h_eq","explanation":"A_v is the area of the vertical openings and h_eq their equivalent height (L03).","category":52,"number":3},
+        {"question":"Which formula gives the heat release rate needed for flashover (Babrauskas)?","options":["Q_FO = 750 · A_v · √h_eq [kW]","Q_FO = 0.23 · Q^(2/5) [kW]","Q_FO = (t / t_a)² [MW]","Q_FO = 345 · log(8t + 1) [kW]"],"answer":[0],"displayAnswer":"Q_FO = 750 · A_v · √h_eq [kW]","explanation":"Thomas gives 7.8 A_T + 378 A_v √h_eq; McCaffrey and Peacock use the form 610 or 740 · √(h_k A_T A_v √h_eq) (L03).","category":52,"number":4},
+        {"question":"A room has one opening of area A_v = 2 m² and equivalent height h_eq = 2 m. Babrauskas: Q_FO = 750 · A_v · √h_eq. The result is about?","options":["2.1 MW","0.2 MW","21 MW","2 kW"],"answer":[0],"displayAnswer":"2.1 MW","explanation":"750 · 2 · √2 ≈ 2121 kW ≈ 2.1 MW.","category":52,"number":5},
+        {"question":"What does the term A_T mean in Thomas' and McCaffrey's flashover formulas?","options":["The total area of the compartment boundaries without the openings","The area of the floor only","The area of the openings","The area of the fire"],"answer":[0],"displayAnswer":"The total area of the compartment boundaries without the openings","explanation":"L03 slide 7.","category":52,"number":6},
+        {"question":"What is the heat release rate (HRR, Q)?","options":["The quantity of heat (energy) released by the combustibles as a function of time","The temperature of the smoke layer","The area under the temperature–time curve","The fire resistance time in minutes"],"answer":[0],"displayAnswer":"The quantity of heat (energy) released by the combustibles as a function of time","explanation":"It is one of the most important factors in fire development; the time variation of HRR is the design fire curve (L03).","category":52,"number":7},
+        {"question":"Is HRR a fundamental property of a fuel?","options":["No, it depends on conditions in the enclosure (ventilation, geometry…)","Yes, it is a constant for each fuel","Yes, but only for liquids","Only for wood"],"answer":[0],"displayAnswer":"No, it depends on conditions in the enclosure (ventilation, geometry…)","explanation":"So the curve cannot be derived from material properties alone; it is estimated from measurements (L03).","category":52,"number":8},
+        {"question":"Match the heat release rate to the source: about 2.5 MW.","options":["1 m² of burning gasoline","A burning cigarette","A candle flame","A waste bin"],"answer":[0],"displayAnswer":"1 m² of burning gasoline","explanation":"Table 3.1: cigarette 5 W, bulb 60 W, candle 80 W, waste bin 100 kW, gasoline 2.5 MW/m², wood cribs 7 MW (L03).","category":52,"number":9},
+        {"question":"Match the heat release rate to the source: about 100 kW.","options":["A waste bin","A burning cigarette","A candle flame","1 m² of gasoline"],"answer":[0],"displayAnswer":"A waste bin","explanation":"Cigarette 5 W, candle 80 W, waste bin 100 kW, gasoline 2.5 MW (L03 Table 3.1).","category":52,"number":10},
+        {"question":"What is the shape of the design fire (HRR curve) in the Eurocode?","options":["A t² growth, a steady plateau at Q_max and a linear decay","A straight line rising forever","A single peak and nothing else","An exponential decay only"],"answer":[0],"displayAnswer":"A t² growth, a steady plateau at Q_max and a linear decay","explanation":"The real curve is replaced by this simple shape (L03 slide 14).","category":52,"number":11},
+        {"question":"The growth stage of the design fire is given by (t_a = time to reach 1 MW):","options":["Q = (t / t_a)² [MW]","Q = t / t_a [MW]","Q = t_a · t² [MW]","Q = √(t / t_a) [MW]"],"answer":[0],"displayAnswer":"Q = (t / t_a)² [MW]","explanation":"α = 1/t_a² is the fire growth coefficient (the slide's wording \"1 over the square root of time\" is a slip) (L03).","category":52,"number":12},
+        {"type":"order","question":"Order the growth classes from the fastest to the slowest fire.","options":["Ultra-fast (t_a = 75 s)","Fast (t_a = 150 s)","Medium (t_a = 300 s)","Slow (t_a = 600 s)"],"orderAnswer":[0,1,2,3],"answer":[0,1,2,3],"displayAnswer":"Ultra-fast (t_a = 75 s) → Fast (t_a = 150 s) → Medium (t_a = 300 s) → Slow (t_a = 600 s)","explanation":"The growth phase is a t² curve defined by the time needed to reach 1 MW, between 75 s and 600 s (L03, L04).","category":52,"number":13},
+        {"question":"A fire grows with t_a = 300 s (medium). What is the heat release rate after 600 s, using Q = (t/t_a)² MW?","options":["4 MW","2 MW","8 MW","1 MW"],"answer":[0],"displayAnswer":"4 MW","explanation":"(600/300)² = 4 MW.","category":52,"number":14},
+        {"question":"For a fast fire (t_a = 150 s), after how long is Q = 4 MW?","options":["300 s","150 s","600 s","75 s"],"answer":[0],"displayAnswer":"300 s","explanation":"Q = (t/150)² = 4, so t = 2 · 150 = 300 s.","category":52,"number":15},
+        {"question":"Which occupancy has a \"fast\" fire growth rate (t_a = 150 s) in Table 3.2?","options":["Library","Dwelling","Office","Hotel room"],"answer":[0],"displayAnswer":"Library","explanation":"Fast: library, shopping centre, theatre/cinema. Medium (300 s): dwelling, hospital, hotel, office, classroom. Slow (600 s): transport public spaces.","category":52,"number":16},
+        {"question":"Which occupancy has a \"slow\" fire growth rate (t_a = 600 s)?","options":["Transport (public space)","Library","Theatre","Shopping centre"],"answer":[0],"displayAnswer":"Transport (public space)","explanation":"L03 Table 3.2.","category":52,"number":17},
+        {"question":"What is the fuel-controlled plateau of the design fire?","options":["Q = RHR_f · A_fi","Q = 0.10 · m · H_u · A_v · √h_eq","Q = (t/t_a)²","Q = 20 + 345 · log(8t+1)"],"answer":[0],"displayAnswer":"Q = RHR_f · A_fi","explanation":"RHR_f is the maximum HRR per 1 m² of burning fuel [kW/m²]; A_fi is the maximum fire area (L03).","category":52,"number":18},
+        {"question":"An office has RHR_f = 250 kW/m² and the whole floor of 100 m² burns (A_fi = 100 m²). Fuel-controlled plateau Q?","options":["25 MW","2.5 MW","250 MW","0.25 MW"],"answer":[0],"displayAnswer":"25 MW","explanation":"250 kW/m² · 100 m² = 25 000 kW = 25 MW.","category":52,"number":19},
+        {"question":"What is the ventilation-controlled plateau of the design fire?","options":["Q_max,v = 0.10 · m · H_u · A_v · √h_eq [MW]","Q = RHR_f · A_fi","Q = (t / t_a)²","Q = 750 · A_v · √h_eq"],"answer":[0],"displayAnswer":"Q_max,v = 0.10 · m · H_u · A_v · √h_eq [MW]","explanation":"m = 0.8 is the burning efficiency and H_u = 17.5 MJ/kg is the heat of combustion of wood (L03).","category":52,"number":20},
+        {"question":"A room has A_v = 3 m² and h_eq = 2 m. With m = 0.8 and H_u = 17.5 MJ/kg, Q_max,v = 0.10 · m · H_u · A_v · √h_eq ≈ ?","options":["About 5.9 MW","About 0.6 MW","About 59 MW","About 1.4 MW"],"answer":[0],"displayAnswer":"About 5.9 MW","explanation":"0.10 · 0.8 · 17.5 = 1.4; 3 · √2 = 4.24; 1.4 · 4.24 ≈ 5.9 MW.","category":52,"number":21},
+        {"question":"Which effects of smoke are named in the lecture? (select all)","options":["Opacity (hinders evacuation and the fire brigade)","Toxicity (asphyxia, CO, HCN…)","Corrosion (acid components attack metals, electronics…)","It lowers the temperature of the structure","It increases the fire resistance"],"answer":[0,1,2],"displayAnswer":"Opacity (hinders evacuation and the fire brigade); Toxicity (asphyxia, CO, HCN…); Corrosion (acid components attack metals, electronics…)","explanation":"L03 slide 18–19.","category":52,"number":22},
+        {"question":"Which smoke effect makes evacuation difficult by poor visibility and panic?","options":["Opacity","Corrosion","Toxicity only","Conduction"],"answer":[0],"displayAnswer":"Opacity","explanation":"Opacity also delays the firefighters, who cannot easily locate the fire and victims (L03).","category":52,"number":23},
+        {"question":"Which part of EN 1991-1-2 contains the parametric temperature–time curves?","options":["Annex A","Annex C","Annex E","Annex G"],"answer":[0],"displayAnswer":"Annex A","explanation":"A parametric curves, B external members, C localised fires, D advanced fire models, E fire load densities, F equivalent time, G configuration factor (L03 slide 25).","category":52,"number":24},
+        {"question":"Which annex of EN 1991-1-2 gives the fire load densities?","options":["Annex E","Annex A","Annex C","Annex F"],"answer":[0],"displayAnswer":"Annex E","explanation":"Annex F gives the equivalent time of fire exposure and Annex G the configuration factor.","category":52,"number":25},
+        {"question":"Which annex of EN 1991-1-2 covers localised fires?","options":["Annex C","Annex A","Annex D","Annex E"],"answer":[0],"displayAnswer":"Annex C","explanation":"Annex D covers advanced fire models.","category":52,"number":26},
+        {"question":"What are the two ways of finding the fire resistance the norms require for a member?","options":["The prescriptive approach and the performance-based approach","The active and the passive approach","The CC1 and the CC3 approach","The static and the dynamic approach"],"answer":[0],"displayAnswer":"The prescriptive approach and the performance-based approach","explanation":"A structural fire calculation combines the design fire, the thermal analysis and the structural analysis (L03).","category":52,"number":27},
+        {"type":"self-grade-text","selfGrade":true,"question":"What does a design fire curve consist of and what determines each part?","answer":"Three parts: a growth stage Q = (t/t_a)² MW set by the growth rate t_a (occupancy); a steady plateau at Q_max, either RHR_f · A_fi (fuel-controlled) or 0.10 · m · H_u · A_v · √h_eq (ventilation-controlled); and a linear decay as the fuel is consumed.","displayAnswer":"Three parts: a growth stage Q = (t/t_a)² MW set by the growth rate t_a (occupancy); a steady plateau at Q_max, either RHR_f · A_fi (fuel-controlled) or 0.10 · m · H_u · A_v · √h_eq (ventilation-controlled); and a linear decay as the fuel is consumed.","explanation":"L03 slides 14–17.","category":52,"number":28}
+      ],
+      "53": [
+        {"question":"Which formula is the ISO 834 standard fire curve (t in minutes)?","options":["θ_f = θ_0 + 345 · log₁₀(8t + 1)","θ_f = θ_0 + 345 · (8t + 1)","θ_f = 1325 (1 − 0.324 e^(−0.2t))","θ_f = 660 (1 − 0.687 e^(−0.32t))"],"answer":[0],"displayAnswer":"θ_f = θ_0 + 345 · log₁₀(8t + 1)","explanation":"The second is the parametric (Annex A) heating phase and the third is the external fire curve (L04).","category":53,"number":1},
+        {"question":"Using ISO 834 with θ₀ = 20 °C, what is the gas temperature after 30 minutes?","options":["About 842 °C","About 300 °C","About 1200 °C","About 600 °C"],"answer":[0],"displayAnswer":"About 842 °C","explanation":"8 · 30 + 1 = 241; log₁₀(241) ≈ 2.382; 345 · 2.382 ≈ 822; plus 20 gives about 842 °C.","category":53,"number":2},
+        {"question":"Using ISO 834 with θ₀ = 20 °C, what is the gas temperature after 60 minutes?","options":["About 945 °C","About 500 °C","About 1500 °C","About 700 °C"],"answer":[0],"displayAnswer":"About 945 °C","explanation":"8 · 60 + 1 = 481; log₁₀(481) ≈ 2.682; 345 · 2.682 ≈ 925; plus 20 gives about 945 °C.","category":53,"number":3},
+        {"question":"Which of these are drawbacks of the ISO 834 nominal curve? (select all)","options":["It rises indefinitely (no decay phase)","It ignores the pre-flashover phase","It does not account for thermal load or ventilation","It is applied in the whole compartment whatever its size","It is too low to be useful","It cannot be used in laboratories"],"answer":[0,1,2,3],"displayAnswer":"It rises indefinitely (no decay phase); It ignores the pre-flashover phase; It does not account for thermal load or ventilation; It is applied in the whole compartment whatever its size","explanation":"L04 slide 5.","category":53,"number":4},
+        {"question":"Which are the three nominal curves of EN 1991-1-2?","options":["Standard (ISO 834), external fire and hydrocarbon","Standard, parametric and localised","Heskestad, Hasemi and Annex A","Zone, one-zone and CFD"],"answer":[0],"displayAnswer":"Standard (ISO 834), external fire and hydrocarbon","explanation":"They need no data about the compartment (L04).","category":53,"number":5},
+        {"question":"Which approach takes the thermal action from the nominal fire curve?","options":["The prescriptive approach","The performance-based approach","The probabilistic approach","The active approach"],"answer":[0],"displayAnswer":"The prescriptive approach","explanation":"The performance-based approach uses physical parameters instead (L04).","category":53,"number":6},
+        {"question":"What does the parametric fire (EN 1991-1-2, Annex A) take into account?","options":["The opening factor O, the thermal load q_f and the thermal absorptivity b of the boundaries","Only the opening factor","Only the ISO 834 curve","The exact geometry and CFD results"],"answer":[0],"displayAnswer":"The opening factor O, the thermal load q_f and the thermal absorptivity b of the boundaries","explanation":"It is a simple way to approximate a post-flashover fire with a decay phase (L04).","category":53,"number":7},
+        {"question":"How is the opening factor defined in Annex A?","options":["O = A_v · √h / A_t","O = A_t / A_v","O = A_v · h / A_f","O = √(A_v) / h"],"answer":[0],"displayAnswer":"O = A_v · √h / A_t","explanation":"A_t is the total area of the enclosure including the openings; 0.02 ≤ O ≤ 0.20 m^½ (L04).","category":53,"number":8},
+        {"question":"Valid limits of the opening factor in Annex A?","options":["0.02 ≤ O ≤ 0.20 m^½","0.2 ≤ O ≤ 2.0","1000 ≤ O ≤ 2000","50 ≤ O ≤ 1000"],"answer":[0],"displayAnswer":"0.02 ≤ O ≤ 0.20 m^½","explanation":"1000 ≤ b ≤ 2000 J/m²s½K and 50 ≤ q_t,d ≤ 1000 MJ/m² are the other limits.","category":53,"number":9},
+        {"question":"What is \"b\" in the parametric fire formulas?","options":["The thermal absorptivity (thermal inertia) of the boundaries, b = √(ρ c λ)","The width of the opening","The burning efficiency","The thickness of the wall"],"answer":[0],"displayAnswer":"The thermal absorptivity (thermal inertia) of the boundaries, b = √(ρ c λ)","explanation":"Valid between 1000 and 2000 J/m²s½K; for layered boundaries b is calculated with (A.2) or (A.3) (L04).","category":53,"number":10},
+        {"question":"What are the validity limits of the Annex A parametric curve (as used for the exercise)? (select all)","options":["Floor area up to 100 m²","No openings in the roof","Maximum height 4 m","Only compartments above 500 m²","Only compartments with a steel frame"],"answer":[0,1,2],"displayAnswer":"Floor area up to 100 m²; No openings in the roof; Maximum height 4 m","explanation":"The curves also assume mainly cellulosic fire loads (L04 slide 34). Slide 16 quotes different limits, so use these for exercises.","category":53,"number":11},
+        {"question":"A compartment has A_v = 6 m² (window 3 m × 2 m), h = 2 m and A_t = 108 m². The opening factor O is?","options":["About 0.079 m^½","About 0.79 m^½","About 0.0079 m^½","About 0.5 m^½"],"answer":[0],"displayAnswer":"About 0.079 m^½","explanation":"O = 6 · √2 / 108 = 8.485 / 108 ≈ 0.0786 m^½.","category":53,"number":12},
+        {"question":"In the L04 exercise (4 × 6 m room, 3 m high, 3 × 2 m window, 800 MJ/m², concrete b = 1900), what maximum temperature does the parametric curve give?","options":["About 800 °C (≈ 799 °C)","About 300 °C","About 1200 °C","About 1500 °C"],"answer":[0],"displayAnswer":"About 800 °C (≈ 799 °C)","explanation":"My solution of the unsolved slide-36 exercise: O = 0.0786, Γ = 1.438, q_t,d = 177.8 MJ/m², t_max ≈ 17.7 min, Θ_max ≈ 799 °C, total duration ≈ 70 min (with the lecture's 0.13·10⁻³ coefficient).","category":53,"number":13},
+        {"question":"In a parametric fire, what happens to the maximum temperature and the duration when the opening factor O increases in the ventilation-controlled regime?","options":["Lower maximum temperature and a shorter fire","Higher temperature and longer fire","No change","The fire becomes fuel-controlled and immediately stops"],"answer":[0],"displayAnswer":"Lower maximum temperature and a shorter fire","explanation":"L04 slide 9 shows the two regimes: ventilation-controlled and fuel-controlled.","category":53,"number":14},
+        {"question":"Which model applies to a localised fire in which the flames do NOT reach the ceiling (L_f < H)?","options":["Heskestad","Hasemi","Wickström","Thomas"],"answer":[0],"displayAnswer":"Heskestad","explanation":"Heskestad gives the temperature along the axis. Annex C also gives Hasemi for flames that impact the ceiling (L04).","category":53,"number":15},
+        {"question":"Which model applies when the flames impact the ceiling (L_f > H) and gives the heat flux at a distance r from the axis?","options":["Hasemi","Heskestad","Kawagoe","Babrauskas"],"answer":[0],"displayAnswer":"Hasemi","explanation":"The horizontal flame length is L_h = 2.9 · H · (Q*_H)^0.33 − H (L04).","category":53,"number":16},
+        {"question":"Localised fire versus generalised fire: which statement is correct?","options":["Localised: temperature θ(x, y, z, t); generalised: uniform θ(t) in the compartment","Both give a uniform temperature","Localised fire is post-flashover","Generalised fire is the Heskestad model"],"answer":[0],"displayAnswer":"Localised: temperature θ(x, y, z, t); generalised: uniform θ(t) in the compartment","explanation":"The parametric curve is a generalised-fire model (L04 slide 15).","category":53,"number":17},
+        {"question":"On what principles are zone models based?","options":["Conservation of mass and energy","The ISO 834 curve","Experimental tables only","Reliability index β"],"answer":[0],"displayAnswer":"Conservation of mass and energy","explanation":"They divide the compartment into zones of uniform temperature and pressure (L04).","category":53,"number":18},
+        {"question":"Which model is used for the pre-flashover (localised) fire?","options":["The two-zone model","The one-zone model","The ISO 834 curve","The parametric curve"],"answer":[0],"displayAnswer":"The two-zone model","explanation":"The one-zone model is used after flashover (generalised fire) (L04).","category":53,"number":19},
+        {"question":"When does the program switch from the two-zone to the one-zone model? (select all)","options":["The upper layer temperature exceeds 500 °C","The smoke layer interface falls below 10 % of the ceiling height","The fire area exceeds 50 % of the floor area","The fire lasts more than 5 minutes","The ceiling temperature drops"],"answer":[0,1,2],"displayAnswer":"The upper layer temperature exceeds 500 °C; The smoke layer interface falls below 10 % of the ceiling height; The fire area exceeds 50 % of the floor area","explanation":"C1: T_u > 500 °C; C3: H_i < 0.1 H; C4: A_fi > 0.5 A (and C2: smoke layer below the fuel top with T_u above about 300 °C) (L04).","category":53,"number":20},
+        {"question":"Which two CFD programs are shown in the lecture?","options":["Sofie and FDS (Fire Dynamics Simulator)","OZone and Eurocode","Excel and Word","Heskestad and Hasemi"],"answer":[0],"displayAnswer":"Sofie and FDS (Fire Dynamics Simulator)","explanation":"OZone v2.2 is a two-zone model (L04).","category":53,"number":21},
+        {"question":"How do active fire-fighting measures affect the design thermal load q_f,d?","options":["They reduce it (e.g. 625 MJ/m² without measures down to 189 MJ/m² with automatic water suppression)","They increase it","They have no influence","They only change the opening factor"],"answer":[0],"displayAnswer":"They reduce it (e.g. 625 MJ/m² without measures down to 189 MJ/m² with automatic water suppression)","explanation":"q_f,d = m · δq1 · δq2 · Πδni · q_f,k (OZone study case, L04).","category":53,"number":22},
+        {"question":"Which fire models run from the simplest to the most complex?","options":["Nominal curves → parametric / localised fires → 1–2 zone models → CFD","CFD → zone models → nominal curves","Zone models → nominal curves → CFD","Parametric → CFD → nominal curves"],"answer":[0],"displayAnswer":"Nominal curves → parametric / localised fires → 1–2 zone models → CFD","explanation":"L03 fig. 10 and L04 slide 3.","category":53,"number":23},
+        {"type":"self-grade-text","selfGrade":true,"question":"Compare the prescriptive and the performance-based approach to the thermal action.","answer":"Prescriptive: thermal action taken from a nominal curve (ISO 834), applied in the whole compartment, always rising, ignoring thermal load, ventilation and the pre-flashover phase. Performance-based: thermal action from physical parameters (fire surface, HRR, boundary properties, openings, ceiling height) using parametric, localised, zone or CFD models.","displayAnswer":"Prescriptive: thermal action taken from a nominal curve (ISO 834), applied in the whole compartment, always rising, ignoring thermal load, ventilation and the pre-flashover phase. Performance-based: thermal action from physical parameters (fire surface, HRR, boundary properties, openings, ceiling height) using parametric, localised, zone or CFD models.","explanation":"L04 slide 5.","category":53,"number":24}
+      ],
+      "54": [
+        {"question":"Fire behaviour of a construction product comprises…","options":["Fire reaction and fire resistance","Fire reaction only","Fire resistance only","Combustibility and toxicity only"],"answer":[0],"displayAnswer":"Fire reaction and fire resistance","explanation":"L05. Reaction to fire matters in the early phases (ignition, growth), resistance in the fully developed fire.","category":54,"number":1},
+        {"question":"Which stages of a fire does the reaction to fire of a product matter for?","options":["Ignition and growth (the early phases)","The fully developed fire","The decay only","Only after flashover"],"answer":[0],"displayAnswer":"Ignition and growth (the early phases)","explanation":"Resistance to fire matters in the fully developed fire (L05 fig. 3.3).","category":54,"number":2},
+        {"type":"order","question":"Order the Euroclasses from the best to the worst fire reaction.","options":["A1","A2","B","C","D","E","F"],"orderAnswer":[0,1,2,3,4,5,6],"answer":[0,1,2,3,4,5,6],"displayAnswer":"A1 → A2 → B → C → D → E → F","explanation":"A1 no contribution to fire; A2 almost none; B very limited; C limited; D important; E very important; F no performance determined (L05).","category":54,"number":3},
+        {"question":"Which Euroclass means \"no contribution to fire\"?","options":["A1","A2","B","F"],"answer":[0],"displayAnswer":"A1","explanation":"A1 products: natural stone, concrete, brick, ceramics, glass, steel and most metals (L05).","category":54,"number":4},
+        {"question":"Which Euroclass means \"no performance determined\"?","options":["F","E","A1","D"],"answer":[0],"displayAnswer":"F","explanation":"F also covers products that cannot be classed A1 to E or are not tested.","category":54,"number":5},
+        {"question":"Which products are typical Euroclass A1? (select all)","options":["Concrete","Brick","Glass","Steel","Low-density fibre board","Plastic insulation"],"answer":[0,1,2,3],"displayAnswer":"Concrete; Brick; Glass; Steel","explanation":"The last two are typical class E examples (L05).","category":54,"number":6},
+        {"question":"A wood-based product of thickness ≥ 10 mm and density ≥ about 400 kg/m³ is typically in class…","options":["D","A1","B","F"],"answer":[0],"displayAnswer":"D","explanation":"Class D resists a long time to a small flame and can withstand an SBI thermal attack with limited heat release (L05).","category":54,"number":7},
+        {"question":"Plasterboard with different finishes and fire-retardant wood-based products are typical examples of class…","options":["B","A1","D","E"],"answer":[0],"displayAnswer":"B","explanation":"Class B: very limited contribution to fire; more severe conditions than class C (L05).","category":54,"number":8},
+        {"question":"What does the additional classification s1 / s2 / s3 describe?","options":["Smoke production: s1 limited, s2 average, s3 no limit (large production)","Falling droplets","Flame spread","Structural stability"],"answer":[0],"displayAnswer":"Smoke production: s1 limited, s2 average, s3 no limit (large production)","explanation":"L05 slide 12.","category":54,"number":9},
+        {"question":"What does the additional classification d0 / d1 / d2 describe?","options":["Burning droplets or particles: d0 none, d1 lasting less than 10 s, d2 no requirement","Smoke production","Lateral flame spread","Insulation"],"answer":[0],"displayAnswer":"Burning droplets or particles: d0 none, d1 lasting less than 10 s, d2 no requirement","explanation":"L05 slide 12.","category":54,"number":10},
+        {"question":"Which Euroclasses carry both smoke (s) and droplet (d) sub-classes?","options":["A2, B, C and D","A1 and F only","E and F only","All classes"],"answer":[0],"displayAnswer":"A2, B, C and D","explanation":"A1 has none, E has only d2 and F has none (L05 slide 12).","category":54,"number":11},
+        {"question":"Which suffix marks the class family for floors?","options":["FL (A1FL … FFL)","L","S","D"],"answer":[0],"displayAnswer":"FL (A1FL … FFL)","explanation":"The suffix L marks linear pipe insulation (A1L … FL) (L05).","category":54,"number":12},
+        {"question":"In the Romanian norm P118-99, which category is \"non-combustible\"?","options":["C0","C1","C2","C4"],"answer":[0],"displayAnswer":"C0","explanation":"C0 non-combustible, C1 non-flammable, C2 hard to ignite, C3 average flammable, C4 easily flammable (L05).","category":54,"number":13},
+        {"question":"What does FIGRA stand for?","options":["Fire growth rate","Fire resistance angle","Flame ignition rate","Total heat released"],"answer":[0],"displayAnswer":"Fire growth rate","explanation":"FIGRA = 1000 · max(HRR_med(t) / (t − 300 s)) (L05).","category":54,"number":14},
+        {"question":"What does THR₆₀₀ₛ stand for?","options":["Total heat released in the first 600 s","Total smoke production over 600 s","Thermal resistance after 600 seconds","Test heat rate"],"answer":[0],"displayAnswer":"Total heat released in the first 600 s","explanation":"The integral of HRR from 0 to 600 s (L05). TSP₆₀₀ₛ is the total smoke production.","category":54,"number":15},
+        {"question":"What does SMOGRA stand for?","options":["Smoke growth rate (smoke emission rate)","Smoke measure of gases","Standard smoke gradient","Total heat released"],"answer":[0],"displayAnswer":"Smoke growth rate (smoke emission rate)","explanation":"The maximum of SPR_med(t) / (t − 300 s) (L05).","category":54,"number":16},
+        {"question":"Which criterion is ΔT = T_m − T_f in the non-combustibility test?","options":["Temperature rise (T_m maximum temperature over the test, T_f final temperature)","Mass loss","Smoke production","Persistent flame duration"],"answer":[0],"displayAnswer":"Temperature rise (T_m maximum temperature over the test, T_f final temperature)","explanation":"ΔT in °C is found on 5 samples (SR EN ISO 1182) (L05).","category":54,"number":17},
+        {"question":"Which test identifies products that do NOT contribute to fire development and spread?","options":["EN ISO 1182, non-combustibility test (furnace)","EN ISO 11925-2 small flame","EN ISO 9239-1 radiant panel","EN 1187 roofs"],"answer":[0],"displayAnswer":"EN ISO 1182, non-combustibility test (furnace)","explanation":"Used for classes A1, A2, A1FL, A2FL (L05).","category":54,"number":18},
+        {"question":"What does the calorimetric bomb test (EN ISO 1716) measure?","options":["The gross calorific value (PCS) of a fully burnt product, independent of end use","Flame spread on floors","Smoke density","The fire resistance time"],"answer":[0],"displayAnswer":"The gross calorific value (PCS) of a fully burnt product, independent of end use","explanation":"Classes A1, A2, A1FL, A2FL (L05).","category":54,"number":19},
+        {"question":"Which test checks ignitability under a small flame, recording whether the flame tip reaches 150 mm?","options":["EN ISO 11925-2","EN 13823 (SBI)","EN ISO 1182","EN ISO 9239-1"],"answer":[0],"displayAnswer":"EN ISO 11925-2","explanation":"Serves classes B, C, D, E (and their FL equivalents) (L05).","category":54,"number":20},
+        {"question":"What is the SBI test (EN 13823)?","options":["The single burning item test: a sample is ignited in the corner of a room, measuring its contribution to a fully developed fire","A test for floors with a radiant panel","A test for roof fire performance","A test with a calorimetric bomb"],"answer":[0],"displayAnswer":"The single burning item test: a sample is ignited in the corner of a room, measuring its contribution to a fully developed fire","explanation":"Covers classes A2, B, C, D (L05).","category":54,"number":21},
+        {"question":"Which test is used for floor coverings and finds the critical radiant flux?","options":["EN ISO 9239-1 (radiant panel)","EN 13823 (SBI)","EN ISO 1182","EN ISO 1716"],"answer":[0],"displayAnswer":"EN ISO 9239-1 (radiant panel)","explanation":"Classes A2FL, BFL, CFL, DFL (L05).","category":54,"number":22},
+        {"question":"Classification of the same product may change with…","options":["The end-use conditions: products must be tested only for their end-use","The day of the test","The colour of the product","Its price"],"answer":[0],"displayAnswer":"The end-use conditions: products must be tested only for their end-use","explanation":"Any change of use needs a new classification or test (L05).","category":54,"number":23},
+        {"question":"What is \"external fire performance\" in this course?","options":["The conventional behaviour of a roof system in its end use when exposed to an external fire (class B_ROOF)","The behaviour of a wall under internal fire","The smoke production of facades","The reaction of paints"],"answer":[0],"displayAnswer":"The conventional behaviour of a roof system in its end use when exposed to an external fire (class B_ROOF)","explanation":"Test method EN 1187 with four methods (embers, wind, radiant heat…) (L05).","category":54,"number":24},
+        {"question":"Which standard sets the roof external-fire test methods?","options":["SR EN 1187","SR EN 13823","SR EN 1363-1","SR EN 1990"],"answer":[0],"displayAnswer":"SR EN 1187","explanation":"The class criteria are in SR EN 13501-5 (L05).","category":54,"number":25},
+        {"question":"What are the symbols W, M, C and S in EN 1363-1?","options":["Radiation (W), mechanical action (M), self-closing (C), smoke leakage (S)","Weight, mass, cost, size","Water, metal, concrete, steel","Wind, moisture, cold, snow"],"answer":[0],"displayAnswer":"Radiation (W), mechanical action (M), self-closing (C), smoke leakage (S)","explanation":"The main criteria are R, E and I (L05).","category":54,"number":26},
+        {"type":"self-grade-text","selfGrade":true,"question":"Explain the difference between reaction to fire and resistance to fire.","answer":"Reaction to fire describes how a product contributes to the fire (ignitability, heat release, flame spread, smoke, droplets) in the early stages, ignition and growth. Resistance to fire describes how a building element keeps its load-bearing (R), integrity (E) and insulation (I) function for a time in the fully developed fire.","displayAnswer":"Reaction to fire describes how a product contributes to the fire (ignitability, heat release, flame spread, smoke, droplets) in the early stages, ignition and growth. Resistance to fire describes how a building element keeps its load-bearing (R), integrity (E) and insulation (I) function for a time in the fully developed fire.","explanation":"L05 fig. 3.3.","category":54,"number":27}
+      ],
+      "55": [
+        {"question":"What does R mean in fire-resistance classification?","options":["Load-bearing capacity (stability)","Radiation","Reaction","Resistance to smoke"],"answer":[0],"displayAnswer":"Load-bearing capacity (stability)","explanation":"R load-bearing capacity, E integrity, I insulation (L05, L06).","category":55,"number":1},
+        {"question":"What does E mean in fire-resistance classification?","options":["Integrity: the element does not let flames and hot gases through cracks (tested with cotton waste)","Elasticity","Emission of smoke","Energy absorbed"],"answer":[0],"displayAnswer":"Integrity: the element does not let flames and hot gases through cracks (tested with cotton waste)","explanation":"L05, L06.","category":55,"number":2},
+        {"question":"What does I mean in fire-resistance classification, and what limit is applied in the test?","options":["Insulation; the temperature rise on the unexposed face is limited (180 °C)","Ignitability; the flame height is limited to 150 mm","Integrity; no collapse","Isolation of smoke; 600 °C"],"answer":[0],"displayAnswer":"Insulation; the temperature rise on the unexposed face is limited (180 °C)","explanation":"L06 slide 16.","category":55,"number":3},
+        {"question":"Which criteria must a load-bearing column or beam satisfy?","options":["R","E and I","R, E and I","E only"],"answer":[0],"displayAnswer":"R","explanation":"Non-load-bearing separating elements need I + E, load-bearing elements with a separating function need R + I + E (L05).","category":55,"number":4},
+        {"question":"Which criteria must a non-load-bearing partition wall or door satisfy?","options":["E and I","R only","R, E and I","R and E"],"answer":[0],"displayAnswer":"E and I","explanation":"L05, L06 table.","category":55,"number":5},
+        {"question":"Which criteria must a load-bearing wall or floor satisfy?","options":["R, E and I (REI)","R only","E only","I only"],"answer":[0],"displayAnswer":"R, E and I (REI)","explanation":"Floor/ceiling and load-bearing walls separate compartments and carry load (L05, L06).","category":55,"number":6},
+        {"question":"Which classes are used for non-load-bearing elements?","options":["EI-ttt and E-ttt","REI-ttt and R-ttt","A1 and B","RE-ttt only"],"answer":[0],"displayAnswer":"EI-ttt and E-ttt","explanation":"Load-bearing: REI-ttt, RE-ttt, R-ttt (L05).","category":55,"number":7},
+        {"question":"What does REI-120 mean?","options":["Load-bearing capacity, integrity and insulation are all kept for 120 minutes","Reaction to fire class E for 120 minutes","Resistance to 120 °C","R kept 120 min, E and I are not needed"],"answer":[0],"displayAnswer":"Load-bearing capacity, integrity and insulation are all kept for 120 minutes","explanation":"The number is the time in minutes (L05).","category":55,"number":8},
+        {"question":"What is the evaluation rule among R, E and I?","options":["If R fails, E and I fail automatically; if E fails, I fails automatically","They are independent","If I fails, R fails","If E fails, R fails"],"answer":[0],"displayAnswer":"If R fails, E and I fail automatically; if E fails, I fails automatically","explanation":"L05 slide 27.","category":55,"number":9},
+        {"question":"Do individual materials possess fire resistance?","options":["No. Fire resistance is given to building elements (walls, columns, slabs, beams)","Yes, every material has a rating","Only steel does","Only concrete does"],"answer":[0],"displayAnswer":"No. Fire resistance is given to building elements (walls, columns, slabs, beams)","explanation":"L06: in a prescriptive framework it is given to elements.","category":55,"number":10},
+        {"question":"Fire resistance is a form of…","options":["Passive protection (always ready and waiting)","Active protection","Preventive protection","Human behaviour"],"answer":[0],"displayAnswer":"Passive protection (always ready and waiting)","explanation":"Active measures act only after detection (L06).","category":55,"number":11},
+        {"question":"Why is fire resistance especially important according to the lecture?","options":["For property protection and externalities; it is little significant in the early stages of a fire","Only for life safety in the first minute","Only for small houses","It is not important"],"answer":[0],"displayAnswer":"For property protection and externalities; it is little significant in the early stages of a fire","explanation":"L06 slide 7.","category":55,"number":12},
+        {"question":"How is a fire-resistance rating usually obtained?","options":["By a standard fire test (furnace), sometimes by approved calculation or expert opinion","By measuring the colour of the element","By counting occupants","By weighing the element"],"answer":[0],"displayAnswer":"By a standard fire test (furnace), sometimes by approved calculation or expert opinion","explanation":"L06: ratings are typically in hours or half hours (L06 slides 9, 20).","category":55,"number":13},
+        {"type":"order","question":"Put the steps of a typical standard fire-resistance test in order.","options":["Build a specimen that represents the as-built construction","Place it in a rigid loading frame","Position it in, next to or over a standard furnace","Apply the likely service load","Keep the load constant and apply the standard temperature–time curve","Continue until a failure criterion is reached"],"orderAnswer":[0,1,2,3,4,5],"answer":[0,1,2,3,4,5],"displayAnswer":"Build a specimen that represents the as-built construction → Place it in a rigid loading frame → Position it in, next to or over a standard furnace → Apply the likely service load → Keep the load constant and apply the standard temperature–time curve → Continue until a failure criterion is reached","explanation":"L06 slide 15. The test is normally stopped once the rating is obtained.","category":55,"number":14},
+        {"question":"Which standard temperature–time curve is used in Europe, and which in North America?","options":["ISO 834 in Europe, ASTM E119 in North America","ASTM E119 in Europe, ISO 834 in America","Both use EN 1991","Both use the hydrocarbon curve"],"answer":[0],"displayAnswer":"ISO 834 in Europe, ASTM E119 in North America","explanation":"The curve dates from 1918 (USA) and 1932 (UK) (L06).","category":55,"number":15},
+        {"question":"The standard fire test implies that the assembly built in a real structure…","options":["performs at least as well as the tested assembly","performs exactly like the tested assembly","performs worse than the tested assembly","cannot be compared"],"answer":[0],"displayAnswer":"performs at least as well as the tested assembly","explanation":"L06 slide 14: the test is the reference, but real construction is usually worse than the specimen.","category":55,"number":16},
+        {"question":"Which are drawbacks of fire-resistance testing? (select all)","options":["Expense of the specimen and the test","Specimen size is often unrealistic","Restraint and continuity cannot be applied realistically","The fire exposure is not a natural fire","Reproducibility between tests and labs","The test is too fast","The test always predicts failure"],"answer":[0,1,2,3,4],"displayAnswer":"Expense of the specimen and the test; Specimen size is often unrealistic; Restraint and continuity cannot be applied realistically; The fire exposure is not a natural fire; Reproducibility between tests and labs","explanation":"Also: confidentiality of proprietary data, loading, missed failure modes, no cooling phase (L06 slide 19).","category":55,"number":17},
+        {"question":"Which limitations apply to the beam / slab fire resistance test?","options":["Only simply supported beams, no force redistribution, no thermal expansion of adjoining elements","Only continuous beams","Only steel beams","Only beams without loads"],"answer":[0],"displayAnswer":"Only simply supported beams, no force redistribution, no thermal expansion of adjoining elements","explanation":"L05 slide 30.","category":55,"number":18},
+        {"question":"Which approved sources of fire-resistance ratings are listed in the lecture?","options":["Listings of approved assemblies, approved calculation methods and expert opinion","Only manufacturers' advertisements","Only the Eurocode","Only the fire brigade"],"answer":[0],"displayAnswer":"Listings of approved assemblies, approved calculation methods and expert opinion","explanation":"L06 slide 20.","category":55,"number":19},
+        {"question":"How does a steel beam behave in fire, compared with a timber beam?","options":["Steel loses strength while the stress stays constant; timber chars but keeps strength while the stress rises as the section shrinks","Steel chars; timber loses strength","Both lose strength equally","Neither is affected"],"answer":[0],"displayAnswer":"Steel loses strength while the stress stays constant; timber chars but keeps strength while the stress rises as the section shrinks","explanation":"Steel fails when strength falls below stress; timber fails when stress rises above strength (L06).","category":55,"number":20},
+        {"question":"Strategy for timber in fire?","options":["Sacrifice cross-section (char layer) to keep a cool core","Keep the temperature down with paint","Embed it in concrete","Nothing can be done"],"answer":[0],"displayAnswer":"Sacrifice cross-section (char layer) to keep a cool core","explanation":"Steel: keep steel temperatures down. Concrete: keep reinforcement and core cool (L06 slide 24).","category":55,"number":21},
+        {"question":"Strategy for steel in fire?","options":["Keep the steel temperature down","Sacrifice cross-section","Let it char","Increase its section efficiency"],"answer":[0],"displayAnswer":"Keep the steel temperature down","explanation":"L06.","category":55,"number":22},
+        {"question":"Why is steel the most vulnerable load-bearing material in fire?","options":["Its yield limit and elastic modulus drop drastically at high temperature, and its section efficiency is high (slender)","It burns easily","It is combustible","It has a low density"],"answer":[0],"displayAnswer":"Its yield limit and elastic modulus drop drastically at high temperature, and its section efficiency is high (slender)","explanation":"Steel is non-combustible but loses properties (L06 slide 27).","category":55,"number":23},
+        {"question":"Which methods protect steel elements? (select all)","options":["Fire-rated boards (calcium silicate / gypsum, 15–30 mm)","Intumescent paint","Embedment in concrete / guniting","Spraying mineral fibre with binders","Painting with ordinary paint","Leaving the steel unprotected"],"answer":[0,1,2,3],"displayAnswer":"Fire-rated boards (calcium silicate / gypsum, 15–30 mm); Intumescent paint; Embedment in concrete / guniting; Spraying mineral fibre with binders","explanation":"Boards give up to 4 hours; intumescent paint is used where steel is exposed for architectural reasons but is expensive (L06).","category":55,"number":24},
+        {"question":"How thick are fire-rated boards and what rating can they give?","options":["15–30 mm and up to 4 hours","1–2 mm and 10 minutes","100–200 mm and 30 minutes","15–30 cm and 1 minute"],"answer":[0],"displayAnswer":"15–30 mm and up to 4 hours","explanation":"Calcium silicate or gypsum plaster boards (L06 slide 28).","category":55,"number":25},
+        {"question":"Main advantage and disadvantage of intumescent paints?","options":["Small specific load and good execution productivity, but high price","Cheap but very heavy","Very cheap and thick","Combustible but cheap"],"answer":[0],"displayAnswer":"Small specific load and good execution productivity, but high price","explanation":"L06 slide 28.","category":55,"number":26},
+        {"question":"What is the relation between fire safety engineering, fire protection engineering and structural fire engineering?","options":["Structural fire engineering ⊂ fire protection engineering ⊂ fire safety engineering","They are unrelated","Fire safety engineering ⊂ structural fire engineering","They are the same thing"],"answer":[0],"displayAnswer":"Structural fire engineering ⊂ fire protection engineering ⊂ fire safety engineering","explanation":"SFE is the specific part of passive fire protection (L06 slide 5).","category":55,"number":27},
+        {"question":"Prescriptive vs performance-based codes in structural fire engineering?","options":["Prescriptive: rules on how a building must be built. Performance-based: goals on how it must perform, any strategy is allowed if safety is shown","Prescriptive is the Eurocode approach","Performance-based gives fixed ratings","They are identical"],"answer":[0],"displayAnswer":"Prescriptive: rules on how a building must be built. Performance-based: goals on how it must perform, any strategy is allowed if safety is shown","explanation":"L06 slide 8.","category":55,"number":28},
+        {"question":"Why is considering members in isolation unrealistic for most structures?","options":["Continuity, restraint, redistribution, fire-induced elongations and P-delta effects change the behaviour","Members never interact","Members always fail alone","It is realistic and exact"],"answer":[0],"displayAnswer":"Continuity, restraint, redistribution, fire-induced elongations and P-delta effects change the behaviour","explanation":"L06 slide 25.","category":55,"number":29},
+        {"question":"In performance-based codes, fire severity is described by a complete burnout fire, or…","options":["an equivalent time of burnout, or a shorter time allowing only escape and fire-fighting","the ISO curve for 24 hours","the CC3 reliability index","the Euroclass"],"answer":[0],"displayAnswer":"an equivalent time of burnout, or a shorter time allowing only escape and fire-fighting","explanation":"L06 slide 21.","category":55,"number":30},
+        {"type":"self-grade-text","selfGrade":true,"question":"Explain R, E and I and which type of building element needs which.","answer":"R: load-bearing capacity, no collapse or excessive deflection (columns, beams: R). E: integrity, no passage of flames and hot gases (non-load-bearing separating elements: E + I). I: insulation, temperature rise on the unexposed face limited to 180 °C. Load-bearing separating elements (floors, load-bearing walls): R + E + I (REI).","displayAnswer":"R: load-bearing capacity, no collapse or excessive deflection (columns, beams: R). E: integrity, no passage of flames and hot gases (non-load-bearing separating elements: E + I). I: insulation, temperature rise on the unexposed face limited to 180 °C. Load-bearing separating elements (floors, load-bearing walls): R + E + I (REI).","explanation":"L05 slides 25–27, L06 slide 16.","category":55,"number":31},
+        {"type":"self-grade-text","selfGrade":true,"question":"Compare the behaviour in fire of a steel beam and a timber beam.","answer":"Steel: strength degrades with temperature while the stress in the member stays constant; failure when strength falls below stress; protect to keep steel cool. Timber: chars at the surface but the core keeps its strength; the stress rises as the cross-section is lost; failure when stress rises above strength; sacrifice cross-section to keep a cool core.","displayAnswer":"Steel: strength degrades with temperature while the stress in the member stays constant; failure when strength falls below stress; protect to keep steel cool. Timber: chars at the surface but the core keeps its strength; the stress rises as the cross-section is lost; failure when stress rises above strength; sacrifice cross-section to keep a cool core.","explanation":"L06 slides 23–24.","category":55,"number":32}
+      ],
+      "56": [
+        {"question":"Reliability of a structure is normally expressed…","options":["In probabilistic terms","As a colour code","In minutes of fire resistance","As a mass per square metre"],"answer":[0],"displayAnswer":"In probabilistic terms","explanation":"It covers safety, service life and durability (EN 1990, L01).","category":56,"number":1},
+        {"question":"What gives the reliability required by EN 1990? (select all)","options":["Design following EN 1990–EN 1999","Adequate execution","A quality management system","A larger building","A lower price"],"answer":[0,1,2],"displayAnswer":"Design following EN 1990–EN 1999; Adequate execution; A quality management system","explanation":"L01 slide 5.","category":56,"number":2},
+        {"question":"Which Eurocode gives the basis of design?","options":["EN 1990 (EC0)","EN 1991 (EC1)","EN 1992 (EC2)","EN 1998 (EC8)"],"answer":[0],"displayAnswer":"EN 1990 (EC0)","explanation":"EN 1991 gives the actions (EN 1991-1-2: actions on structures exposed to fire) (L01).","category":56,"number":3},
+        {"question":"Which Eurocode covers steel structures?","options":["EN 1993 (EC3)","EN 1992","EN 1995","EN 1999"],"answer":[0],"displayAnswer":"EN 1993 (EC3)","explanation":"EC2 concrete, EC3 steel, EC4 composite, EC5 timber, EC6 masonry, EC9 aluminium, EC7 geotechnical, EC8 seismic (L01).","category":56,"number":4},
+        {"question":"Which Eurocode covers timber structures?","options":["EN 1995 (EC5)","EN 1993","EN 1996","EN 1992"],"answer":[0],"displayAnswer":"EN 1995 (EC5)","explanation":"EC6 is masonry (L01).","category":56,"number":5},
+        {"question":"Consequence class CC3 (high consequences) applies to…","options":["Stadiums, bridges, public buildings, concert halls","Agricultural buildings","Greenhouses","Industrial halls"],"answer":[0],"displayAnswer":"Stadiums, bridges, public buildings, concert halls","explanation":"CC2: residential and office buildings; CC1: agricultural buildings, greenhouses, industrial halls (L01).","category":56,"number":6},
+        {"question":"Residential and office buildings belong to which consequence class?","options":["CC2","CC1","CC3","CC4"],"answer":[0],"displayAnswer":"CC2","explanation":"Medium consequences (L01 slide 9).","category":56,"number":7},
+        {"question":"What is the minimum reliability index β for RC2 over a 50-year reference period?","options":["3.8","1.5","4.7","5.2"],"answer":[0],"displayAnswer":"3.8","explanation":"RC3: 4.3; RC2: 3.8; RC1: 3.3 for 50 years. For a 1-year reference: 5.2 / 4.7 / 4.2 (L01).","category":56,"number":8},
+        {"question":"Which β is used for the service limit states (50 years)?","options":["1.5","3.8","4.3","5.2"],"answer":[0],"displayAnswer":"1.5","explanation":"Ultimate limit states use 3.8 (L01 slide 11).","category":56,"number":9},
+        {"question":"Which failure probability corresponds to β ≈ 3.7?","options":["P_f ≈ 10⁻⁴","P_f ≈ 10⁻¹","P_f ≈ 10⁻⁷","P_f ≈ 0.5"],"answer":[0],"displayAnswer":"P_f ≈ 10⁻⁴","explanation":"β = 1.28 (10⁻¹), 2.32 (10⁻²), 3.09 (10⁻³), 3.72 (10⁻⁴), 4.27 (10⁻⁵), 4.75 (10⁻⁶), 5.20 (10⁻⁷).","category":56,"number":10},
+        {"question":"Hazard and risk: which statement is correct?","options":["A hazard is a potential danger; risk is the probability (frequency) of a hazard","They are synonyms","Risk is a potential danger; hazard is a frequency","Hazard is only for fire"],"answer":[0],"displayAnswer":"A hazard is a potential danger; risk is the probability (frequency) of a hazard","explanation":"L01 slide 12.","category":56,"number":11},
+        {"question":"What does ALARP stand for?","options":["As low as reasonably practicable","As long as risk persists","All loads are really permanent","Approved level of acceptable risk, provisional"],"answer":[0],"displayAnswer":"As low as reasonably practicable","explanation":"The middle region of the risk triangle (L01).","category":56,"number":12},
+        {"question":"Accepted risk of death from fires inside buildings in the lecture table?","options":["About 4 · 10⁻⁶ per year","About 4 · 10⁻² per year","About 0.14 · 10⁻⁶ per year","About 12 000 · 10⁻⁶ per year"],"answer":[0],"displayAnswer":"About 4 · 10⁻⁶ per year","explanation":"Structural failure (UK) is 0.14 · 10⁻⁶ (L01 slide 13).","category":56,"number":13},
+        {"question":"What is the \"safety level\" of a building?","options":["The state of control over recognised hazards so that the risk is acceptable","The thickness of the walls","The number of exits","The fire resistance in minutes"],"answer":[0],"displayAnswer":"The state of control over recognised hazards so that the risk is acceptable","explanation":"Safety rises as risk falls (L01 slide 14).","category":56,"number":14},
+        {"question":"Which are objectives for fire safety in civil construction? (select all)","options":["Limit loss of life","Limit material losses (including property) to acceptable levels","Eliminate all possible fires","Maximise the fire load"],"answer":[0,1],"displayAnswer":"Limit loss of life; Limit material losses (including property) to acceptable levels","explanation":"L01 slide 14. Limiting the environmental impact is also an objective, but it is not in the Romanian norms.","category":56,"number":15},
+        {"question":"Which of the following are performance criteria for fire safety? (select all)","options":["Structural stability in fire for a normalised time","Limit the spread of fire and smoke inside the building","Limit fire spread to neighbouring buildings","Safe evacuation routes for a defined period","Safety of the firefighters' intervention","Maximum architectural freedom","Lowest construction cost"],"answer":[0,1,2,3,4],"displayAnswer":"Structural stability in fire for a normalised time; Limit the spread of fire and smoke inside the building; Limit fire spread to neighbouring buildings; Safe evacuation routes for a defined period; Safety of the firefighters' intervention","explanation":"L01 slide 15 lists five criteria.","category":56,"number":16},
+        {"question":"Preventive fire safety measures are…","options":["Actions before a fire to avoid it (remove ignition sources, limit fuel concentration)","Automatic sprinklers","Fire resistance of beams","Evacuation routes"],"answer":[0],"displayAnswer":"Actions before a fire to avoid it (remove ignition sources, limit fuel concentration)","explanation":"Active measures fight a fire once it started; passive measures are built into the building (L01, L03).","category":56,"number":17},
+        {"question":"Which is an active measure?","options":["Automatic detection and alarm, suppression systems","Fire resistance of columns","Evacuation routes dimensioned properly","Limiting ignition sources"],"answer":[0],"displayAnswer":"Automatic detection and alarm, suppression systems","explanation":"Active: detection, alarm, suppression (L01).","category":56,"number":18},
+        {"question":"Which is a functional passive measure?","options":["Enough means of escape, dimensioning and protection of evacuation routes","Sprinklers","Smoke detectors","Removing ignition sources"],"answer":[0],"displayAnswer":"Enough means of escape, dimensioning and protection of evacuation routes","explanation":"Constructive passive: fire resistance of elements, verified by tests; also design of the structure by calculation (not in P118-99) (L01).","category":56,"number":19},
+        {"question":"Which is a constructive passive measure?","options":["Design of the fire resistance of structural elements, verified by tests","Automatic alarm","Hand-held extinguishers","Removing fuel"],"answer":[0],"displayAnswer":"Design of the fire resistance of structural elements, verified by tests","explanation":"L01 slide 17.","category":56,"number":20},
+        {"question":"Which five areas make up fire safety engineering in the course?","options":["Combustion theory, passive protection, active protection, compartment fires and human behaviour in fire","Concrete, steel, timber, masonry and glass","Heat, smoke, light, sound and water","Design, planning, tendering, building and handover"],"answer":[0],"displayAnswer":"Combustion theory, passive protection, active protection, compartment fires and human behaviour in fire","explanation":"L01 slide 18.","category":56,"number":21},
+        {"question":"Which normative documents does the course reference for fire classification of reaction to fire and resistance?","options":["SR EN 13501-1 (reaction) and SR EN 13501-2 (resistance)","SR EN 1990 only","SR EN 1992 only","ISO 9001"],"answer":[0],"displayAnswer":"SR EN 13501-1 (reaction) and SR EN 13501-2 (resistance)","explanation":"Other references: P118/1999, SR EN 1991-1-2, Buchanan (L01).","category":56,"number":22},
+        {"type":"self-grade-text","selfGrade":true,"question":"Name and explain the three types of fire safety measures with an example of each.","answer":"Preventive: actions before a fire to avoid it, e.g. removing ignition sources and concentrated fuel. Active: fighting a fire after it has started, e.g. automatic detection, alarm and suppression. Passive: built into the building, a) functional (escape routes) and b) constructive (fire resistance of elements verified by tests, structural design in fire).","displayAnswer":"Preventive: actions before a fire to avoid it, e.g. removing ignition sources and concentrated fuel. Active: fighting a fire after it has started, e.g. automatic detection, alarm and suppression. Passive: built into the building, a) functional (escape routes) and b) constructive (fire resistance of elements verified by tests, structural design in fire).","explanation":"L01 slide 17 and L03 slide 20.","category":56,"number":23}
+      ]
+    };
+
     const STORAGE_KEY = 'quiz-personal-v1';
     const SESSION_KEY = 'quiz-session-v2';
     const STATS_KEY = 'quiz-lifetime-stats-v1';
@@ -11030,7 +11246,7 @@
       var key = getWrongSetKey(currentCategory, currentQuizFormat);
       sets[key] = {
         category: currentCategory,
-        categoryName: currentCategory !== null ? (categoryNames[currentCategory] || ('Category ' + currentCategory)) : 'Mixed quiz',
+        categoryName: isMixedCategoryId(currentCategory) ? mixedCategoryName(currentCategory) : (currentCategory !== null ? (categoryNames[currentCategory] || ('Category ' + currentCategory)) : 'Mixed quiz'),
         quizFormat: normalizeQuizFormat(currentQuizFormat),
         questions: wrongQuestions,
         score: score,
@@ -11171,10 +11387,9 @@
 
     function applySavedSession(saved) {
       if (!saved || !Array.isArray(saved.activeQuestions) || saved.activeQuestions.length === 0) return false;
-      if (saved.activeQuestionSetTitle === CHEMISTRY_SEM1_SET_TITLE) {
-        useChemistrySem1QuestionSet();
-      }
-      currentCategory = typeof saved.currentCategory === 'number' ? saved.currentCategory : null;
+      var savedSet = findQuestionSetByTitle(saved.activeQuestionSetTitle);
+      if (savedSet) savedSet.use();
+      currentCategory = (typeof saved.currentCategory === 'number' || typeof saved.currentCategory === 'string') ? saved.currentCategory : null;
       activeQuestions = saved.activeQuestionSetTitle === CHEMISTRY_SEM1_SET_TITLE
         ? refreshChemistrySem1QuestionList(saved.activeQuestions, currentCategory)
         : saved.activeQuestions;
@@ -11306,7 +11521,7 @@
         row.className = 'practice-actions';
         var format = normalizeQuizFormat(set.quizFormat || inferQuizFormatFromList(set.questions));
         var formatLabel = format === 'text-box' ? 'Text box' : 'Multiple choice';
-        var label = (set.category !== null && set.category !== undefined ? set.category + '. ' : '') + (set.categoryName || 'Saved quiz') + ' - ' + formatLabel;
+        var label = (set.category !== null && set.category !== undefined && !isMixedCategoryId(set.category) ? set.category + '. ' : '') + (set.categoryName || 'Saved quiz') + ' - ' + formatLabel;
         row.appendChild(createActionButton('Retake ' + label + ' (' + set.questions.length + ')', '#28a745', '#fff', function () {
           startWrongPracticeForCategory(set.category, format);
         }, false));
@@ -11511,7 +11726,7 @@
     }
 
     function isCourseQuestionsCategory(cat) {
-      return Number(cat) === COURSE_QUESTIONS_CATEGORY_ID;
+      return activeQuestionSetTitle === 'Chemistry Sem 2' && Number(cat) === COURSE_QUESTIONS_CATEGORY_ID;
     }
 
     function isChemistryExamSubjectCategory(cat) {
@@ -11658,6 +11873,63 @@
       questions = MATH_SPECIAL_QUESTIONS || {};
       categoryNames = MATH_SPECIAL_CATEGORY_NAMES || {};
       activeQuestionSetTitle = MATH_SPECIAL_SET_TITLE;
+    }
+
+    function useFireSafetyQuestionSet() {
+      questions = FIRE_SAFETY_QUESTIONS || {};
+      categoryNames = FIRE_SAFETY_CATEGORY_NAMES || {};
+      activeQuestionSetTitle = FIRE_SAFETY_SET_TITLE;
+    }
+
+    function countQuestionsIn(structured) {
+      return Object.keys(structured || {}).reduce(function (sum, key) {
+        return sum + ((structured[key] && structured[key].length) || 0);
+      }, 0);
+    }
+
+    // One entry per subject on the main menu. Add a new subject here and it appears in the menu,
+    // and a saved quiz of that subject can be resumed (the title is stored with the session).
+    var QUESTION_SETS = [
+      { title: CHEMISTRY_SEM1_SET_TITLE, use: useChemistrySem1QuestionSet, total: function () { return countQuestionsIn(CHEMISTRY_SEM1_QUESTIONS); } },
+      { title: 'Chemistry Sem 2', use: useChemistryQuestionSet, total: function () { return countQuestionsIn(chemistryQuestions); } },
+      { title: ARCHITECTURAL_CATEGORY_NAME, use: useArchitecturalQuestionSet, screen: function () { showArchitectureQuizTypeScreen(); }, total: function () { return ARCHITECTURAL_ELEMENTS_QUESTIONS.length; } },
+      { title: PHYSICS_SET_TITLE, use: useMechanicsQuestionSet, total: function () {
+        return MECHANICS_PART1_DEFINITIONS_QUESTIONS.length + MECHANICS_PART1_FORMULAS_QUESTIONS.length +
+          MECHANICS_PART2_DEFINITIONS_QUESTIONS.length + MECHANICS_PART2_FORMULAS_QUESTIONS.length;
+      } },
+      { title: ECONOMICS_SET_TITLE, use: useEconomicsQuestionSet, total: function () { return countQuestionsIn(ECONOMICS_QUESTIONS); } },
+      { title: MATH_SPECIAL_SET_TITLE, use: useMathSpecialQuestionSet, total: function () { return countQuestionsIn(MATH_SPECIAL_QUESTIONS); } },
+      { title: FIRE_SAFETY_SET_TITLE, use: useFireSafetyQuestionSet, total: function () { return countQuestionsIn(FIRE_SAFETY_QUESTIONS); } }
+    ];
+
+    function findQuestionSetByTitle(title) {
+      for (var i = 0; i < QUESTION_SETS.length; i++) {
+        if (QUESTION_SETS[i].title === title) return QUESTION_SETS[i];
+      }
+      return null;
+    }
+
+    // Mixed quizzes use a string category id such as "all:Fire Safety" or "quick:Fire Safety".
+    var QUICK_ROUND_SIZE = 20;
+    var menuQuizFormat = 'multiple-choice';
+
+    function isMixedCategoryId(cat) {
+      return typeof cat === 'string' && /^(all|quick):/.test(cat);
+    }
+
+    function mixedCategoryName(cat) {
+      var kind = String(cat).indexOf('quick:') === 0 ? 'Quick round' : 'All chapters mixed';
+      return kind + ' - ' + String(cat).replace(/^(all|quick):/, '');
+    }
+
+    function getAllQuestionsForActiveSet() {
+      var all = [];
+      getCategoryKeys().forEach(function (c) {
+        (questions[c] || []).forEach(function (q) {
+          all.push(q.category !== undefined ? q : Object.assign({}, q, { category: Number(c) }));
+        });
+      });
+      return all;
     }
 
     function normalizeTextAnswer(value) {
@@ -11981,71 +12253,30 @@
       var wrap = document.createElement('div');
       wrap.className = 'main-menu-buttons';
 
-      var chemistrySem1Btn = document.createElement('button');
-      chemistrySem1Btn.type = 'button';
-      chemistrySem1Btn.className = 'main-menu-btn';
-      chemistrySem1Btn.textContent = CHEMISTRY_SEM1_SET_TITLE;
-      chemistrySem1Btn.addEventListener('click', function () {
-        useChemistrySem1QuestionSet();
-        questionEl.closest('section').classList.remove('main-menu-screen');
-        showCategoryScreen();
+      QUESTION_SETS.forEach(function (set) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'main-menu-btn';
+        btn.textContent = set.title;
+        var total = set.total();
+        if (total > 0) {
+          var countEl = document.createElement('small');
+          countEl.textContent = total + ' questions';
+          countEl.style.display = 'block';
+          countEl.style.marginTop = '0.2rem';
+          countEl.style.fontSize = '0.8rem';
+          countEl.style.fontWeight = '400';
+          countEl.style.opacity = '0.9';
+          btn.appendChild(countEl);
+        }
+        btn.addEventListener('click', function () {
+          set.use();
+          menuQuizFormat = 'multiple-choice';
+          questionEl.closest('section').classList.remove('main-menu-screen');
+          (set.screen || showCategoryScreen)();
+        });
+        wrap.appendChild(btn);
       });
-      wrap.appendChild(chemistrySem1Btn);
-
-      var chemistryBtn = document.createElement('button');
-      chemistryBtn.type = 'button';
-      chemistryBtn.className = 'main-menu-btn';
-      chemistryBtn.textContent = 'Chemistry Sem 2';
-      chemistryBtn.addEventListener('click', function () {
-        useChemistryQuestionSet();
-        questionEl.closest('section').classList.remove('main-menu-screen');
-        showCategoryScreen();
-      });
-      wrap.appendChild(chemistryBtn);
-
-      var architectureBtn = document.createElement('button');
-      architectureBtn.type = 'button';
-      architectureBtn.className = 'main-menu-btn';
-      architectureBtn.textContent = ARCHITECTURAL_CATEGORY_NAME;
-      architectureBtn.addEventListener('click', function () {
-        useArchitecturalQuestionSet();
-        questionEl.closest('section').classList.remove('main-menu-screen');
-        showArchitectureQuizTypeScreen();
-      });
-      wrap.appendChild(architectureBtn);
-
-      var mechanicsBtn = document.createElement('button');
-      mechanicsBtn.type = 'button';
-      mechanicsBtn.className = 'main-menu-btn';
-      mechanicsBtn.textContent = PHYSICS_SET_TITLE;
-      mechanicsBtn.addEventListener('click', function () {
-        useMechanicsQuestionSet();
-        questionEl.closest('section').classList.remove('main-menu-screen');
-        showCategoryScreen();
-      });
-      wrap.appendChild(mechanicsBtn);
-
-      var economicsBtn = document.createElement('button');
-      economicsBtn.type = 'button';
-      economicsBtn.className = 'main-menu-btn';
-      economicsBtn.textContent = ECONOMICS_SET_TITLE;
-      economicsBtn.addEventListener('click', function () {
-        useEconomicsQuestionSet();
-        questionEl.closest('section').classList.remove('main-menu-screen');
-        showCategoryScreen();
-      });
-      wrap.appendChild(economicsBtn);
-
-      var mathBtn = document.createElement('button');
-      mathBtn.type = 'button';
-      mathBtn.className = 'main-menu-btn';
-      mathBtn.textContent = MATH_SPECIAL_SET_TITLE;
-      mathBtn.addEventListener('click', function () {
-        useMathSpecialQuestionSet();
-        questionEl.closest('section').classList.remove('main-menu-screen');
-        showCategoryScreen();
-      });
-      wrap.appendChild(mathBtn);
 
       optionsContainer.appendChild(wrap);
       appendProgressActions(optionsContainer, true);
@@ -12151,9 +12382,47 @@
       optionsContainer.appendChild(menuActions);
       appendProgressActions(optionsContainer, false);
       appendSavedWrongSetsPanel(optionsContainer);
+      currentQuizFormat = menuQuizFormat;
+      var formatRow = document.createElement('div');
+      formatRow.className = 'practice-actions';
+      formatRow.style.marginTop = '1rem';
+      [['multiple-choice', 'Multiple choice'], ['text-box', 'Text box (write, then self-grade)']].forEach(function (pair) {
+        var active = menuQuizFormat === pair[0];
+        formatRow.appendChild(createActionButton(pair[1], active ? '#1a1a2e' : '#e8eaf0', active ? '#fff' : '#1a1a2e', function () {
+          menuQuizFormat = pair[0];
+          showCategoryScreen();
+        }, false));
+      });
+      optionsContainer.appendChild(formatRow);
+
       var wrap = document.createElement('div');
       wrap.className = 'category-buttons';
       wrap.style.marginTop = '1rem';
+      var nonEmptyCategories = getCategoryKeys().filter(function (c) { return questions[c] && questions[c].length > 0; });
+      if (nonEmptyCategories.length > 1) {
+        var allList = getAllQuestionsForActiveSet();
+        [
+          ['all:' + activeQuestionSetTitle, 'Mixed', 'All chapters mixed (' + allList.length + ' questions)', allList],
+          ['quick:' + activeQuestionSetTitle, 'Quick round', QUICK_ROUND_SIZE + ' random questions from all chapters', null]
+        ].forEach(function (entry) {
+          var mixedBtn = document.createElement('button');
+          mixedBtn.type = 'button';
+          mixedBtn.className = 'category-btn';
+          var mixedLabel = document.createElement('span');
+          mixedLabel.className = 'category-btn-label';
+          mixedLabel.textContent = entry[1];
+          var mixedName = document.createElement('span');
+          mixedName.className = 'category-btn-name';
+          mixedName.textContent = entry[2];
+          mixedBtn.appendChild(mixedLabel);
+          mixedBtn.appendChild(mixedName);
+          mixedBtn.addEventListener('click', function () {
+            var list = entry[3] || shuffleArray(getAllQuestionsForActiveSet()).slice(0, QUICK_ROUND_SIZE);
+            startQuizFromList(entry[0], list, 'normal', menuQuizFormat);
+          });
+          wrap.appendChild(mixedBtn);
+        });
+      }
       getCategoryKeys().forEach(function (c) {
         var count = questions[c] ? questions[c].length : 0;
         var btn = document.createElement('button');
@@ -12188,7 +12457,7 @@
           metaEl.style.fontSize = '0.82rem';
           btn.appendChild(metaEl);
         }
-        var savedWrongSet = getSavedWrongSetForCategory(c);
+        var savedWrongSet = getSavedWrongSetForCategory(c, menuQuizFormat === 'text-box' ? 'text-box' : undefined);
         if (savedWrongSet) {
           var savedWrongEl = document.createElement('small');
           savedWrongEl.textContent = 'Saved wrong practice: ' + savedWrongSet.questions.length;
@@ -12218,7 +12487,7 @@
 
     function startQuizForCategory(cat) {
       var list = questions[cat];
-      startQuizFromList(cat, list, 'normal', 'multiple-choice');
+      startQuizFromList(cat, list, 'normal', menuQuizFormat);
     }
 
     function startWrongPracticeForCategory(cat, quizFormat) {
@@ -12378,7 +12647,7 @@
       const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
       const answered = score + wrongCount;
       const progressPct = total > 0 ? Math.round((answered / total) * 100) : 0;
-      var currentList = questions[currentCategory] || (currentCategory === ARCHITECTURAL_CATEGORY_ID ? ARCHITECTURAL_ELEMENTS_QUESTIONS : []);
+      var currentList = isMixedCategoryId(currentCategory) ? activeQuestions : (questions[currentCategory] || (currentCategory === ARCHITECTURAL_CATEGORY_ID ? ARCHITECTURAL_ELEMENTS_QUESTIONS : []));
       const lifetime = currentCategory !== null ? getCategorySummary(currentCategory, currentList) : getLifetimeSummary();
 
       var completeLabel = currentQuizMode === 'wrong-practice' ? 'Wrong-question practice complete!' : 'Quiz complete!';
@@ -12815,7 +13084,7 @@
       }
 
       const question = activeQuestions[index];
-      questionEl.textContent = (currentQuizMode === 'wrong-practice' ? 'Practice: ' : '') + (question.number !== undefined ? question.number + ') ' : '') + question.question;
+      questionEl.textContent = (currentQuizMode === 'wrong-practice' ? 'Practice: ' : '') + (question.number !== undefined ? (isMixedCategoryId(currentCategory) && question.category !== undefined ? 'Ch. ' + question.category + ' · ' : '') + question.number + ') ' : '') + question.question;
       renderQuestionTypeBanner(question, questionEl);
 
       optionsContainer.innerHTML = '';
@@ -13059,6 +13328,41 @@
     document.getElementById('setting-wait-between').addEventListener('change', updateSettingsFromUI);
     document.getElementById('setting-no-timers').addEventListener('change', updateSettingsFromUI);
     document.getElementById('setting-hide-multiple-count').addEventListener('change', updateSettingsFromUI);
+
+    // Keyboard shortcuts: 1-9 pick an option, N or right arrow = next, S = show answer,
+    // P = pause / resume, B or Esc = back. Ignored while typing in a text box.
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
+      var target = e.target;
+      var tag = target && target.tagName ? target.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || (target && target.isContentEditable)) return;
+      var section = document.querySelector('.question-container');
+      if (!section || section.classList.contains('category-screen') || section.classList.contains('main-menu-screen')) return;
+      var key = e.key;
+      function press(el) {
+        if (el && !el.disabled && !el.classList.contains('hidden')) {
+          el.click();
+          e.preventDefault();
+        }
+      }
+      if (key === 'b' || key === 'B' || key === 'Escape') {
+        press(document.getElementById('btn-back'));
+        return;
+      }
+      if (activeQuestions.length === 0 || currentQuestionIndex >= activeQuestions.length) return;
+      if (/^[1-9]$/.test(key)) {
+        var optionButtons = document.getElementById('options-container').querySelectorAll('.option-btn');
+        press(optionButtons[parseInt(key, 10) - 1]);
+      } else if (key === 'n' || key === 'N' || key === 'ArrowRight') {
+        var nextEl = document.getElementById('btn-next-question');
+        if (nextEl && !nextEl.classList.contains('hidden')) press(nextEl);
+        else press(document.querySelector('.btn-skip'));
+      } else if (key === 's' || key === 'S') {
+        press(document.getElementById('btn-show-answer'));
+      } else if (key === 'p' || key === 'P') {
+        press(document.querySelector('.btn-pause.hidden') ? document.querySelector('.btn-resume') : document.querySelector('.btn-pause'));
+      }
+    });
 
     window.addEventListener('beforeunload', function () {
       savePreferences();
